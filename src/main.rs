@@ -37,8 +37,11 @@ fn main() {
     ];
     let formation = Formation::empty(positions);
     let crusaders = create_user_data().unlocked_crusaders();
-    let search = BestFormationSearch::new(&crusaders, formation);
-    println!("{}", search.valid_placements().count());
+    let mut search = BestFormationSearch::new(&crusaders, formation);
+    search.calculate_best_formation(::std::time::Duration::from_secs(5));
+    for p in &search.best_formation().positions {
+        println!("({}, {}): {:?}", p.coordinate.x, p.coordinate.y, p.crusader.as_ref().map(|c| c.name));
+    }
 }
 
 fn create_user_data() -> UserData {

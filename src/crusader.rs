@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use dps::*;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -347,11 +349,31 @@ impl CrusaderName {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone)]
 pub struct Crusader {
     pub name: CrusaderName,
     base_dps: Dps,
     level: Level,
+}
+
+impl PartialEq for Crusader {
+    fn eq(&self, other: &Crusader) -> bool {
+        self.name == other.name
+    }
+}
+
+impl Eq for Crusader {}
+
+impl PartialOrd for Crusader {
+    fn partial_cmp(&self, other: &Crusader) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Crusader {
+    fn cmp(&self, other: &Crusader) -> Ordering {
+        self.name.cmp(&other.name)
+    }
 }
 
 impl Crusader {

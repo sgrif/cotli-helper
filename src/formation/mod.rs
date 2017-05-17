@@ -50,8 +50,8 @@ impl<'a> Formation<'a> {
 
 #[derive(Debug, Clone)]
 pub struct FormationPosition<'a> {
-    coordinate: Coordinate,
-    crusader: Option<&'a Crusader>,
+    pub coordinate: Coordinate,
+    pub crusader: Option<&'a Crusader>,
 }
 
 impl<'a> FormationPosition<'a> {
