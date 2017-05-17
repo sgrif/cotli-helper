@@ -237,4 +237,24 @@ mod benchmarks {
         let search = BestFormationSearch::new(&crusaders, formation);
         b.iter(|| search.random_placement())
     }
+
+    #[bench]
+    fn bench_calculate_single_formation(b: &mut Bencher) {
+        let positions = vec![
+            Coordinate::new(0, 0),
+            Coordinate::new(0, 1),
+            Coordinate::new(0, 2),
+            Coordinate::new(0, 3),
+            Coordinate::new(1, 0),
+            Coordinate::new(1, 1),
+            Coordinate::new(1, 2),
+            Coordinate::new(2, 1),
+            Coordinate::new(2, 2),
+            Coordinate::new(3, 1),
+        ];
+        let formation = Formation::empty(positions);
+        let crusaders = create_user_data().unlocked_crusaders();
+        let mut search = BestFormationSearch::new(&crusaders, formation);
+        b.iter(|| search.calculate_single_formation())
+    }
 }
