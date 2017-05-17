@@ -17,8 +17,7 @@ impl<'a> BestFormationSearch<'a> {
     }
 
     pub fn valid_placements<'b>(&'b self) -> impl Iterator<Item=(usize, &'a Crusader)> + 'b {
-        let valid_crusaders = self.valid_crusaders().collect::<Vec<_>>();
-        self.valid_positions().cartesian_product(valid_crusaders)
+        self.valid_positions().cartesian_product(self.valid_crusaders())
     }
 
     pub fn random_placement(&self) -> Option<(usize, &'a Crusader)> {
@@ -32,9 +31,30 @@ impl<'a> BestFormationSearch<'a> {
         self.formation.empty_positions()
     }
 
-    fn valid_crusaders(&self) -> impl Iterator<Item=&'a Crusader> {
-        let used_slots = self.formation.used_slots();
-        self.crusaders.iter().filter(move |c| !used_slots.contains(c.slot()))
+    fn valid_crusaders(&self) -> impl Iterator<Item=&'a Crusader> + Clone {
+        UnusedSlots {
+            crusaders: self.crusaders.iter(),
+            used_slots: self.formation.used_slots(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct UnusedSlots<T> {
+    crusaders: T,
+    used_slots: Slot,
+}
+
+impl<'a, T: Iterator<Item=&'a Crusader>> Iterator for UnusedSlots<T> {
+    type Item = &'a Crusader;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some(item) = self.crusaders.next() {
+            if !self.used_slots.contains(item.slot()) {
+                return Some(item);
+            }
+        }
+        None
     }
 }
 
