@@ -3,7 +3,7 @@ mod talent_data;
 
 pub use self::crusader_data::CrusaderData;
 
-use crusader::CrusaderName;
+use crusader::*;
 use gear::GearQuality;
 use self::crusader_data::AllCrusaderData;
 use self::talent_data::TalentData;
@@ -50,8 +50,11 @@ impl UserData {
         self
     }
 
-    pub fn unlocked_crusaders<'a>(&'a self) -> impl Iterator<Item=&'a CrusaderName> {
+    pub fn unlocked_crusaders(&self) -> Vec<Crusader> {
         self.crusader_data.unlocked_crusaders()
+            .cloned()
+            .map(|name| Crusader::new(name, self.talents.max_level()))
+            .collect()
     }
 
     // pub fn auras(&self) -> Vec<Aura> {

@@ -1,3 +1,5 @@
+use std::cmp;
+
 use dps::*;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -129,90 +131,90 @@ pub enum CrusaderName {
 }
 
 impl CrusaderName {
-    pub fn slot(&self) -> u8 {
+    pub fn slot(&self) -> Slot {
         use self::CrusaderName::*;
         match *self {
             // TheBushWhacker |
             // RoboRabbit |
             // GrahamTheDriver |
-            // WarwickTheWarlock => 1,
+            // WarwickTheWarlock => SLOT_1,
             JimTheLumberjack |
             // PilotPam |
             VeronicaTheAndroidArcher |
-            Arachnobuddy => 2,
+            Arachnobuddy => SLOT_2,
             EmoWerewolf |
-            SallyTheSuccubus => 3,
-            // KarenTheCatTeenager => 3,
+            SallyTheSuccubus => SLOT_3,
+            // KarenTheCatTeenager => SLOT_3,
             SashaTheFierceWarrior |
-            GroklokTheOrc => 4,
-            // MindyTheMime => 4,
+            GroklokTheOrc => SLOT_4,
+            // MindyTheMime => SLOT_4,
             TheWashedUpHermit |
             KyleThePartyBro |
             // SerpentKingDraco |
             // HenryTheScaredyGhoul |
-            Grandmora => 5,
+            Grandmora => SLOT_5,
             DetectiveKaine |
             // MisterTheMonkey |
-            LarryTheLeprechaun => 6,
-            // BernardTheBartender => 6,
+            LarryTheLeprechaun => SLOT_6,
+            // BernardTheBartender => SLOT_6,
             ThePrincess |
             // RoboTurkey |
             // RangerRayna |
-            BaenarallAngelOfHope => 7,
+            BaenarallAngelOfHope => SLOT_7,
             NatalieDragon |
             // JackOLantern |
-            PresidentBillySmithsonian => 8,
-            // KarlTheKicker => 8,
+            PresidentBillySmithsonian => SLOT_8,
+            // KarlTheKicker => SLOT_8,
             JasonMasterOfShadows |
             // PeteTheCarney |
-            Broot => 9,
-            // PaulThePilgrim => 9,
+            Broot => SLOT_9,
+            // PaulThePilgrim => SLOT_9,
             ArtaxesTheLion |
             DrizzleTheDarkElf |
             // BubbaTheSwimmingOrc |
-            SisaronTheDragonSorceress => 10,
+            SisaronTheDragonSorceress => SLOT_10,
             // KhouriTheWitchDoctor |
             // MommaKaine |
             // BrogonPrinceOfDragons |
             // TheHalfBloodElf |
-            // Foresight => 11,
+            // Foresight => SLOT_11,
             // DarkGryphon |
             // RockyTheRockstar |
             // MontanaJames |
-            // TheDarkHelper => 12,
+            // TheDarkHelper => SLOT_12,
             // SarahTheCollector |
             // TheMetalSoldierette |
-            // SnicketteTheSneaky => 13,
+            // SnicketteTheSneaky => SLOT_13,
             // GoldPanda |
             // RoboSanta |
             // LeerionTheRoyalDwarf |
-            // KatieTheCupid => 14,
+            // KatieTheCupid => SLOT_14,
             // PrinceSalTheMerman |
             // WendyTheWitch |
             // RobbieRaccoon |
-            // PrincessValTheMermaid => 15,
+            // PrincessValTheMermaid => SLOT_15,
             // FirePhoenix |
             // AlanTheArchAngel |
-            // FrightOTron4000 |
-            // Spaceking => 16,
+            // FrightOTronSLOT_4000 |
+            // Spaceking => SLOT_16,
             // KingReginaldIV |
             // QueenSiri |
             // MrBogginsTheSubstitute |
-            // SquigglesTheClown => 17,
+            // SquigglesTheClown => SLOT_17,
             // ThaliaTheThunderKing |
             // FrostyTheSnowman |
             // Littlefoot |
-            // CindyTheCheerOrc => 18,
+            // CindyTheCheerOrc => SLOT_18,
             // MerciTheMadWizard |
             // TheBatBillionaire |
-            // PetraThePilgrim => 19,
+            // PetraThePilgrim => SLOT_19,
             // NateDragon |
             // KizlblypTheAlienTraitor |
-            // RoboRudolph => 20,
+            // RoboRudolph => SLOT_20,
             // TheExterminator |
-            // GloriaTheGoodWitch => 21,
+            // GloriaTheGoodWitch => SLOT_21,
             // TheShadowQueen |
-            // IlsaTheInsaneWizard => 22,
+            // IlsaTheInsaneWizard => SLOT_22,
         }
     }
 
@@ -347,8 +349,54 @@ impl CrusaderName {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct Crusader {
-    name: CrusaderName,
+    pub name: CrusaderName,
     base_dps: Dps,
     level: Level,
+}
+
+impl Crusader {
+    pub fn new(name: CrusaderName, level: Level) -> Self {
+        Crusader {
+            name,
+            base_dps: Dps(name.base_dps()),
+            level,
+        }
+    }
+
+    pub fn base_dps(&self) -> Dps {
+        self.base_dps * self.level
+    }
+
+    pub fn slot(&self) -> Slot {
+        self.name.slot()
+    }
+}
+
+bitflags! {
+    pub flags Slot: u32 {
+        const SLOT_1   = 1,
+        const SLOT_2   = 1 << 1,
+        const SLOT_3   = 1 << 2,
+        const SLOT_4   = 1 << 3,
+        const SLOT_5   = 1 << 4,
+        const SLOT_6   = 1 << 5,
+        const SLOT_7   = 1 << 6,
+        const SLOT_8   = 1 << 7,
+        const SLOT_9   = 1 << 8,
+        const SLOT_10  = 1 << 9,
+        const SLOT_11  = 1 << 10,
+        const SLOT_12  = 1 << 11,
+        const SLOT_13  = 1 << 12,
+        const SLOT_14  = 1 << 13,
+        const SLOT_15  = 1 << 14,
+        const SLOT_16  = 1 << 15,
+        const SLOT_17  = 1 << 16,
+        const SLOT_18  = 1 << 17,
+        const SLOT_19  = 1 << 18,
+        const SLOT_20  = 1 << 19,
+        const SLOT_21  = 1 << 20,
+        const SLOT_22  = 1 << 21,
+    }
 }

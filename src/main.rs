@@ -1,28 +1,47 @@
 #![cfg_attr(test, feature(test))]
 #![feature(conservative_impl_trait)]
 
+#[macro_use] extern crate bitflags;
+extern crate itertools;
+
+pub mod best_formation_search;
 pub mod crusader;
 pub mod dps;
+pub mod formation;
 pub mod gear;
 pub mod talent;
 pub mod user_data;
 
 use crusader::*;
 use dps::*;
+use formation::*;
 use gear::*;
 use talent::*;
 use user_data::*;
 
 fn main() {
-    println!("Hello, world!");
+    let positions = vec![
+        Coordinate::new(0, 0),
+        Coordinate::new(0, 1),
+        Coordinate::new(0, 2),
+        Coordinate::new(0, 3),
+        Coordinate::new(1, 0),
+        Coordinate::new(1, 1),
+        Coordinate::new(1, 2),
+        Coordinate::new(2, 1),
+        Coordinate::new(2, 2),
+        Coordinate::new(3, 1),
+    ];
+    let formation = Formation::empty(positions);
+    let crusaders = create_user_data().crusaders();
 }
 
 fn create_user_data() -> UserData {
     UserData::default()
-        .with_dps_from_rings(443.0)
-        .with_cooldown_percent(176.5)
+        .with_dps_from_rings(455.0)
+        .with_cooldown_percent(177.0)
         .with_dps_from_achievements(381.0)
-        .with_unspent_idols(245)
+        .with_unspent_idols(779)
         .level_talent(Talent::SpeedRunner, 10)
         .level_talent(Talent::RideTheStorm, 4)
         .level_talent(Talent::StormsBuilding, 6)
@@ -31,7 +50,7 @@ fn create_user_data() -> UserData {
         .level_talent(Talent::Overenchanted, 9)
         .level_talent(Talent::SetBonus, 9)
         .level_talent(Talent::FastLearners, 2)
-        .level_talent(Talent::WellEquipped, 3)
+        .level_talent(Talent::WellEquipped, 4)
         .level_talent(Talent::SwapDay, 3)
         .level_talent(Talent::SpendItAll, 1)
         .level_talent(Talent::UpgradeThemAll, 1)

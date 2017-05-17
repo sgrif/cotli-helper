@@ -11,6 +11,7 @@ pub struct TalentData {
 
 const BASE_EP_FRACTION_FROM_BENCH: f64 = 0.3;
 const BASE_DPS_PERCENT_PER_EP: f64 = 25.0;
+const BASE_MAX_LEVEL: u16 = 5000;
 
 impl TalentData {
     pub fn level_talent(&mut self, talent: Talent, level: u16) {
@@ -60,5 +61,11 @@ impl TalentData {
 
     pub fn dps_percent_from_swap_day(&self) -> f64 {
         BONUS_PER_SWAP_DAY_LEVEL * self.get_level(&SwapDay) as f64
+    }
+
+    pub fn max_level(&self) -> Level {
+        let bonus_levels = BONUS_PER_EXTRA_TRAINING_LEVEL
+            * self.get_level(&ExtraTraining);
+        Level(BASE_MAX_LEVEL + bonus_levels)
     }
 }
