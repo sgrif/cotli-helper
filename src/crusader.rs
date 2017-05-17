@@ -1,5 +1,3 @@
-use std::cmp;
-
 use dps::*;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

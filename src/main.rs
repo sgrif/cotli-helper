@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 #![cfg_attr(test, feature(test))]
 #![feature(conservative_impl_trait)]
 
@@ -135,33 +136,4 @@ fn create_user_data() -> UserData {
                 GearQuality::Legendary(Level(3)),
             ],
         })
-}
-
-#[cfg(test)]
-mod benchmarks {
-    extern crate test;
-    use super::*;
-    use self::test::*;
-
-    #[bench]
-    fn test_random_placement(b: &mut Bencher) {
-        let positions = vec![
-            Coordinate::new(0, 0),
-            Coordinate::new(0, 1),
-            Coordinate::new(0, 2),
-            Coordinate::new(0, 3),
-            Coordinate::new(1, 0),
-            Coordinate::new(1, 1),
-            Coordinate::new(1, 2),
-            Coordinate::new(2, 1),
-            Coordinate::new(2, 2),
-            Coordinate::new(3, 1),
-        ];
-        let formation = Formation::empty(positions);
-        let crusaders = create_user_data().unlocked_crusaders();
-        let mut search = BestFormationSearch::new(&crusaders, formation);
-        b.iter(|| {
-            search.random_placement()
-        })
-    }
 }

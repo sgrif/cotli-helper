@@ -4,7 +4,6 @@ mod talent_data;
 pub use self::crusader_data::CrusaderData;
 
 use crusader::*;
-use gear::GearQuality;
 use self::crusader_data::AllCrusaderData;
 use self::talent_data::TalentData;
 use talent::*;

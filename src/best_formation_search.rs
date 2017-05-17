@@ -20,7 +20,7 @@ impl<'a> BestFormationSearch<'a> {
         self.valid_positions().cartesian_product(self.valid_crusaders())
     }
 
-    pub fn random_placement(&self) -> Option<(usize, &'a Crusader)> {
+    fn random_placement(&self) -> Option<(usize, &'a Crusader)> {
         let mut rng = thread_rng();
         let num_placements = self.valid_positions().count()
             * self.valid_crusaders().count();
@@ -130,4 +130,32 @@ fn test_crusaders() -> Vec<Crusader> {
         Crusader::new(CrusaderName::VeronicaTheAndroidArcher, Level(5000)),
         Crusader::new(CrusaderName::SallyTheSuccubus, Level(5000)),
     ]
+}
+
+#[cfg(test)]
+mod benchmarks {
+    extern crate test;
+    use super::*;
+    use super::super::create_user_data;
+    use self::test::*;
+
+    #[bench]
+    fn test_random_placement(b: &mut Bencher) {
+        let positions = vec![
+            Coordinate::new(0, 0),
+            Coordinate::new(0, 1),
+            Coordinate::new(0, 2),
+            Coordinate::new(0, 3),
+            Coordinate::new(1, 0),
+            Coordinate::new(1, 1),
+            Coordinate::new(1, 2),
+            Coordinate::new(2, 1),
+            Coordinate::new(2, 2),
+            Coordinate::new(3, 1),
+        ];
+        let formation = Formation::empty(positions);
+        let crusaders = create_user_data().unlocked_crusaders();
+        let search = BestFormationSearch::new(&crusaders, formation);
+        b.iter(|| search.random_placement())
+    }
 }
