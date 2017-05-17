@@ -376,6 +376,13 @@ impl Ord for Crusader {
     }
 }
 
+use std::hash::*;
+impl Hash for Crusader {
+    fn hash<H: Hasher>(&self, h: &mut H) {
+        self.name.hash(h)
+    }
+}
+
 impl Crusader {
     pub fn new(name: CrusaderName, level: Level) -> Self {
         Crusader {

@@ -1,20 +1,20 @@
+extern crate ordermap;
+
 use itertools::*;
 use rand::*;
 use std::cmp::max;
-use std::collections::BTreeMap;
 use std::time::*;
+use self::ordermap::OrderMap;
 
 use crusader::*;
 use dps::*;
 use formation::*;
 
-type Map<K, V> = BTreeMap<K, V>;
-
 pub struct BestFormationSearch<'a> {
     crusaders: &'a [Crusader],
     formation: Formation<'a>,
     best_seen_placement: (Dps, Option<(usize, &'a Crusader)>),
-    tried_placements: Map<(usize, &'a Crusader), BestFormationSearch<'a>>,
+    tried_placements: OrderMap<(usize, &'a Crusader), BestFormationSearch<'a>>,
 }
 
 impl<'a> BestFormationSearch<'a> {

@@ -7,3 +7,4 @@ authors = ["Sean Griffin <sean@seantheprogrammer.com>"]
 itertools = "0.6.0"
 bitflags = "0.8.2"
 rand = "0.3.15"
+ordermap = "0.2.10"
