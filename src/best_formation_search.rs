@@ -1,4 +1,6 @@
 use itertools::*;
+use rand::*;
+use std::cmp::max;
 
 use crusader::*;
 use dps::*;
@@ -15,12 +17,24 @@ impl<'a> BestFormationSearch<'a> {
     }
 
     pub fn valid_placements<'b>(&'b self) -> impl Iterator<Item=(usize, &'a Crusader)> + 'b {
+        let valid_crusaders = self.valid_crusaders().collect::<Vec<_>>();
+        self.valid_positions().cartesian_product(valid_crusaders)
+    }
+
+    pub fn random_placement(&self) -> Option<(usize, &'a Crusader)> {
+        let mut rng = thread_rng();
+        let num_placements = self.valid_positions().count()
+            * self.valid_crusaders().count();
+        self.valid_placements().nth(rng.gen_range(0, max(1, num_placements)))
+    }
+
+    fn valid_positions<'b>(&'b self) -> impl Iterator<Item=usize> + 'b {
+        self.formation.empty_positions()
+    }
+
+    fn valid_crusaders(&self) -> impl Iterator<Item=&'a Crusader> {
         let used_slots = self.formation.used_slots();
-        let valid_positions = self.formation.empty_positions();
-        let valid_crusaders = self.crusaders.iter()
-            .filter(|c| !used_slots.contains(c.slot()))
-            .collect::<Vec<_>>();
-        valid_positions.cartesian_product(valid_crusaders)
+        self.crusaders.iter().filter(move |c| !used_slots.contains(c.slot()))
     }
 }
 
