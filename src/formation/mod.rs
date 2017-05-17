@@ -7,7 +7,7 @@ use dps::*;
 
 #[derive(Debug, Clone)]
 pub struct Formation<'a> {
-    pub positions: Vec<FormationPosition<'a>>,
+    positions: Vec<FormationPosition<'a>>,
     used_slots: Slot,
 }
 
@@ -41,6 +41,13 @@ impl<'a> Formation<'a> {
 
     pub fn used_slots(&self) -> Slot {
         self.used_slots
+    }
+
+    pub fn placements<'b>(&'b self)
+        -> impl Iterator<Item=(Coordinate, Option<&'a Crusader>)> + 'b
+    {
+        self.positions.iter()
+            .map(|pos| (pos.coordinate, pos.crusader))
     }
 
     fn crusaders<'b>(&'b self) -> impl Iterator<Item=&'a Crusader> + 'b {

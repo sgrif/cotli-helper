@@ -190,7 +190,7 @@ fn test_calculate_formation_changes_best_formation() {
     let crusaders = test_crusaders();
     let mut search = BestFormationSearch::new(&crusaders, test_formation());
     search.calculate_single_formation();
-    assert!(search.best_formation().positions.iter().any(|p| p.crusader.is_some()));
+    assert!(search.best_formation().placements().any(|(_, crusader)| crusader.is_some()));
 }
 
 #[cfg(test)]
