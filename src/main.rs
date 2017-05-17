@@ -21,8 +21,8 @@ fn create_user_data() -> UserData {
     UserData::default()
         .with_dps_from_rings(443.0)
         .with_cooldown_percent(176.5)
-        .with_dps_from_achievements(377.0) // I seem to have been off by 1-2%
-        .with_unspent_idols(94)
+        .with_dps_from_achievements(381.0)
+        .with_unspent_idols(245)
         .level_talent(Talent::SpeedRunner, 10)
         .level_talent(Talent::RideTheStorm, 4)
         .level_talent(Talent::StormsBuilding, 6)
@@ -32,7 +32,7 @@ fn create_user_data() -> UserData {
         .level_talent(Talent::SetBonus, 9)
         .level_talent(Talent::FastLearners, 2)
         .level_talent(Talent::WellEquipped, 3)
-        .level_talent(Talent::SwapDay, 2)
+        .level_talent(Talent::SwapDay, 3)
         .level_talent(Talent::SpendItAll, 1)
         .level_talent(Talent::UpgradeThemAll, 1)
         .level_talent(Talent::Scavenger, 1)
@@ -43,10 +43,10 @@ fn create_user_data() -> UserData {
         .level_talent(Talent::ExtraTraining, 2)
         .level_talent(Talent::TripleTierTrouble, 1)
         .add_crusader(CrusaderName::JimTheLumberjack, CrusaderData {
-            enchantment_points: 68,
+            enchantment_points: 77,
             gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Epic],
         }).add_crusader(CrusaderName::Arachnobuddy, CrusaderData {
-            enchantment_points: 43,
+            enchantment_points: 47,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
         }).add_crusader(CrusaderName::VeronicaTheAndroidArcher, CrusaderData {
             enchantment_points: 4,
@@ -65,7 +65,7 @@ fn create_user_data() -> UserData {
             enchantment_points: 109,
             gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Legendary(Level(2))],
         }).add_crusader(CrusaderName::GroklokTheOrc, CrusaderData {
-            enchantment_points: 30,
+            enchantment_points: 41,
             gear: [GearQuality::GoldenEpic, GearQuality::Epic, GearQuality::Rare],
         }).add_crusader(CrusaderName::TheWashedUpHermit, CrusaderData {
             enchantment_points: 145,
@@ -86,7 +86,7 @@ fn create_user_data() -> UserData {
             enchantment_points: 0,
             gear: [GearQuality::Legendary(Level(1)), GearQuality::Uncommon, GearQuality::Rare],
         }).add_crusader(CrusaderName::ThePrincess, CrusaderData {
-            enchantment_points: 76,
+            enchantment_points: 85,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
         }).add_crusader(CrusaderName::NatalieDragon, CrusaderData {
             enchantment_points: 69,
@@ -97,9 +97,19 @@ fn create_user_data() -> UserData {
             ],
         }).add_crusader(CrusaderName::PresidentBillySmithsonian, CrusaderData {
             enchantment_points: 0,
-            gear: [GearQuality::Rare, GearQuality::Legendary(Level(2)), GearQuality::Rare],
+            gear: [GearQuality::Rare, GearQuality::Legendary(Level(2)), GearQuality::Epic],
         }).add_crusader(CrusaderName::JasonMasterOfShadows, CrusaderData {
             enchantment_points: 82,
             gear: [GearQuality::Epic, GearQuality::Rare, GearQuality::Epic],
+        }).add_crusader(CrusaderName::Broot, CrusaderData {
+            enchantment_points: 70,
+            gear: [GearQuality::Uncommon, GearQuality::Uncommon, GearQuality::Uncommon],
+        }).add_crusader(CrusaderName::ArtaxesTheLion, CrusaderData {
+            enchantment_points: 94,
+            gear: [
+                GearQuality::Legendary(Level(3)),
+                GearQuality::Legendary(Level(1)),
+                GearQuality::Legendary(Level(3)),
+            ],
         })
 }

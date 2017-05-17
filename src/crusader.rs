@@ -1,4 +1,4 @@
-use dps::Dps;
+use dps::*;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum CrusaderName {
@@ -52,14 +52,14 @@ pub enum CrusaderName {
     // Slot 9
     JasonMasterOfShadows,
     // PeteTheCarney,
-    // Broot,
+    Broot,
     // PaulThePilgrim,
 
     // Slot 10
-    // ArtaxesTheLion,
-    // DrizzleTheDarkElf,
+    ArtaxesTheLion,
+    DrizzleTheDarkElf,
     // BubbaTheSwimmingOrc,
-    // SisaronTheDragonSorceress,
+    SisaronTheDragonSorceress,
 
     // Slot 11
     // KhouriTheWitchDoctor,
@@ -163,14 +163,14 @@ impl CrusaderName {
             // JackOLantern |
             PresidentBillySmithsonian => 8,
             // KarlTheKicker => 8,
-            JasonMasterOfShadows => 9,
+            JasonMasterOfShadows |
             // PeteTheCarney |
-            // Broot |
+            Broot => 9,
             // PaulThePilgrim => 9,
-            // ArtaxesTheLion |
-            // DrizzleTheDarkElf |
+            ArtaxesTheLion |
+            DrizzleTheDarkElf |
             // BubbaTheSwimmingOrc |
-            // SisaronTheDragonSorceress => 10,
+            SisaronTheDragonSorceress => 10,
             // KhouriTheWitchDoctor |
             // MommaKaine |
             // BrogonPrinceOfDragons |
@@ -267,16 +267,16 @@ impl CrusaderName {
             // KarlTheKicker |
 
             // Slot 9
-            JasonMasterOfShadows => 56571.6,
+            JasonMasterOfShadows |
             // PeteTheCarney |
-            // Broot |
+            Broot => 56571.6,
             // PaulThePilgrim |
 
             // Slot 10
-            // ArtaxesTheLion |
-            // DrizzleTheDarkElf |
+            ArtaxesTheLion |
+            DrizzleTheDarkElf |
             // BubbaTheSwimmingOrc |
-            // SisaronTheDragonSorceress |
+            SisaronTheDragonSorceress => 224302.8,
 
             // Slot 11
             // KhouriTheWitchDoctor |
@@ -345,4 +345,10 @@ impl CrusaderName {
             // IlsaTheInsaneWizard |
         }
     }
+}
+
+pub struct Crusader {
+    name: CrusaderName,
+    base_dps: Dps,
+    level: Level,
 }
