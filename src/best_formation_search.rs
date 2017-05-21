@@ -12,20 +12,19 @@ use formation::*;
 
 pub struct BestFormationSearch<'a> {
     crusaders: &'a [Crusader],
+    search: FormationSearch<'a>,
+}
+
+struct FormationSearch<'a> {
     formation: Formation<'a>,
     highest_dps_seen: Dps,
-    tried_placements: OrderMap<(usize, &'a Crusader), BestFormationSearch<'a>>,
+    tried_placements: OrderMap<(usize, &'a Crusader), FormationSearch<'a>>,
 }
 
 impl<'a> BestFormationSearch<'a> {
     pub fn new(crusaders: &'a [Crusader], formation: Formation<'a>) -> Self {
-        let formation_dps = formation.total_dps();
-        BestFormationSearch {
-            crusaders,
-            formation,
-            highest_dps_seen: formation_dps,
-            tried_placements: Default::default(),
-        }
+        let search = FormationSearch::new(formation);
+        BestFormationSearch { crusaders, search }
     }
 
     pub fn calculate_best_formation(&mut self, max_time: Duration) {
@@ -36,6 +35,25 @@ impl<'a> BestFormationSearch<'a> {
     }
 
     pub fn best_formation(&self) -> &Formation<'a> {
+        self.search.best_formation()
+    }
+
+    fn calculate_single_formation(&mut self) {
+        self.search.calculate_single_formation(self.crusaders)
+    }
+}
+
+impl<'a> FormationSearch<'a> {
+    fn new(formation: Formation<'a>) -> Self {
+        let formation_dps = formation.total_dps();
+        FormationSearch {
+            formation,
+            highest_dps_seen: formation_dps,
+            tried_placements: Default::default(),
+        }
+    }
+
+    fn best_formation(&self) -> &Formation<'a> {
         self.tried_placements
             .values()
             .find(|p| p.highest_dps_seen() == self.highest_dps_seen())
@@ -43,15 +61,15 @@ impl<'a> BestFormationSearch<'a> {
             .unwrap_or(&self.formation)
     }
 
-    pub fn highest_dps_seen(&self) -> Dps {
+    fn highest_dps_seen(&self) -> Dps {
         self.highest_dps_seen
     }
 
-    fn calculate_single_formation(&mut self) {
-        if let Some((position, crusader)) = self.random_placement() {
+    fn calculate_single_formation(&mut self, crusaders: &'a [Crusader]) {
+        if let Some((position, crusader)) = self.random_placement(crusaders) {
             let search_dps = {
                 let placement_search = self.search_after_placement(position, crusader);
-                placement_search.calculate_single_formation();
+                placement_search.calculate_single_formation(crusaders);
                 placement_search.highest_dps_seen()
             };
             if search_dps > self.highest_dps_seen() {
@@ -66,38 +84,34 @@ impl<'a> BestFormationSearch<'a> {
         crusader: &'a Crusader,
     ) -> &mut Self {
         let formation = &self.formation;
-        let crusaders = self.crusaders;
 
         self.tried_placements
             .entry((position, crusader))
             .or_insert_with(|| {
                 let mut new_formation = formation.clone();
                 new_formation.place_crusader(position, crusader);
-                BestFormationSearch::new(
-                    crusaders,
-                    new_formation,
-                )
+                FormationSearch::new(new_formation)
             })
     }
 
-    fn valid_placements<'b>(&'b self) -> impl Iterator<Item=(usize, &'a Crusader)> + 'b {
-        self.valid_positions().cartesian_product(self.valid_crusaders())
+    fn valid_placements<'b>(&'b self, crusaders: &'a [Crusader]) -> impl Iterator<Item=(usize, &'a Crusader)> + 'b {
+        self.valid_positions().cartesian_product(self.valid_crusaders(crusaders))
     }
 
-    fn random_placement(&self) -> Option<(usize, &'a Crusader)> {
+    fn random_placement(&self, crusaders: &'a [Crusader]) -> Option<(usize, &'a Crusader)> {
         let mut rng = thread_rng();
         let num_placements = self.valid_positions().count()
-            * self.valid_crusaders().count();
-        self.valid_placements().nth(rng.gen_range(0, max(1, num_placements)))
+            * self.valid_crusaders(crusaders).count();
+        self.valid_placements(crusaders).nth(rng.gen_range(0, max(1, num_placements)))
     }
 
     fn valid_positions<'b>(&'b self) -> impl Iterator<Item=usize> + 'b {
         self.formation.empty_positions()
     }
 
-    fn valid_crusaders(&self) -> impl Iterator<Item=&'a Crusader> + Clone {
+    fn valid_crusaders(&self, crusaders: &'a [Crusader]) -> impl Iterator<Item=&'a Crusader> + Clone {
         UnusedSlots {
-            crusaders: self.crusaders.iter(),
+            crusaders: crusaders.iter(),
             used_slots: self.formation.used_slots(),
         }
     }
@@ -124,23 +138,23 @@ impl<'a, T: Iterator<Item=&'a Crusader>> Iterator for UnusedSlots<T> {
 
 #[test]
 fn no_valid_placements_when_no_crusaders() {
-    let search = BestFormationSearch::new(&[], test_formation());
-    assert_eq!(0, search.valid_placements().count());
+    let search = FormationSearch::new(test_formation());
+    assert_eq!(0, search.valid_placements(&[]).count());
 }
 
 #[test]
 fn no_valid_placements_when_no_empty_slots() {
     let crusaders = test_crusaders();
     let formation = Formation::empty(vec![]);
-    let search = BestFormationSearch::new(&crusaders, formation);
-    assert_eq!(0, search.valid_placements().count());
+    let search = FormationSearch::new(formation);
+    assert_eq!(0, search.valid_placements(&crusaders).count());
 }
 
 #[test]
 fn valid_placements_is_product_of_positions_and_crusaders() {
     let crusaders = test_crusaders();
     let formation = test_formation();
-    let search = BestFormationSearch::new(&crusaders, formation);
+    let search = FormationSearch::new(formation);
     let expected = vec![
         (0, &crusaders[0]),
         (0, &crusaders[1]),
@@ -149,7 +163,7 @@ fn valid_placements_is_product_of_positions_and_crusaders() {
         (1, &crusaders[1]),
         (1, &crusaders[2]),
     ];
-    let actual = search.valid_placements().collect::<Vec<_>>();
+    let actual = search.valid_placements(&crusaders).collect::<Vec<_>>();
     assert_eq!(actual, expected);
 }
 
@@ -158,12 +172,12 @@ fn valid_placements_excludes_placed_crusaders() {
     let crusaders = test_crusaders();
     let mut formation = test_formation();
     formation.place_crusader(0, &crusaders[2]);
-    let search = BestFormationSearch::new(&crusaders, formation);
+    let search = FormationSearch::new(formation);
     let expected = vec![
         (1, &crusaders[0]),
         (1, &crusaders[1]),
     ];
-    let actual = search.valid_placements().collect::<Vec<_>>();
+    let actual = search.valid_placements(&crusaders).collect::<Vec<_>>();
     assert_eq!(actual, expected);
 }
 
@@ -172,17 +186,17 @@ fn valid_placements_excludes_placed_slots() {
     let crusaders = test_crusaders();
     let mut formation = test_formation();
     formation.place_crusader(1, &crusaders[0]);
-    let search = BestFormationSearch::new(&crusaders, formation);
+    let search = FormationSearch::new(formation);
     let expected = vec![(0, &crusaders[2])];
-    let actual = search.valid_placements().collect::<Vec<_>>();
+    let actual = search.valid_placements(&crusaders).collect::<Vec<_>>();
     assert_eq!(actual, expected);
 }
 
 #[test]
 fn test_calculate_formation_changes_best_placement_seen() {
     let crusaders = test_crusaders();
-    let mut search = BestFormationSearch::new(&crusaders, test_formation());
-    search.calculate_single_formation();
+    let mut search = FormationSearch::new(test_formation());
+    search.calculate_single_formation(&crusaders);
     assert_ne!(search.highest_dps_seen, search.formation.total_dps());
 }
 
@@ -235,8 +249,8 @@ mod benchmarks {
         ];
         let formation = Formation::empty(positions);
         let crusaders = create_user_data().unlocked_crusaders();
-        let search = BestFormationSearch::new(&crusaders, formation);
-        b.iter(|| search.random_placement())
+        let search = FormationSearch::new(formation);
+        b.iter(|| search.random_placement(&crusaders))
     }
 
     #[bench]
