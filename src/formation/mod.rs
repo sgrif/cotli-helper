@@ -7,13 +7,15 @@ use dps::*;
 
 #[derive(Debug, Clone)]
 pub struct Formation<'a> {
-    positions: Vec<FormationPosition<'a>>,
+    positions: Box<[FormationPosition<'a>]>,
     used_slots: Slot,
 }
 
 impl<'a> Formation<'a> {
     pub fn empty<I: IntoIterator<Item=Coordinate>>(positions: I) -> Self {
-        let positions = positions.into_iter().map(FormationPosition::empty).collect();
+        let positions = positions.into_iter().map(FormationPosition::empty)
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
         Formation {
             positions,
             used_slots: Slot::empty(),
