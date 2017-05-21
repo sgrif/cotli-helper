@@ -13,7 +13,7 @@ use formation::*;
 pub struct BestFormationSearch<'a> {
     crusaders: &'a [Crusader],
     formation: Formation<'a>,
-    best_seen_placement: (Dps, Option<(usize, &'a Crusader)>),
+    highest_dps_seen: Dps,
     tried_placements: OrderMap<(usize, &'a Crusader), BestFormationSearch<'a>>,
 }
 
@@ -23,7 +23,7 @@ impl<'a> BestFormationSearch<'a> {
         BestFormationSearch {
             crusaders,
             formation,
-            best_seen_placement: (formation_dps, None),
+            highest_dps_seen: formation_dps,
             tried_placements: Default::default(),
         }
     }
@@ -36,14 +36,15 @@ impl<'a> BestFormationSearch<'a> {
     }
 
     pub fn best_formation(&self) -> &Formation<'a> {
-        self.best_seen_placement.1
-            .and_then(|placement| {
-                self.tried_placements.get(&placement).map(Self::best_formation)
-            }).unwrap_or(&self.formation)
+        self.tried_placements
+            .values()
+            .find(|p| p.highest_dps_seen() == self.highest_dps_seen())
+            .map(Self::best_formation)
+            .unwrap_or(&self.formation)
     }
 
     pub fn highest_dps_seen(&self) -> Dps {
-        self.best_seen_placement.0
+        self.highest_dps_seen
     }
 
     fn calculate_single_formation(&mut self) {
@@ -54,7 +55,7 @@ impl<'a> BestFormationSearch<'a> {
                 placement_search.highest_dps_seen()
             };
             if search_dps > self.highest_dps_seen() {
-                self.best_seen_placement = (search_dps, Some((position, crusader)));
+                self.highest_dps_seen = search_dps;
             }
         }
     }
@@ -182,7 +183,7 @@ fn test_calculate_formation_changes_best_placement_seen() {
     let crusaders = test_crusaders();
     let mut search = BestFormationSearch::new(&crusaders, test_formation());
     search.calculate_single_formation();
-    assert!(search.best_seen_placement.1.is_some());
+    assert_ne!(search.highest_dps_seen, search.formation.total_dps());
 }
 
 #[test]
