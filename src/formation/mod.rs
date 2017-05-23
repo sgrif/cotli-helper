@@ -45,11 +45,13 @@ impl<'a> Formation<'a> {
         self.used_slots
     }
 
-    pub fn placements<'b>(&'b self)
-        -> impl Iterator<Item=(Coordinate, Option<&'a Crusader>)> + 'b
-    {
-        self.positions.iter()
-            .map(|pos| (pos.coordinate, pos.crusader))
+    pub fn print(&self) {
+        println!("Total DPS: {}", self.total_dps());
+        for pos in self.positions.iter() {
+            let coord = pos.coordinate;
+            let crusader = pos.crusader;
+            println!("({}, {}): {:?}", coord.x, coord.y, crusader.map(|c| c.name));
+        }
     }
 
     fn crusaders<'b>(&'b self) -> impl Iterator<Item=&'a Crusader> + 'b {
@@ -58,9 +60,9 @@ impl<'a> Formation<'a> {
 }
 
 #[derive(Debug, Clone)]
-pub struct FormationPosition<'a> {
-    pub coordinate: Coordinate,
-    pub crusader: Option<&'a Crusader>,
+struct FormationPosition<'a> {
+    coordinate: Coordinate,
+    crusader: Option<&'a Crusader>,
 }
 
 impl<'a> FormationPosition<'a> {

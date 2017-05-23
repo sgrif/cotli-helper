@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Sean Griffin <sean@seantheprogrammer.com>"]
 
 [dependencies]
-itertools = "0.6.0"
 bitflags = "0.8.2"
-rand = "0.3.15"
+itertools = "0.6.0"
 ordermap = "0.2.10"
+rand = "0.3.15"

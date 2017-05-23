@@ -1,7 +1,8 @@
+use std::fmt;
 use std::iter::Sum;
 use std::ops::{Mul, Add};
 
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Default)]
 pub struct Dps(pub f64);
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Level(pub u16);
@@ -28,6 +29,19 @@ impl Sum for Dps {
         I: Iterator<Item=Self>,
     {
         iter.fold(Dps(0.0), |total, dps| total + dps)
+    }
+}
+
+impl fmt::Display for Dps {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let s = self.0.trunc().to_string();
+        if s.len() <= 3 {
+            write!(f, "{}", s)
+        } else {
+            let scale = self.0.log10().trunc() as i32;
+            let x = (self.0 / 10f64.powi(scale - 2)).floor();
+            write!(f, "{:.2}e{}", x / 100.0, scale)
+        }
     }
 }
 

@@ -4,17 +4,18 @@
 
 #[macro_use] extern crate bitflags;
 extern crate itertools;
+extern crate ordermap;
 extern crate rand;
 
-pub mod best_formation_search;
 pub mod crusader;
 pub mod dps;
 pub mod formation;
+pub mod formation_search;
 pub mod gear;
 pub mod talent;
 pub mod user_data;
 
-use best_formation_search::*;
+use formation_search::*;
 use crusader::*;
 use dps::*;
 use formation::*;
@@ -37,11 +38,9 @@ fn main() {
     ];
     let formation = Formation::empty(positions);
     let crusaders = create_user_data().unlocked_crusaders();
-    let mut search = BestFormationSearch::new(&crusaders, formation);
-    search.calculate_best_formation(::std::time::Duration::from_secs(5));
-    for (coord, crusader) in search.best_formation().placements() {
-        println!("({}, {}): {:?}", coord.x, coord.y, crusader.map(|c| c.name));
-    }
+    let mut search = FormationSearch::new(formation, &crusaders);
+    search.perform_search(::std::time::Duration::from_secs(5));
+    search.formation().print();
 }
 
 fn create_user_data() -> UserData {
