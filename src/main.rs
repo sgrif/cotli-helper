@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-#![cfg_attr(test, feature(test))]
+#![cfg_attr(bench, feature(test))]
 #![feature(conservative_impl_trait)]
 
 #[macro_use] extern crate bitflags;
