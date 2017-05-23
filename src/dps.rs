@@ -7,6 +7,16 @@ pub struct Dps(pub f64);
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Level(pub u16);
 
+impl Dps {
+    pub fn percent_increase(self, percent: f64) -> Self {
+        if percent == 0.0 {
+            return self
+        }
+
+        Dps(self.0 * (1.0 + percent / 100.0))
+    }
+}
+
 impl Mul<Level> for Dps {
     type Output = Dps;
 

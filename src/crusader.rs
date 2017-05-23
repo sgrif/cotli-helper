@@ -1,5 +1,7 @@
 use std::cmp::Ordering;
 
+use aura::*;
+use aura::Target::*;
 use dps::*;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -347,11 +349,159 @@ impl CrusaderName {
             // IlsaTheInsaneWizard |
         }
     }
+
+    pub fn tags(&self) -> Tags {
+        use self::CrusaderName::*;
+        match *self {
+            // Slot 1
+            // TheBushWhacker => MALE | HUMAN | CLICKER,
+            // RoboRabbit => MALE | EVENT | ROBOT | SUPPORT | CLICKER,
+            // GrahamTheDriver => MALE | HUMAN | DPS | SUPPORT | CLICKER,
+            // WarwickTheWarlock => MALE | MAGICAL | EVENT | LEPRECHAUN | CLICKER,
+
+            // Slot 2
+            JimTheLumberjack => MALE | HUMAN | DPS | SUPPORT,
+            // PilotPam => FEMALE | HUMAN | EVENT | DPS | SUPPORT,
+            VeronicaTheAndroidArcher => FEMALE | EVENT | ROBOT | ELF | SUPPORT,
+            Arachnobuddy => MALE | HUMAN | EVENT | SUPPORT,
+
+            // Slot 3
+            EmoWerewolf => MALE | ANIMAL | SUPERNATURAL | DPS,
+            SallyTheSuccubus => FEMALE | SUPERNATURAL | EVENT | DEMON | DPS,
+            // KarenTheCatTeenager => FEMALE | ANIMAL | SUPERNATURAL | EVENT | DPS,
+
+            // Slot 4
+            SashaTheFierceWarrior => FEMALE | HUMAN | SUPPORT,
+            GroklokTheOrc => MALE | EVENT | ORC | TANK | DPS | SUPPORT,
+            // MindyTheMime => FEMALE | HUMAN | SUPERNATURAL | EVENT | DPS | SUPPORT,
+
+            // Slot 5
+            TheWashedUpHermit => MALE | HUMAN | DPS,
+            KyleThePartyBro => MALE | HUMAN | EVENT | DPS,
+            // SerpentKingDraco => MALE | ANIMAL | ROYAL | EVENT | DPS,
+            // HenryTheScaredyGhoul => MALE | SUPERNATURAL | EVENT | DPS,
+            Grandmora => FEMALE | EVENT | SUPPORT | ALIEN,
+
+            // Slot 6
+            DetectiveKaine => MALE | HUMAN | GOLD_FINDER,
+            // MisterTheMonkey => MALE | ANIMAL | EVENT | GOLD_FINDER,
+            LarryTheLeprechaun => MALE | MAGICAL | EVENT | LEPRECHAUN | SUPPORT | GOLD_FINDER,
+            // BernardTheBartender => MALE | HUMAN | EVENT | SUPPORT | GOLD_FINDER,
+
+            // Slot 7
+            ThePrincess => FEMALE | HUMAN | ROYAL | SUPPORT,
+            // RoboTurkey => MALE | EVENT | ROBOT | SUPPORT,
+            // RangerRayna => FEMALE | HUMAN | EVENT | DPS | HEALER,
+            BaenarallAngelOfHope => FEMALE | SUPERNATURAL | EVENT | ANGEL | SUPPORT,
+
+            // Slot 8
+            NatalieDragon => FEMALE | HUMAN | DPS | GOLD_FINDER,
+            // JackOLantern => MALE | ANIMAL | SUPERNATURAL | EVENT | TANK | GOLD_FINDER,
+            PresidentBillySmithsonian => MALE | HUMAN | EVENT | SUPPORT | GOLD_FINDER,
+            // KarlTheKicker => MALE | HUMAN | EVENT | SUPPORT | GOLD_FINDER,
+
+            // Slot 9
+            JasonMasterOfShadows => MALE | HUMAN | DPS | GOLD_FINDER,
+            // PeteTheCarney => MALE | HUMAN | EVENT | SUPPORT | GOLD_FINDER,
+            Broot => MALE | FEMALE | SUPERNATURAL | EVENT | TANK | SUPPORT | GOLD_FINDER,
+            // PaulThePilgrim => MALE | EVENT | ELF | TANK | SUPPORT | GOLD_FINDER,
+
+            // Slot 10
+            ArtaxesTheLion => MALE | ANIMAL | SUPERNATURAL | SUPPORT,
+            DrizzleTheDarkElf => FEMALE | EVENT | ELF | SUPPORT,
+            // BubbaTheSwimmingOrc => MALE | EVENT | ORC | SUPPORT | GOLD_FINDER,
+            SisaronTheDragonSorceress => FEMALE | ANIMAL | MAGICAL | EVENT | SUPPORT | DRAGON,
+
+            // Slot 11
+            // KhouriTheWitchDoctor => MALE | HUMAN | MAGICAL | SUPPORT | HEALER,
+            // MommaKaine => FEMALE | HUMAN | EVENT | SUPPORT | HEALER,
+            // BrogonPrinceOfDragons => MALE | ANIMAL | ROYAL | EVENT | SUPPORT | HEALER | DRAGON,
+            // TheHalfBloodElf => FEMALE | EVENT | ORC | ELF | SUPPORT | HEALER,
+            // Foresight => SUPERNATURAL | EVENT | ROBOT | SUPPORT | HEALER,
+
+            // Slot 12
+            // DarkGryphon => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
+            // RockyTheRockstar => MALE | HUMAN | EVENT | DPS,
+            // MontanaJames => MALE | HUMAN | EVENT | SUPPORT,
+            // TheDarkHelper => FEMALE | EVENT | ELF | SUPPORT | GOLD_FINDER,
+
+            // Slot 13
+            // SarahTheCollector => FEMALE | HUMAN | DPS,
+            // TheMetalSoldierette => FEMALE | HUMAN | EVENT | ROBOT | TANK | DPS,
+            // SnicketteTheSneaky => FEMALE | SUPERNATURAL | EVENT | LEPRECHAUN | SUPPORT,
+
+            // Slot 14
+            // GoldPanda => FEMALE | ANIMAL | SUPERNATURAL | GOLD_FINDER,
+            // RoboSanta => MALE | EVENT | ROBOT | GOLD_FINDER,
+            // LeerionTheRoyalDwarf => MALE | HUMAN | ROYAL | EVENT | GOLD_FINDER | DWARF,
+            // KatieTheCupid => FEMALE | SUPERNATURAL | EVENT | SUPPORT | GOLD_FINDER,
+
+            // Slot 15
+            // PrinceSalTheMerman => MALE | ANIMAL | ROYAL | DPS,
+            // WendyTheWitch => FEMALE | HUMAN | MAGICAL | EVENT | DPS,
+            // RobbieRaccoon => MALE | ANIMAL | EVENT | DPS | SUPPORT,
+            // PrincessValTheMermaid => FEMALE | ANIMAL | ROYAL | EVENT | SUPPORT | HEALER,
+
+            // Slot 16
+            // FirePhoenix => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
+            // AlanTheArchAngel => MALE | SUPERNATURAL | EVENT | ANGEL | SUPPORT,
+            // FrightOTron4000 => FEMALE | EVENT | ROBOT | SUPPORT,
+            // Spaceking => MALE | HUMAN | ROYAL | EVENT | DPS,
+
+            // Slot 17
+            // KingReginaldIV => MALE | HUMAN | ROYAL | SUPPORT,
+            // QueenSiri => FEMALE | HUMAN | ROYAL | EVENT | SUPPORT | GOLD_FINDER,
+            // MrBogginsTheSubstitute => MALE | EVENT | LEPRECHAUN | SUPPORT | GOLD_FINDER,
+            // SquigglesTheClown => MALE | HUMAN | EVENT | DPS,
+
+            // Slot 18
+            // ThaliaTheThunderKing => MALE | HUMAN | ROYAL | MAGICAL | TANK | SUPPORT,
+            // FrostyTheSnowman => MALE | ANIMAL | SUPERNATURAL | EVENT | DPS,
+            // Littlefoot => FEMALE | ANIMAL | SUPERNATURAL | EVENT | TANK | SUPPORT,
+            // CindyTheCheerOrc => FEMALE | EVENT | ORC | SUPPORT,
+
+            // Slot 19
+            // MerciTheMadWizard => MALE | HUMAN | MAGICAL | SUPPORT,
+            // TheBatBillionaire => MALE | HUMAN | EVENT | SUPPORT,
+            // PetraThePilgrim => FEMALE | EVENT | ELF | DPS,
+
+            // Slot 20
+            // NateDragon => MALE | HUMAN | DPS | SUPPORT,
+            // KizlblypTheAlienTraitor => FEMALE | MAGICAL | EVENT | DPS | SUPPORT | ALIEN,
+            // RoboRudolph => MALE | EVENT | ROBOT | DPS,
+
+            // Slot 21
+            // TheExterminator => MALE | ROBOT | DPS | GOLD_FINDER,
+            // GloriaTheGoodWitch => FEMALE | ANIMAL | MAGICAL | SUPPORT | HEALER,
+
+            // Slot 22
+            // TheShadowQueen => FEMALE | HUMAN | ROYAL | SUPERNATURAL | SUPPORT,
+            // IlsaTheInsaneWizard => FEMALE | HUMAN | MAGICAL | DPS,
+        }
+    }
+
+    fn dps_auras(&self) -> Vec<Aura> {
+        use self::CrusaderName::*;
+        match *self {
+            SallyTheSuccubus => vec![
+                Aura::dps_increase(100.0).for_crusader(*self),
+                Aura::dps_increase(100.0).for_crusader(*self),
+                Aura::dps_increase(300.0).for_crusader(*self)
+                    .minus(Aura::dps_global(25.0).times(
+                        WithTag(FEMALE).and(AdjacentTo(*self))
+                    )),
+                Aura::dps_increase(100.0).for_crusader(*self),
+                Aura::dps_increase(100.0).for_crusader(*self),
+                Aura::dps_increase(25.0).affecting(WithTag(FEMALE))
+            ],
+            _ => vec![],
+        }
+    }
 }
 
-#[derive(Debug, Clone)]
 pub struct Crusader {
     pub name: CrusaderName,
+    dps_auras: Vec<Aura>,
     base_dps: Dps,
     level: Level,
 }
@@ -383,12 +533,20 @@ impl Hash for Crusader {
     }
 }
 
+use std::fmt;
+impl fmt::Debug for Crusader {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.name.fmt(f)
+    }
+}
+
 impl Crusader {
     pub fn new(name: CrusaderName, level: Level) -> Self {
         Crusader {
             name,
             base_dps: Dps(name.base_dps()),
             level,
+            dps_auras: name.dps_auras(),
         }
     }
 
@@ -398,6 +556,10 @@ impl Crusader {
 
     pub fn slot(&self) -> Slot {
         self.name.slot()
+    }
+
+    pub fn dps_auras(&self) -> &[Aura] {
+        &self.dps_auras
     }
 }
 
@@ -425,5 +587,33 @@ bitflags! {
         const SLOT_20  = 1 << 19,
         const SLOT_21  = 1 << 20,
         const SLOT_22  = 1 << 21,
+    }
+}
+
+bitflags! {
+    pub flags Tags: u32 {
+        const MALE            = 0b000000000000000000000000000000001,
+        const FEMALE          = 0b000000000000000000000000000000010,
+        const HUMAN           = 0b000000000000000000000000000000100,
+        const ANIMAL          = 0b000000000000000000000000000001000,
+        const ROYAL           = 0b000000000000000000000000000010000,
+        const MAGICAL         = 0b000000000000000000000000000100000,
+        const SUPERNATURAL    = 0b000000000000000000000000001000000,
+        const EVENT           = 0b000000000000000000000000010000000,
+        const ROBOT           = 0b000000000000000000000000100000000,
+        const ORC             = 0b000000000000000000000001000000000,
+        const ELF             = 0b000000000000000000000010000000000,
+        const LEPRECHAUN      = 0b000000000000000000000100000000000,
+        const DEMON           = 0b000000000000000000001000000000000,
+        const ANGEL           = 0b000000000000000000010000000000000,
+        const TANK            = 0b000000000000000000100000000000000,
+        const DPS             = 0b000000000000000001000000000000000,
+        const SUPPORT         = 0b000000000000000010000000000000000,
+        const HEALER          = 0b000000000000000100000000000000000,
+        const GOLD_FINDER     = 0b000000000000001000000000000000000,
+        const CLICKER         = 0b000000000000010000000000000000000,
+        const DWARF           = 0b000000000000100000000000000000000,
+        const DRAGON          = 0b000000000001000000000000000000000,
+        const ALIEN           = 0b000000000010000000000000000000000,
     }
 }

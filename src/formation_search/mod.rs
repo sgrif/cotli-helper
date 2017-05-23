@@ -46,7 +46,6 @@ impl<'a> FormationSearch<'a> {
                 }).nth(0); // FIXME: If multiple options have same, take most searched
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
-                self.state.formation.print();
                 self.search_root = child;
             } else {
                 break;

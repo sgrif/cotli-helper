@@ -2,6 +2,7 @@ mod coordinate;
 
 pub use self::coordinate::Coordinate;
 
+use aura::Aura;
 use crusader::*;
 use dps::*;
 
@@ -29,9 +30,9 @@ impl<'a> Formation<'a> {
     }
 
     pub fn total_dps(&self) -> Dps {
-        self.crusaders().map(|c| {
-            c.base_dps()
-        }).sum()
+        self.positions.iter()
+            .map(|p| p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras)))
+            .sum()
     }
 
     pub fn empty_positions<'b>(&'b self) -> impl Iterator<Item=usize> + 'b {
@@ -45,6 +46,12 @@ impl<'a> Formation<'a> {
         self.used_slots
     }
 
+    pub fn position_of(&self, crusader: CrusaderName) -> Option<&Coordinate> {
+        self.positions.iter()
+            .find(|p| p.crusader.as_ref().map(|c| c.name) == Some(crusader))
+            .map(|p| &p.coordinate)
+    }
+
     pub fn print(&self) {
         println!("Total DPS: {}", self.total_dps());
         for pos in self.positions.iter() {
@@ -54,7 +61,7 @@ impl<'a> Formation<'a> {
         }
     }
 
-    fn crusaders<'b>(&'b self) -> impl Iterator<Item=&'a Crusader> + 'b {
+    pub fn crusaders<'b>(&'b self) -> impl Iterator<Item=&'a Crusader> + 'b {
         self.positions.iter().filter_map(|p| p.crusader)
     }
 }
@@ -71,5 +78,21 @@ impl<'a> FormationPosition<'a> {
             coordinate,
             crusader: None,
         }
+    }
+
+    fn total_dps<I>(&self, formation: &Formation<'a>, auras: I) -> Dps where
+        I: IntoIterator<Item=&'a Aura>,
+    {
+        let crusader = match self.crusader {
+            Some(crusader) => crusader,
+            None => return Dps(0.0),
+        };
+        auras.into_iter()
+            .fold(crusader.base_dps(), |dps, aura| {
+                dps.percent_increase(aura.amount_for_crusader(
+                    crusader.name,
+                    formation,
+                ))
+            })
     }
 }
