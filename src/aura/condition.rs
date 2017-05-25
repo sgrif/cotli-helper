@@ -2,6 +2,7 @@ use super::*;
 
 pub enum Condition {
     Gt(Target, usize),
+    Lt(Target, usize),
 }
 
 impl Condition {
@@ -9,6 +10,7 @@ impl Condition {
         use self::Condition::*;
         match *self {
             Gt(ref target, amount) => target.count_in_formation(formation) > amount,
+            Lt(ref target, amount) => target.count_in_formation(formation) < amount,
         }
     }
 }

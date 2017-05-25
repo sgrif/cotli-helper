@@ -4,4 +4,5 @@ mod veronica_the_android_archer;
 mod arachnobuddy;
 
 // Slot 3
+mod emo_werewolf;
 mod sally_the_succubus;

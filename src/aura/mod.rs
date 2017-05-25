@@ -41,6 +41,10 @@ impl Aura {
         self.when(Condition::Gt(target, 0))
     }
 
+    pub fn when_none(self, target: Target) -> Self {
+        self.when(Condition::Lt(target, 1))
+    }
+
     fn when(self, condition: Condition) -> Self {
         Aura { condition: Some(condition), ..self }
     }

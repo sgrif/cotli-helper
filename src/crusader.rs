@@ -536,7 +536,15 @@ impl CrusaderName {
             ],
 
             // Slot 3
-            EmoWerewolf => vec![],
+            EmoWerewolf => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Sad Story
+                Aura::dps_increase(200.0).for_crusader(*self) // Lone Wolf
+                    .when_none(WithTag(HUMAN).and(AdjacentTo(*self))),
+                Aura::dps_increase(100.0).for_crusader(*self), // Fashion Sense
+                Aura::dps_increase(100.0).for_crusader(*self), // Teenage Agnst
+                Aura::dps_increase(150.0).for_crusader(*self), // Parental Shame
+                // FIXME: Whimper at the Moon
+            ],
             SallyTheSuccubus => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Enchantress
                 Aura::dps_increase(100.0).for_crusader(*self), // Charm
