@@ -1,8 +1,10 @@
+use std::cmp::min;
 use std::ops;
 
 use crusader::*;
 use formation::*;
 
+#[derive(Clone)]
 pub enum Target {
     AdjacentTo(CrusaderName),
     AllCrusaders,
@@ -11,6 +13,7 @@ pub enum Target {
     InColumnAhead(CrusaderName),
     InColumnBehind(CrusaderName),
     InSameColumn(CrusaderName),
+    Min(Box<Target>, usize),
     Not(Box<Target>),
     Or(Box<Target>, Box<Target>),
     SpecificCrusader(CrusaderName),
@@ -24,6 +27,10 @@ impl Target {
 
     pub fn or(self, other: Target) -> Self {
         Target::Or(Box::new(self), Box::new(other))
+    }
+
+    pub fn min(self, count: usize) -> Self {
+        Target::Min(Box::new(self), count)
     }
 
     pub fn matches(
@@ -56,6 +63,7 @@ impl Target {
             InSameColumn(source) =>
                 formation.position_of(crusader).map(|c| c.x) ==
                     formation.position_of(source).map(|c| c.x),
+            Min(ref t1, _) => t1.matches(crusader, formation),
             Not(ref t1) => !t1.matches(crusader, formation),
             Or(ref t1, ref t2) => t1.matches(crusader, formation) ||
                 t2.matches(crusader, formation),
@@ -65,12 +73,13 @@ impl Target {
     }
 
     pub fn count_in_formation(&self, formation: &Formation) -> usize {
-        if let Target::EmptySlot = *self {
-            formation.empty_positions().count()
-        } else {
-            formation.crusaders()
+        use self::Target::*;
+        match *self {
+            EmptySlot => formation.empty_positions().count(),
+            Min(ref t1, count) => min(t1.count_in_formation(formation), count),
+            _ => formation.crusaders()
                 .filter(|c| self.matches(c.name, formation))
-                .count()
+                .count(),
         }
     }
 }

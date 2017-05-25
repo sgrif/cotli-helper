@@ -41,6 +41,11 @@ impl Aura {
         self.with_modifier(Modifier::DividedBy(target))
     }
 
+    pub fn randomly_affecting(self, count: usize) -> Self {
+        let target = self.target.clone();
+        self.with_modifier(Modifier::RandomlyAffecting(count, target))
+    }
+
     pub fn when_exists(self, target: Target) -> Self {
         self.when(Condition::Gt(target, 0))
     }

@@ -13,3 +13,4 @@ mod groklok_the_orc;
 
 // Slot 5
 mod washed_up_hermit;
+mod kyle_the_party_bro;

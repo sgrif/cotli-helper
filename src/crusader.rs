@@ -588,7 +588,19 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Dark Warstories
                 // FIXME: Arrow Attack
             ],
-            KyleThePartyBro => vec![],
+            KyleThePartyBro => vec![
+                Aura::dps_increase(25.0).affecting(AdjacentTo(*self)) // Get Smashed
+                    .randomly_affecting(3),
+                Aura::dps_increase(50.0).for_crusader(*self) // Mosh Pit
+                    .times(AdjacentTo(*self).min(3)),
+                Aura::dps_increase(100.0).for_crusader(*self) // Party Animal
+                    .when_exists(AdjacentTo(*self).and(WithTag(ANIMAL))),
+                Aura::dps_increase(100.0).for_crusader(*self) // Lady's Man
+                    .when_exists(AdjacentTo(*self).and(WithTag(FEMALE))),
+                Aura::dps_increase(100.0).for_crusader(*self) // Get Lucky
+                    .when_exists(AdjacentTo(*self).and(WithTag(LEPRECHAUN))),
+                Aura::dps_global(20.0), // Hangover Cure
+            ],
             // SerpentKingDraco => vec![],
             // HenryTheScaredyGhoul => vec![],
             Grandmora => vec![],
