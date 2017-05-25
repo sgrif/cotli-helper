@@ -51,10 +51,10 @@ impl UserData {
         self
     }
 
-    pub fn unlocked_crusaders(&self) -> Vec<Crusader> {
+    pub fn unlocked_crusaders(&self, gold: Option<f64>) -> Vec<Crusader> {
         self.crusader_data.unlocked_crusaders()
             .cloned()
-            .map(|name| Crusader::new(name, self.talents.max_level()))
+            .map(|name| Crusader::new(name, self.talents.max_level(), gold))
             .collect()
     }
 

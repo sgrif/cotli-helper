@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::cmp::{Ordering, min};
 
 use aura::*;
 use aura::Target::*;
@@ -746,6 +746,142 @@ impl CrusaderName {
             // IlsaTheInsaneWizard => vec![],
         }
     }
+
+    fn level_at_cost(&self, cost: f64) -> Level {
+        use self::CrusaderName::*;
+        let base_cost = match *self {
+            // Testing only
+            #[cfg(any(test, debug_assertions))]
+            Dummy(..) => 0.0,
+
+            // Slot 1
+            // TheBushWhacker |
+            // RoboRabbit |
+            // GrahamTheDriver |
+            // WarwickTheWarlock |
+
+            // Slot 2
+            JimTheLumberjack |
+            // PilotPam |
+            VeronicaTheAndroidArcher |
+            Arachnobuddy => 50.0,
+
+            // Slot 3
+            EmoWerewolf |
+            SallyTheSuccubus => 250.0,
+            // KarenTheCatTeenager |
+
+            // Slot 4
+            SashaTheFierceWarrior |
+            GroklokTheOrc => 1000.0,
+            // MindyTheMime |
+
+            // Slot 5
+            TheWashedUpHermit |
+            KyleThePartyBro |
+            // SerpentKingDraco |
+            // HenryTheScaredyGhoul |
+            Grandmora => 10_000.0,
+
+            // Slot 6
+            DetectiveKaine |
+            // MisterTheMonkey |
+            LarryTheLeprechaun => 25_000.0,
+            // BernardTheBartender |
+
+            // Slot 7
+            ThePrincess |
+            // RoboTurkey |
+            // RangerRayna |
+            BaenarallAngelOfHope => 100_000.0,
+
+            // Slot 8
+            NatalieDragon |
+            // JackOLantern |
+            PresidentBillySmithsonian => 600_000.0,
+            // KarlTheKicker |
+
+            // Slot 9
+            JasonMasterOfShadows |
+            // PeteTheCarney |
+            Broot => 2.5e6,
+            // PaulThePilgrim |
+
+            // Slot 10
+            ArtaxesTheLion |
+            DrizzleTheDarkElf |
+            // BubbaTheSwimmingOrc |
+            SisaronTheDragonSorceress => 1.5e7,
+
+            // Slot 11
+            // KhouriTheWitchDoctor => 0.0,
+            // MommaKaine |
+            // BrogonPrinceOfDragons |
+            // TheHalfBloodElf |
+            // Foresight |
+
+            // Slot 12
+            // DarkGryphon |
+            // RockyTheRockstar |
+            // MontanaJames |
+            // TheDarkHelper |
+
+            // Slot 13
+            // SarahTheCollector |
+            // TheMetalSoldierette |
+            // SnicketteTheSneaky |
+
+            // Slot 14
+            // GoldPanda |
+            // RoboSanta |
+            // LeerionTheRoyalDwarf |
+            // KatieTheCupid |
+
+            // Slot 15
+            // PrinceSalTheMerman |
+            // WendyTheWitch |
+            // RobbieRaccoon |
+            // PrincessValTheMermaid |
+
+            // Slot 16
+            // FirePhoenix |
+            // AlanTheArchAngel |
+            // FrightOTron4000 |
+            // Spaceking |
+
+            // Slot 17
+            // KingReginaldIV |
+            // QueenSiri |
+            // MrBogginsTheSubstitute |
+            // SquigglesTheClown |
+
+            // Slot 18
+            // ThaliaTheThunderKing |
+            // FrostyTheSnowman |
+            // Littlefoot |
+            // CindyTheCheerOrc |
+
+            // Slot 19
+            // MerciTheMadWizard |
+            // TheBatBillionaire |
+            // PetraThePilgrim |
+
+            // Slot 20
+            // NateDragon |
+            // KizlblypTheAlienTraitor |
+            // RoboRudolph |
+
+            // Slot 21
+            // TheExterminator |
+            // GloriaTheGoodWitch |
+
+            // Slot 22
+            // TheShadowQueen |
+            // IlsaTheInsaneWizard |
+        };
+        let lvl = ((cost * -0.07 / base_cost - 1.0) / -1.0).ln() / 1.07f64.ln();
+        Level(lvl as u16)
+    }
 }
 
 pub struct Crusader {
@@ -790,7 +926,10 @@ impl fmt::Debug for Crusader {
 }
 
 impl Crusader {
-    pub fn new(name: CrusaderName, level: Level) -> Self {
+    pub fn new(name: CrusaderName, level: Level, max_cost: Option<f64>) -> Self {
+        let level = max_cost
+            .map(|max_cost| min(level, name.level_at_cost(max_cost)))
+            .unwrap_or(level);
         Crusader {
             name,
             base_dps: Dps(name.base_dps()),
@@ -801,7 +940,7 @@ impl Crusader {
 
     #[cfg(any(test, debug_assertions))]
     pub fn dummy(tags: Tags) -> Self {
-        Crusader::new(CrusaderName::Dummy(tags), Level(1))
+        Crusader::new(CrusaderName::Dummy(tags), Level(1), None)
     }
 
     pub fn at_level(self, level: u16) -> Self {

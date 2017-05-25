@@ -19,7 +19,7 @@ fn main() {
         Coordinate::new(3, 1),
     ];
     let formation = Formation::empty(positions);
-    let crusaders = create_user_data().unlocked_crusaders();
+    let crusaders = create_user_data().unlocked_crusaders(Some(4.86e105));
     let mut search = FormationSearch::new(formation, &crusaders);
     search.perform_search(::std::time::Duration::from_secs(5));
     search.formation().print();

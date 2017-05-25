@@ -287,9 +287,9 @@ fn test_formation<'a>() -> Formation<'a> {
 #[cfg(test)]
 fn test_crusaders() -> Vec<Crusader> {
     vec![
-        Crusader::new(CrusaderName::JimTheLumberjack, Level(5000)),
-        Crusader::new(CrusaderName::VeronicaTheAndroidArcher, Level(5000)),
-        Crusader::new(CrusaderName::SallyTheSuccubus, Level(5000)),
+        Crusader::new(CrusaderName::JimTheLumberjack, Level(5000), None),
+        Crusader::new(CrusaderName::VeronicaTheAndroidArcher, Level(5000), None),
+        Crusader::new(CrusaderName::SallyTheSuccubus, Level(5000), None),
     ]
 }
 
@@ -323,7 +323,7 @@ mod benchmarks {
             Coordinate::new(3, 1),
         ];
         let formation = Formation::empty(positions);
-        let crusaders = create_user_data().unlocked_crusaders();
+        let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
         let state = State { formation, crusaders: &crusaders };
 
@@ -347,7 +347,7 @@ mod benchmarks {
             Coordinate::new(3, 1),
         ];
         let formation = Formation::empty(positions);
-        let crusaders = create_user_data().unlocked_crusaders();
+        let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
         let state = State { formation, crusaders: &crusaders };
         for _ in 0..1_000 {
