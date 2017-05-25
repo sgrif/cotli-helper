@@ -33,6 +33,15 @@ impl<'a> FormationSearch<'a> {
             while loop_start.elapsed() < max_time && !self.search_root.is_complete() {
                 self.search_root.expand(&mut self.state.clone())
             }
+            {
+                let mut children = self.search_root.children
+                    .iter()
+                    .collect::<Vec<_>>();
+                children.sort_by_key(|&(_, ref c)| c.times_checked);
+                for (placement, child) in children {
+                    println!("{:?} checked {} times", placement, child.times_checked);
+                }
+            }
             let current_dps = self.state.formation.total_dps();
             let root_dps = self.search_root.highest_dps_seen;
             let best_option = self.search_root.children
@@ -69,6 +78,7 @@ struct Node<'a> {
     highest_dps_seen: Dps,
     progress: Progress,
     children: OrderMap<Placement<'a>, Node<'a>>,
+    times_checked: u32,
 }
 
 impl<'a> Node<'a> {
@@ -77,6 +87,7 @@ impl<'a> Node<'a> {
             progress: Progress::Expandable,
             highest_dps_seen: Default::default(),
             children: Default::default(),
+            times_checked: 0,
         }
     }
 
@@ -91,12 +102,13 @@ impl<'a> Node<'a> {
                     self.children.insert(placement, child);
                 } else {
                     self.progress = Progress::FullyExpanded;
-                    self.expand(state);
+                    return self.expand(state);
                 }
             }
             Progress::FullyExpanded => self.to_best_child(state, Self::expand),
             Progress::Complete => panic!("expand called on complete node"),
         }
+        self.times_checked += 1;
     }
 
     fn best_child(&mut self) -> Option<(Placement<'a>, &mut Self)> {
@@ -110,35 +122,28 @@ impl<'a> Node<'a> {
     }
 
     fn check_single_formation(&mut self, state: &mut State<'a>) {
-        let mut search_dps = None;
         match self.progress {
             Progress::Expandable => {
                 if let Some(placement) = state.random_placement(&EmptySet) {
                     state.place(placement);
+                    let search_dps;
                     if let Some(child) = self.children.get_mut(&placement) {
                         child.check_single_formation(state);
-                        search_dps = Some(child.highest_dps_seen);
+                        search_dps = child.highest_dps_seen;
                     } else {
                         state.fill_formation_randomly();
-                        search_dps = Some(state.formation.total_dps())
+                        search_dps = state.formation.total_dps()
                     }
+                    self.maybe_assign_dps(search_dps)
+                } else {
+                    self.progress = Progress::Complete;
+                    self.maybe_assign_dps(state.formation.total_dps());
                 }
             }
-            Progress::FullyExpanded => {
-                if let Some((placement, child)) = self.best_child() {
-                    state.place(placement);
-                    child.check_single_formation(state);
-                    search_dps = Some(state.formation.total_dps());
-                }
-            }
+            Progress::FullyExpanded => self.to_best_child(state, Self::check_single_formation),
             Progress::Complete => {}
         }
-        if let Some(dps) = search_dps {
-            self.maybe_assign_dps(dps)
-        } else {
-            self.progress = Progress::Complete;
-            self.maybe_assign_dps(state.formation.total_dps());
-        }
+        self.times_checked += 1;
     }
 
     fn maybe_assign_dps(&mut self, dps: Dps) {
