@@ -70,11 +70,11 @@ pub enum CrusaderName {
     SisaronTheDragonSorceress,
 
     // Slot 11
-    // KhouriTheWitchDoctor,
+    KhouriTheWitchDoctor,
     // MommaKaine,
     // BrogonPrinceOfDragons,
     // TheHalfBloodElf,
-    // Foresight,
+    Foresight,
 
     // Slot 12
     // DarkGryphon,
@@ -181,11 +181,11 @@ impl CrusaderName {
             DrizzleTheDarkElf |
             // BubbaTheSwimmingOrc |
             SisaronTheDragonSorceress => SLOT_10,
-            // KhouriTheWitchDoctor |
+            KhouriTheWitchDoctor |
             // MommaKaine |
             // BrogonPrinceOfDragons |
             // TheHalfBloodElf |
-            // Foresight => SLOT_11,
+            Foresight => SLOT_11,
             // DarkGryphon |
             // RockyTheRockstar |
             // MontanaJames |
@@ -293,11 +293,11 @@ impl CrusaderName {
             SisaronTheDragonSorceress => 224302.8,
 
             // Slot 11
-            // KhouriTheWitchDoctor |
+            KhouriTheWitchDoctor |
             // MommaKaine |
             // BrogonPrinceOfDragons |
             // TheHalfBloodElf |
-            // Foresight |
+            Foresight => 938000.0,
 
             // Slot 12
             // DarkGryphon |
@@ -427,11 +427,11 @@ impl CrusaderName {
             SisaronTheDragonSorceress => FEMALE | ANIMAL | MAGICAL | EVENT | SUPPORT | DRAGON,
 
             // Slot 11
-            // KhouriTheWitchDoctor => MALE | HUMAN | MAGICAL | SUPPORT | HEALER,
+            KhouriTheWitchDoctor => MALE | HUMAN | MAGICAL | SUPPORT | HEALER,
             // MommaKaine => FEMALE | HUMAN | EVENT | SUPPORT | HEALER,
             // BrogonPrinceOfDragons => MALE | ANIMAL | ROYAL | EVENT | SUPPORT | HEALER | DRAGON,
             // TheHalfBloodElf => FEMALE | EVENT | ORC | ELF | SUPPORT | HEALER,
-            // Foresight => SUPERNATURAL | EVENT | ROBOT | SUPPORT | HEALER,
+            Foresight => SUPERNATURAL | EVENT | ROBOT | SUPPORT | HEALER,
 
             // Slot 12
             // DarkGryphon => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
@@ -714,11 +714,22 @@ impl CrusaderName {
             ],
 
             // Slot 11
-            // KhouriTheWitchDoctor => vec![],
+            KhouriTheWitchDoctor => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Zombie Kittens
+                Aura::dps_increase(30.0).affecting(AdjacentTo(*self)), // Koffee Potion
+                Aura::dps_increase(100.0).for_crusader(*self), // Shrunken Heads
+                Aura::dps_increase(100.0).for_crusader(*self), // Playing with Dolls
+                Aura::dps_increase(100.0).for_crusader(*self), // MLG
+            ],
             // MommaKaine => vec![],
             // BrogonPrinceOfDragons => vec![],
             // TheHalfBloodElf => vec![],
-            // Foresight => vec![],
+            Foresight => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Powering Up
+                Aura::dps_increase(150.0).for_crusader(*self), // Full Potential
+                Aura::dps_global(20.0), // Global Influence
+                Aura::dps_increase(50.0).affecting(WithTag(SUPERNATURAL)), // Supernatural
+            ],
 
             // Slot 12
             // DarkGryphon => vec![],
@@ -848,11 +859,11 @@ impl CrusaderName {
             SisaronTheDragonSorceress => 1.5e7,
 
             // Slot 11
-            // KhouriTheWitchDoctor => 0.0,
+            KhouriTheWitchDoctor |
             // MommaKaine |
             // BrogonPrinceOfDragons |
             // TheHalfBloodElf |
-            // Foresight |
+            Foresight => 1e8,
 
             // Slot 12
             // DarkGryphon |

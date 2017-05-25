@@ -121,5 +121,11 @@ pub fn create_user_data() -> UserData {
         }).add_crusader(CrusaderName::SisaronTheDragonSorceress, CrusaderData {
             enchantment_points: 158,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
+        }).add_crusader(CrusaderName::KhouriTheWitchDoctor, CrusaderData {
+            enchantment_points: 144,
+            gear: [GearQuality::Epic, GearQuality::Rare, GearQuality::Epic],
+        }).add_crusader(CrusaderName::Foresight, CrusaderData {
+            enchantment_points: 81,
+            gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
         })
 }
