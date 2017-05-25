@@ -579,7 +579,15 @@ impl CrusaderName {
             // MindyTheMime => vec![],
 
             // Slot 5
-            TheWashedUpHermit => vec![],
+            TheWashedUpHermit => vec![
+                Aura::dps_increase(200.0).for_crusader(*self) // Craziness
+                    .when_none(InColumnAhead(*self).and(AdjacentTo(*self))),
+                Aura::dps_increase(100.0).for_crusader(*self), // Friendly Fisticuff
+                Aura::dps_increase(100.0).for_crusader(*self), // Alien Attack
+                Aura::dps_increase(100.0).for_crusader(*self), // Attorney Attack
+                Aura::dps_increase(100.0).for_crusader(*self), // Dark Warstories
+                // FIXME: Arrow Attack
+            ],
             KyleThePartyBro => vec![],
             // SerpentKingDraco => vec![],
             // HenryTheScaredyGhoul => vec![],
