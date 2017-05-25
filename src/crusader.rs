@@ -603,12 +603,32 @@ impl CrusaderName {
             ],
             // SerpentKingDraco => vec![],
             // HenryTheScaredyGhoul => vec![],
-            Grandmora => vec![],
+            Grandmora => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Seen Better Days
+                Aura::dps_increase(300.0).affecting(InColumnAhead(*self)) // Still Suspicious
+                    .divided_by(InColumnBehind(*self)),
+                Aura::dps_global(10.0), // Elder Tech
+                Aura::dps_increase(75.0).affecting(InColumnBehind(*self)) // Untrusting
+                    .times(InColumnAhead(*self)),
+                Aura::dps_global(10.0), // Team Player
+            ],
 
             // Slot 6
-            DetectiveKaine => vec![],
+            DetectiveKaine => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Detective School
+                Aura::dps_increase(100.0).for_crusader(*self), // Abductive Reasoning
+                // FIXME: A-Hah!
+                Aura::dps_increase(100.0).for_crusader(*self), // Detective Kaine: A P.I.
+                Aura::dps_increase(150.0).for_crusader(*self), // Monster Magazine
+            ],
             // MisterTheMonkey => vec![],
-            LarryTheLeprechaun => vec![],
+            LarryTheLeprechaun => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Luck of the Irish
+                // FIXME: Little Pockets
+                // FIXME: Hiding Spot
+                Aura::dps_global(100.0) // Subtle Magics
+                    .when(Condition::Lt(AdjacentTo(*self), 4)),
+            ],
             // BernardTheBartender => vec![],
 
             // Slot 7

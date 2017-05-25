@@ -2,11 +2,11 @@ mod condition;
 mod modifier;
 mod target;
 
+pub use self::condition::*;
 pub use self::target::*;
 
 use crusader::*;
 use formation::*;
-use self::condition::*;
 use self::modifier::*;
 
 pub struct Aura {
@@ -54,7 +54,7 @@ impl Aura {
         self.when(Condition::Lt(target, 1))
     }
 
-    fn when(self, condition: Condition) -> Self {
+    pub fn when(self, condition: Condition) -> Self {
         Aura { condition: Some(condition), ..self }
     }
 
