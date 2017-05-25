@@ -46,7 +46,13 @@ pub fn create_user_data() -> UserData {
         .level_talent(Talent::DeepIdolScavenger, 13)
         .level_talent(Talent::ExtraTraining, 2)
         .level_talent(Talent::TripleTierTrouble, 1)
-        .add_crusader(CrusaderName::JimTheLumberjack, CrusaderData {
+        .add_crusader(CrusaderName::TheBushWhacker, CrusaderData {
+            enchantment_points: 114,
+            gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
+        }).add_crusader(CrusaderName::RoboRabbit, CrusaderData {
+            enchantment_points: 91,
+            gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
+        }).add_crusader(CrusaderName::JimTheLumberjack, CrusaderData {
             enchantment_points: 77,
             gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Epic],
         }).add_crusader(CrusaderName::Arachnobuddy, CrusaderData {

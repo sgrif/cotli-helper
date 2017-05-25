@@ -11,8 +11,8 @@ pub enum CrusaderName {
     Dummy(Tags),
 
     // Slot 1
-    // TheBushWhacker,
-    // RoboRabbit,
+    TheBushWhacker,
+    RoboRabbit,
     // GrahamTheDriver,
     // WarwickTheWarlock,
 
@@ -142,8 +142,8 @@ impl CrusaderName {
         match *self {
             #[cfg(any(test, debug_assertions))]
             Dummy(..) => Slot::empty(),
-            // TheBushWhacker => SLOT_1,
-            // RoboRabbit |
+            TheBushWhacker |
+            RoboRabbit => SLOT_1,
             // GrahamTheDriver |
             // WarwickTheWarlock => SLOT_1,
             JimTheLumberjack |
@@ -234,8 +234,8 @@ impl CrusaderName {
             Dummy(..) => 100.0,
 
             // Slot 1
-            // TheBushWhacker => 0.0,
-            // RoboRabbit |
+            TheBushWhacker |
+            RoboRabbit => 0.0,
             // GrahamTheDriver |
             // WarwickTheWarlock |
 
@@ -368,8 +368,8 @@ impl CrusaderName {
             Dummy(tags) => tags,
 
             // Slot 1
-            // TheBushWhacker => MALE | HUMAN | CLICKER,
-            // RoboRabbit => MALE | EVENT | ROBOT | SUPPORT | CLICKER,
+            TheBushWhacker => MALE | HUMAN | CLICKER,
+            RoboRabbit => MALE | EVENT | ROBOT | SUPPORT | CLICKER,
             // GrahamTheDriver => MALE | HUMAN | DPS | SUPPORT | CLICKER,
             // WarwickTheWarlock => MALE | MAGICAL | EVENT | LEPRECHAUN | CLICKER,
 
@@ -502,8 +502,13 @@ impl CrusaderName {
             Dummy(..) => vec![],
 
             // Slot 1
-            // TheBushWhacker => vec![],
-            // RoboRabbit => vec![],
+            TheBushWhacker => vec![
+                // FIXME: Click damage abilities
+            ],
+            RoboRabbit => vec![
+                // FIXME: Click damage abilities
+                Aura::dps_global(25.0), // Wind-up-Bunny
+            ],
             // GrahamTheDriver => vec![],
             // WarwickTheWarlock => vec![],
 
@@ -800,8 +805,8 @@ impl CrusaderName {
             Dummy(..) => 0.0,
 
             // Slot 1
-            // TheBushWhacker |
-            // RoboRabbit |
+            TheBushWhacker |
+            RoboRabbit => 5.0,
             // GrahamTheDriver |
             // WarwickTheWarlock |
 
