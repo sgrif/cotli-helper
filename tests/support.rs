@@ -1,5 +1,4 @@
 use cotli_helper::crusader::*;
-use cotli_helper::dps::*;
 use cotli_helper::formation::*;
 use cotli_helper::user_data::*;
 
@@ -7,7 +6,7 @@ pub fn user_data() -> UserData {
     use self::CrusaderName::*;
     UserData::default()
         // Slot 1
-        .add_crusader(TheBushWhacker, Default::default())
+        // .add_crusader(TheBushWhacker, Default::default())
         // .add_crusader(RoboRabbit, Default::default())
         // .add_crusader(GrahamTheDriver, Default::default())
         // .add_crusader(WarwickTheWarlock, Default::default())
@@ -138,7 +137,7 @@ pub fn default_crusader(name: CrusaderName) -> Crusader {
         .into_iter()
         .find(|c| c.name == name)
         .unwrap()
-        .at_level(Level(200))
+        .at_level(200)
 }
 
 pub fn worlds_wake<'a>() -> Formation<'a> {

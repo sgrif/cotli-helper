@@ -6,8 +6,12 @@ use dps::*;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum CrusaderName {
+    // Testing only
+    #[cfg(any(test, debug_assertions))]
+    Dummy(Tags),
+
     // Slot 1
-    TheBushWhacker,
+    // TheBushWhacker,
     // RoboRabbit,
     // GrahamTheDriver,
     // WarwickTheWarlock,
@@ -136,7 +140,9 @@ impl CrusaderName {
     pub fn slot(&self) -> Slot {
         use self::CrusaderName::*;
         match *self {
-            TheBushWhacker => SLOT_1,
+            #[cfg(any(test, debug_assertions))]
+            Dummy(..) => Slot::empty(),
+            // TheBushWhacker => SLOT_1,
             // RoboRabbit |
             // GrahamTheDriver |
             // WarwickTheWarlock => SLOT_1,
@@ -223,8 +229,12 @@ impl CrusaderName {
     fn base_dps(&self) -> f64 {
         use self::CrusaderName::*;
         match *self {
+            // Testing only
+            #[cfg(any(test, debug_assertions))]
+            Dummy(..) => 100.0,
+
             // Slot 1
-            TheBushWhacker => 0.0,
+            // TheBushWhacker => 0.0,
             // RoboRabbit |
             // GrahamTheDriver |
             // WarwickTheWarlock |
@@ -353,8 +363,12 @@ impl CrusaderName {
     pub fn tags(&self) -> Tags {
         use self::CrusaderName::*;
         match *self {
+            // Testing only
+            #[cfg(any(test, debug_assertions))]
+            Dummy(tags) => tags,
+
             // Slot 1
-            TheBushWhacker => MALE | HUMAN | CLICKER,
+            // TheBushWhacker => MALE | HUMAN | CLICKER,
             // RoboRabbit => MALE | EVENT | ROBOT | SUPPORT | CLICKER,
             // GrahamTheDriver => MALE | HUMAN | DPS | SUPPORT | CLICKER,
             // WarwickTheWarlock => MALE | MAGICAL | EVENT | LEPRECHAUN | CLICKER,
@@ -483,8 +497,12 @@ impl CrusaderName {
     fn dps_auras(&self) -> Vec<Aura> {
         use self::CrusaderName::*;
         match *self {
+            // Testing only
+            #[cfg(any(test, debug_assertions))]
+            Dummy(..) => vec![],
+
             // Slot 1
-            TheBushWhacker => vec![],
+            // TheBushWhacker => vec![],
             // RoboRabbit => vec![],
             // GrahamTheDriver => vec![],
             // WarwickTheWarlock => vec![],
@@ -681,8 +699,13 @@ impl Crusader {
         }
     }
 
-    pub fn at_level(self, level: Level) -> Self {
-        Crusader { level, ..self }
+    #[cfg(any(test, debug_assertions))]
+    pub fn dummy(tags: Tags) -> Self {
+        Crusader::new(CrusaderName::Dummy(tags), Level(1))
+    }
+
+    pub fn at_level(self, level: u16) -> Self {
+        Crusader { level: Level(level), ..self }
     }
 
     pub fn base_dps(&self) -> Dps {

@@ -1,3 +1,5 @@
+#![deny(warnings)]
+
 extern crate cotli_helper;
 
 pub mod support;
