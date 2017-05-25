@@ -559,7 +559,13 @@ impl CrusaderName {
             // KarenTheCatTeenager => vec![],
 
             // Slot 4
-            SashaTheFierceWarrior => vec![],
+            SashaTheFierceWarrior => vec![
+                Aura::dps_increase(30.0).affecting(InColumnBehind(*self)), // Bulwark
+                Aura::dps_increase(100.0).for_crusader(*self), // Bad Guy Butt Kicking
+                Aura::dps_increase(100.0).for_crusader(*self), // Power of the Warrior
+                Aura::dps_increase(100.0).for_crusader(*self), // Soul of the Warrior
+                Aura::dps_increase(150.0).for_crusader(*self), // Joan's Jiu-Jitsu
+            ],
             GroklokTheOrc => vec![],
             // MindyTheMime => vec![],
 

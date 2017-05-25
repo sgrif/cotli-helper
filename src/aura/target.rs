@@ -7,6 +7,7 @@ pub enum Target {
     AdjacentTo(CrusaderName),
     AllCrusaders,
     And(Box<Target>, Box<Target>),
+    InColumnBehind(CrusaderName),
     InSameColumn(CrusaderName),
     Not(Box<Target>),
     Or(Box<Target>, Box<Target>),
@@ -39,6 +40,11 @@ impl Target {
             AllCrusaders => true,
             And(ref t1, ref t2) => t1.matches(crusader, formation) &&
                 t2.matches(crusader, formation),
+            InColumnBehind(source) => {
+                let source_col = formation.position_of(source).map(|c| c.x);
+                let target_col = formation.position_of(crusader).map(|c| c.x);
+                source_col != Some(0) && target_col == source_col.map(|x| x-1)
+            },
             InSameColumn(source) =>
                 formation.position_of(crusader).map(|c| c.x) ==
                     formation.position_of(source).map(|c| c.x),
