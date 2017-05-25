@@ -7,6 +7,8 @@ pub enum Target {
     AdjacentTo(CrusaderName),
     AllCrusaders,
     And(Box<Target>, Box<Target>),
+    EmptySlot,
+    InColumnAhead(CrusaderName),
     InColumnBehind(CrusaderName),
     InSameColumn(CrusaderName),
     Not(Box<Target>),
@@ -40,6 +42,12 @@ impl Target {
             AllCrusaders => true,
             And(ref t1, ref t2) => t1.matches(crusader, formation) &&
                 t2.matches(crusader, formation),
+            EmptySlot => false,
+            InColumnAhead(source) => {
+                let source_col = formation.position_of(source).map(|c| c.x);
+                let target_col = formation.position_of(crusader).map(|c| c.x);
+                target_col == source_col.map(|x| x+1)
+            },
             InColumnBehind(source) => {
                 let source_col = formation.position_of(source).map(|c| c.x);
                 let target_col = formation.position_of(crusader).map(|c| c.x);
@@ -57,9 +65,13 @@ impl Target {
     }
 
     pub fn count_in_formation(&self, formation: &Formation) -> usize {
-        formation.crusaders()
-            .filter(|c| self.matches(c.name, formation))
-            .count()
+        if let Target::EmptySlot = *self {
+            formation.empty_positions().count()
+        } else {
+            formation.crusaders()
+                .filter(|c| self.matches(c.name, formation))
+                .count()
+        }
     }
 }
 

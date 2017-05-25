@@ -37,6 +37,10 @@ impl Aura {
         self.with_modifier(Modifier::Times(target))
     }
 
+    pub fn divided_by(self, target: Target) -> Self {
+        self.with_modifier(Modifier::DividedBy(target))
+    }
+
     pub fn when_exists(self, target: Target) -> Self {
         self.when(Condition::Gt(target, 0))
     }

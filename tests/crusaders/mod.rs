@@ -9,3 +9,4 @@ mod sally_the_succubus;
 
 // Slot 4
 mod sasha_the_fierce_warrior;
+mod groklok_the_orc;

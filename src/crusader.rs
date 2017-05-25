@@ -566,7 +566,16 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Soul of the Warrior
                 Aura::dps_increase(150.0).for_crusader(*self), // Joan's Jiu-Jitsu
             ],
-            GroklokTheOrc => vec![],
+            GroklokTheOrc => vec![
+                Aura::dps_increase(150.0).for_crusader(*self), // Dual-Threat
+                Aura::dps_increase(150.0).for_crusader(*self), // Checkdown
+                // FIXME: Defensive Team
+                Aura::dps_increase(150.0).for_crusader(*self) // Gunslinger
+                    .when_exists(EmptySlot),
+                Aura::dps_increase(150.0).affecting(InColumnAhead(*self)) // Eligible Receivers
+                    .divided_by(InColumnAhead(*self)),
+                Aura::dps_increase(150.0).for_crusader(*self), // Fumblerooski
+            ],
             // MindyTheMime => vec![],
 
             // Slot 5
