@@ -529,7 +529,11 @@ impl CrusaderName {
                 // FIXME: Fire!
                 Aura::dps_global(15.0),
             ],
-            Arachnobuddy => vec![],
+            Arachnobuddy => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Skitter
+                // FIXME: Web Blast
+                Aura::dps_increase(150.0).for_crusader(*self), // Scuttle
+            ],
 
             // Slot 3
             EmoWerewolf => vec![],
