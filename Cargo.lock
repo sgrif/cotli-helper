@@ -1,5 +1,5 @@
 [root]
-name = "cotli-helper-2"
+name = "cotli-helper"
 version = "0.1.0"
 dependencies = [
  "bitflags 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",

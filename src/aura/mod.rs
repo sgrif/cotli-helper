@@ -1,3 +1,4 @@
+mod condition;
 mod modifier;
 mod target;
 
@@ -5,12 +6,14 @@ pub use self::target::*;
 
 use crusader::*;
 use formation::*;
+use self::condition::*;
 use self::modifier::*;
 
 pub struct Aura {
     amount: f64,
     target: Target,
     modifier: Option<Modifier>,
+    condition: Option<Condition>,
 }
 
 impl Aura {
@@ -28,6 +31,14 @@ impl Aura {
 
     pub fn times(self, target: Target) -> Self {
         self.with_modifier(Modifier::Times(target))
+    }
+
+    pub fn when_exists(self, target: Target) -> Self {
+        self.when(Condition::Gt(target, 0))
+    }
+
+    fn when(self, condition: Condition) -> Self {
+        Aura { condition: Some(condition), ..self }
     }
 
     pub fn amount_for_crusader(
@@ -51,6 +62,7 @@ impl Aura {
         formation: &Formation,
     ) -> bool {
         self.target.matches(crusader, formation)
+            && self.condition.as_ref().map(|c| c.is_met(formation)).unwrap_or(true)
     }
 
     fn modifier_amount(&self, formation: &Formation) -> f64 {
@@ -73,6 +85,7 @@ impl AuraBuilder {
             amount: self.amount,
             target: target,
             modifier: None,
+            condition: None,
         }
     }
 }

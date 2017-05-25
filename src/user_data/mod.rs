@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod crusader_data;
 mod talent_data;
 

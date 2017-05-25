@@ -7,7 +7,7 @@ use dps::*;
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum CrusaderName {
     // Slot 1
-    // TheBushWhacker,
+    TheBushWhacker,
     // RoboRabbit,
     // GrahamTheDriver,
     // WarwickTheWarlock,
@@ -136,7 +136,7 @@ impl CrusaderName {
     pub fn slot(&self) -> Slot {
         use self::CrusaderName::*;
         match *self {
-            // TheBushWhacker |
+            TheBushWhacker => SLOT_1,
             // RoboRabbit |
             // GrahamTheDriver |
             // WarwickTheWarlock => SLOT_1,
@@ -224,7 +224,7 @@ impl CrusaderName {
         use self::CrusaderName::*;
         match *self {
             // Slot 1
-            // TheBushWhacker |
+            TheBushWhacker => 0.0,
             // RoboRabbit |
             // GrahamTheDriver |
             // WarwickTheWarlock |
@@ -354,7 +354,7 @@ impl CrusaderName {
         use self::CrusaderName::*;
         match *self {
             // Slot 1
-            // TheBushWhacker => MALE | HUMAN | CLICKER,
+            TheBushWhacker => MALE | HUMAN | CLICKER,
             // RoboRabbit => MALE | EVENT | ROBOT | SUPPORT | CLICKER,
             // GrahamTheDriver => MALE | HUMAN | DPS | SUPPORT | CLICKER,
             // WarwickTheWarlock => MALE | MAGICAL | EVENT | LEPRECHAUN | CLICKER,
@@ -483,18 +483,139 @@ impl CrusaderName {
     fn dps_auras(&self) -> Vec<Aura> {
         use self::CrusaderName::*;
         match *self {
-            SallyTheSuccubus => vec![
-                Aura::dps_increase(100.0).for_crusader(*self),
-                Aura::dps_increase(100.0).for_crusader(*self),
-                Aura::dps_increase(300.0).for_crusader(*self)
-                    .minus(Aura::dps_global(25.0).times(
-                        WithTag(FEMALE).and(AdjacentTo(*self))
-                    )),
-                Aura::dps_increase(100.0).for_crusader(*self),
-                Aura::dps_increase(100.0).for_crusader(*self),
-                Aura::dps_increase(25.0).affecting(WithTag(FEMALE))
+            // Slot 1
+            TheBushWhacker => vec![],
+            // RoboRabbit => vec![],
+            // GrahamTheDriver => vec![],
+            // WarwickTheWarlock => vec![],
+
+            // Slot 2
+            JimTheLumberjack => vec![
+                Aura::dps_increase(100.0).for_crusader(*self) // Buddy System
+                    .when_exists(AdjacentTo(*self)),
+                Aura::dps_increase(100.0).for_crusader(*self), // Chainsaw Kickback
+                Aura::dps_increase(50.0) // Sharpen Party
+                    .affecting(InSameColumn(*self)),
+                Aura::dps_increase(100.0).for_crusader(*self), // Slick Shave
+                Aura::dps_increase(150.0).for_crusader(*self), // Institute of Lumberjackology
+                // FIXME: Uber Axing
             ],
-            _ => vec![],
+            // PilotPam => vec![],
+            VeronicaTheAndroidArcher => vec![],
+            Arachnobuddy => vec![],
+
+            // Slot 3
+            EmoWerewolf => vec![],
+            SallyTheSuccubus => vec![],
+            // KarenTheCatTeenager => vec![],
+
+            // Slot 4
+            SashaTheFierceWarrior => vec![],
+            GroklokTheOrc => vec![],
+            // MindyTheMime => vec![],
+
+            // Slot 5
+            TheWashedUpHermit => vec![],
+            KyleThePartyBro => vec![],
+            // SerpentKingDraco => vec![],
+            // HenryTheScaredyGhoul => vec![],
+            Grandmora => vec![],
+
+            // Slot 6
+            DetectiveKaine => vec![],
+            // MisterTheMonkey => vec![],
+            LarryTheLeprechaun => vec![],
+            // BernardTheBartender => vec![],
+
+            // Slot 7
+            ThePrincess => vec![],
+            // RoboTurkey => vec![],
+            // RangerRayna => vec![],
+            BaenarallAngelOfHope => vec![],
+
+            // Slot 8
+            NatalieDragon => vec![],
+            // JackOLantern => vec![],
+            PresidentBillySmithsonian => vec![],
+            // KarlTheKicker => vec![],
+
+            // Slot 9
+            JasonMasterOfShadows => vec![],
+            // PeteTheCarney => vec![],
+            Broot => vec![],
+            // PaulThePilgrim => vec![],
+
+            // Slot 10
+            ArtaxesTheLion => vec![],
+            DrizzleTheDarkElf => vec![],
+            // BubbaTheSwimmingOrc => vec![],
+            SisaronTheDragonSorceress => vec![],
+
+            // Slot 11
+            // KhouriTheWitchDoctor => vec![],
+            // MommaKaine => vec![],
+            // BrogonPrinceOfDragons => vec![],
+            // TheHalfBloodElf => vec![],
+            // Foresight => vec![],
+
+            // Slot 12
+            // DarkGryphon => vec![],
+            // RockyTheRockstar => vec![],
+            // MontanaJames => vec![],
+            // TheDarkHelper => vec![],
+
+            // Slot 13
+            // SarahTheCollector => vec![],
+            // TheMetalSoldierette => vec![],
+            // SnicketteTheSneaky => vec![],
+
+            // Slot 14
+            // GoldPanda => vec![],
+            // RoboSanta => vec![],
+            // LeerionTheRoyalDwarf => vec![],
+            // KatieTheCupid => vec![],
+
+            // Slot 15
+            // PrinceSalTheMerman => vec![],
+            // WendyTheWitch => vec![],
+            // RobbieRaccoon => vec![],
+            // PrincessValTheMermaid => vec![],
+
+            // Slot 16
+            // FirePhoenix => vec![],
+            // AlanTheArchAngel => vec![],
+            // FrightOTron4000 => vec![],
+            // Spaceking => vec![],
+
+            // Slot 17
+            // KingReginaldIV => vec![],
+            // QueenSiri => vec![],
+            // MrBogginsTheSubstitute => vec![],
+            // SquigglesTheClown => vec![],
+
+            // Slot 18
+            // ThaliaTheThunderKing => vec![],
+            // FrostyTheSnowman => vec![],
+            // Littlefoot => vec![],
+            // CindyTheCheerOrc => vec![],
+
+            // Slot 19
+            // MerciTheMadWizard => vec![],
+            // TheBatBillionaire => vec![],
+            // PetraThePilgrim => vec![],
+
+            // Slot 20
+            // NateDragon => vec![],
+            // KizlblypTheAlienTraitor => vec![],
+            // RoboRudolph => vec![],
+
+            // Slot 21
+            // TheExterminator => vec![],
+            // GloriaTheGoodWitch => vec![],
+
+            // Slot 22
+            // TheShadowQueen => vec![],
+            // IlsaTheInsaneWizard => vec![],
         }
     }
 }
@@ -548,6 +669,10 @@ impl Crusader {
             level,
             dps_auras: name.dps_auras(),
         }
+    }
+
+    pub fn at_level(self, level: Level) -> Self {
+        Crusader { level, ..self }
     }
 
     pub fn base_dps(&self) -> Dps {

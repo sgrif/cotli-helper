@@ -11,3 +11,9 @@ pub enum GearQuality {
     Legendary(Level),
     GoldenLegendary(Level),
 }
+
+impl Default for GearQuality {
+    fn default() -> Self {
+        GearQuality::None
+    }
+}

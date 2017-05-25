@@ -1,3 +1,5 @@
+use std::ops;
+
 use crusader::*;
 use formation::*;
 
@@ -5,6 +7,8 @@ pub enum Target {
     AdjacentTo(CrusaderName),
     AllCrusaders,
     And(Box<Target>, Box<Target>),
+    InSameColumn(CrusaderName),
+    Not(Box<Target>),
     SpecificCrusader(CrusaderName),
     WithTag(Tags),
 }
@@ -30,6 +34,10 @@ impl Target {
             AllCrusaders => true,
             And(ref t1, ref t2) => t1.matches(crusader, formation) &&
                 t2.matches(crusader, formation),
+            InSameColumn(source) =>
+                formation.position_of(crusader).map(|c| c.x) ==
+                    formation.position_of(source).map(|c| c.x),
+            Not(ref t1) => !t1.matches(crusader, formation),
             SpecificCrusader(name) => crusader == name,
             WithTag(tag) => crusader.tags().contains(tag),
         }
@@ -39,5 +47,16 @@ impl Target {
         formation.crusaders()
             .filter(|c| self.matches(c.name, formation))
             .count()
+    }
+}
+
+impl ops::Not for Target {
+    type Output = Self;
+
+    fn not(self) -> Self::Output {
+        match self {
+            Target::Not(t) => *t,
+            _ => Target::Not(Box::new(self)),
+        }
     }
 }

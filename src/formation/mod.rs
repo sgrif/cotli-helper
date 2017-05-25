@@ -29,6 +29,13 @@ impl<'a> Formation<'a> {
         self
     }
 
+    pub fn remove_crusader(&mut self, position: usize) -> &mut Self {
+        self.positions[position].crusader = None;
+        let used_slots = self.crusaders().fold(Slot::empty(), |s, c| s | c.slot());
+        self.used_slots = used_slots;
+        self
+    }
+
     pub fn total_dps(&self) -> Dps {
         self.positions.iter()
             .map(|p| p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras)))

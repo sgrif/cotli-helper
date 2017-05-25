@@ -43,6 +43,7 @@ impl AllCrusaderData {
     }
 }
 
+#[derive(Default)]
 pub struct CrusaderData {
     pub enchantment_points: u32,
     pub gear: [GearQuality; 3],
