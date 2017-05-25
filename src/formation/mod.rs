@@ -69,6 +69,12 @@ impl<'a> Formation<'a> {
             .map(|p| &p.coordinate)
     }
 
+    pub fn front_column(&self) -> Option<u8> {
+        self.positions.iter()
+            .map(|p| p.coordinate.x)
+            .max()
+    }
+
     pub fn print(&self) {
         println!("Total DPS: {}", self.total_dps());
         for pos in self.positions.iter() {

@@ -133,7 +133,7 @@ pub fn user_data() -> UserData {
 
 pub fn default_crusader(name: CrusaderName) -> Crusader {
     user_data()
-        .unlocked_crusaders()
+        .unlocked_crusaders(None)
         .into_iter()
         .find(|c| c.name == name)
         .unwrap()

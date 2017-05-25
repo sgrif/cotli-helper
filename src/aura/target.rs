@@ -12,6 +12,7 @@ pub enum Target {
     EmptySlot,
     InColumnAhead(CrusaderName),
     InColumnBehind(CrusaderName),
+    InFrontColumn,
     InSameColumn(CrusaderName),
     Min(Box<Target>, usize),
     Not(Box<Target>),
@@ -60,6 +61,10 @@ impl Target {
                 let target_col = formation.position_of(crusader).map(|c| c.x);
                 source_col != Some(0) && target_col == source_col.map(|x| x-1)
             },
+            InFrontColumn => {
+                formation.position_of(crusader).map(|c| c.x) ==
+                    formation.front_column()
+            }
             InSameColumn(source) =>
                 formation.position_of(crusader).map(|c| c.x) ==
                     formation.position_of(source).map(|c| c.x),

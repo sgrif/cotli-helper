@@ -668,9 +668,26 @@ impl CrusaderName {
             // KarlTheKicker => vec![],
 
             // Slot 9
-            JasonMasterOfShadows => vec![],
+            JasonMasterOfShadows => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Night Vision
+                Aura::dps_increase(100.0).for_crusader(*self), // Crouching Jason, Hidden Jason
+                Aura::dps_increase(100.0).for_crusader(*self), // X-Ray Vision
+                Aura::dps_increase(150.0).for_crusader(*self), // Use the Force
+                // FIXME: Ambush
+            ],
             // PeteTheCarney => vec![],
-            Broot => vec![],
+            Broot => vec![
+                // They're all called "I am Broot"
+                Aura::dps_increase(100.0).for_crusader(*self),
+                Aura::dps_global(10.0),
+                Aura::dps_increase(25.0).for_crusader(*self)
+                    .when_exists(SpecificCrusader(*self).and(InFrontColumn)),
+                // FIXME: Test if this is immediately behind or any column behind
+                // Aura::dps_increase(100.0).for_crusader(RobbieRaccoon)
+                //     .when_exists(SpecificCrusader(RobbieRaccoon).and(InColumnBehind(*self))),
+                // Aura::dps_increase(100.0).for_crusader(RobbieRaccoon)
+                //     .when_exists(SpecificCrusader(RobbieRaccoon).and(AdjacentTo(*self))),
+            ],
             // PaulThePilgrim => vec![],
 
             // Slot 10
