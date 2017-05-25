@@ -48,7 +48,7 @@ impl<'a> FormationSearch<'a> {
             let best_option = self.search_root.children
                 .drain(..)
                 .filter(|&(_, ref c)| c.highest_dps_seen >= current_dps)
-                .max_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen));
+                .max_by_key(|&(_, ref c)| (c.highest_dps_seen, c.times_checked));
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
                 self.state.formation.print();

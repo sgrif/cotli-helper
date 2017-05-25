@@ -683,18 +683,35 @@ impl CrusaderName {
                 Aura::dps_increase(25.0).for_crusader(*self)
                     .when_exists(SpecificCrusader(*self).and(InFrontColumn)),
                 // FIXME: Test if this is immediately behind or any column behind
-                // Aura::dps_increase(100.0).for_crusader(RobbieRaccoon)
-                //     .when_exists(SpecificCrusader(RobbieRaccoon).and(InColumnBehind(*self))),
-                // Aura::dps_increase(100.0).for_crusader(RobbieRaccoon)
-                //     .when_exists(SpecificCrusader(RobbieRaccoon).and(AdjacentTo(*self))),
+                // Aura::dps_increase(100.0)
+                //     .affecting(SpecificCrusader(RobbieRaccoon).and(InColumnBehind(*self))),
+                // Aura::dps_increase(100.0)
+                //     .affecting(SpecificCrusader(RobbieRaccoon).and(AdjacentTo(*self))),
             ],
             // PaulThePilgrim => vec![],
 
             // Slot 10
-            ArtaxesTheLion => vec![],
-            DrizzleTheDarkElf => vec![],
+            ArtaxesTheLion => vec![
+                Aura::dps_increase(125.0).for_crusader(*self), // Claw Your Way Up
+                Aura::dps_increase(50.0).affecting(InColumnAhead(*self)), // Roar!
+                Aura::dps_increase(125.0).for_crusader(*self), // Lion's Mane
+                // FIXME: Jungle Speed
+            ],
+            DrizzleTheDarkElf => vec![
+                Aura::dps_global(20.0), // All Star
+                Aura::dps_increase(20.0).affecting(AdjacentTo(*self)), // Inspiring Presence
+                Aura::dps_increase(400.0) // Lateral
+                    .affecting(SpecificCrusader(GroklokTheOrc).and(InSameColumn(*self))),
+                // FIXME: Running Play
+            ],
             // BubbaTheSwimmingOrc => vec![],
-            SisaronTheDragonSorceress => vec![],
+            SisaronTheDragonSorceress => vec![
+                Aura::dps_increase(150.0).for_crusader(*self), // Swoop
+                Aura::dps_increase(100.0).affecting(AdjacentTo(*self)) // Loose Magic
+                    .divided_by(AdjacentTo(*self)),
+                // FIXME: Focused Magic
+                Aura::dps_global(10.0), // Recovered Magic
+            ],
 
             // Slot 11
             // KhouriTheWitchDoctor => vec![],
