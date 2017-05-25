@@ -17,3 +17,6 @@ mod kyle_the_party_bro;
 
 // Slot 9
 mod broot;
+
+// Slot 13
+mod sarah_the_collector;

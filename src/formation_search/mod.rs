@@ -45,10 +45,17 @@ impl<'a> FormationSearch<'a> {
                 }
             }
             let current_dps = self.state.formation.total_dps();
-            let best_option = self.search_root.children
+            let options = self.search_root.children
                 .drain(..)
                 .filter(|&(_, ref c)| c.highest_dps_seen >= current_dps)
-                .max_by_key(|&(_, ref c)| (c.highest_dps_seen, c.times_checked));
+                .collect::<Vec<_>>();
+            let best_option = if options.iter().any(|&(_, ref c)| c.is_complete()) {
+                options.into_iter()
+                    .max_by_key(|&(_, ref c)| (c.highest_dps_seen, c.times_checked))
+            } else {
+                options.into_iter()
+                    .max_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen))
+            };
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
                 self.state.formation.print();

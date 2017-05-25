@@ -142,5 +142,14 @@ pub fn create_user_data() -> UserData {
         }).add_crusader(CrusaderName::MontanaJames, CrusaderData {
             enchantment_points: 79,
             gear: [GearQuality::Epic, GearQuality::Rare, GearQuality::Rare],
+        }).add_crusader(CrusaderName::SarahTheCollector, CrusaderData {
+            enchantment_points: 121,
+            gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Epic],
+        }).add_crusader(CrusaderName::TheMetalSoldierette, CrusaderData {
+            enchantment_points: 102,
+            gear: [GearQuality::Rare, GearQuality::Uncommon, GearQuality::Rare],
+        }).add_crusader(CrusaderName::SnicketteTheSneaky, CrusaderData {
+            enchantment_points: 47,
+            gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
         })
 }

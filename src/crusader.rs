@@ -83,9 +83,9 @@ pub enum CrusaderName {
     // TheDarkHelper,
 
     // Slot 13
-    // SarahTheCollector,
-    // TheMetalSoldierette,
-    // SnicketteTheSneaky,
+    SarahTheCollector,
+    TheMetalSoldierette,
+    SnicketteTheSneaky,
 
     // Slot 14
     // GoldPanda,
@@ -190,9 +190,9 @@ impl CrusaderName {
             RockyTheRockstar |
             MontanaJames => SLOT_12,
             // TheDarkHelper => SLOT_12,
-            // SarahTheCollector |
-            // TheMetalSoldierette |
-            // SnicketteTheSneaky => SLOT_13,
+            SarahTheCollector |
+            TheMetalSoldierette |
+            SnicketteTheSneaky => SLOT_13,
             // GoldPanda |
             // RoboSanta |
             // LeerionTheRoyalDwarf |
@@ -306,9 +306,9 @@ impl CrusaderName {
             // TheDarkHelper |
 
             // Slot 13
-            // SarahTheCollector |
-            // TheMetalSoldierette |
-            // SnicketteTheSneaky |
+            SarahTheCollector |
+            TheMetalSoldierette |
+            SnicketteTheSneaky => 2.04e6,
 
             // Slot 14
             // GoldPanda |
@@ -440,9 +440,9 @@ impl CrusaderName {
             // TheDarkHelper => FEMALE | EVENT | ELF | SUPPORT | GOLD_FINDER,
 
             // Slot 13
-            // SarahTheCollector => FEMALE | HUMAN | DPS,
-            // TheMetalSoldierette => FEMALE | HUMAN | EVENT | ROBOT | TANK | DPS,
-            // SnicketteTheSneaky => FEMALE | SUPERNATURAL | EVENT | LEPRECHAUN | SUPPORT,
+            SarahTheCollector => FEMALE | HUMAN | DPS,
+            TheMetalSoldierette => FEMALE | HUMAN | EVENT | ROBOT | TANK | DPS,
+            SnicketteTheSneaky => FEMALE | SUPERNATURAL | EVENT | LEPRECHAUN | SUPPORT,
 
             // Slot 14
             // GoldPanda => FEMALE | ANIMAL | SUPERNATURAL | GOLD_FINDER,
@@ -762,9 +762,32 @@ impl CrusaderName {
             // TheDarkHelper => vec![],
 
             // Slot 13
-            // SarahTheCollector => vec![],
-            // TheMetalSoldierette => vec![],
-            // SnicketteTheSneaky => vec![],
+            SarahTheCollector => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Ooh Shiny!
+                // Aura::dps_increase(150.0).for_crusader(*self) // Full Set
+                //     .when_none(EmptySlot),
+                Aura::dps_increase(100.0).for_crusader(*self), // Collect Them All!
+                Aura::dps_increase(100.0).for_crusader(*self), // My Precioussss
+                Aura::dps_increase(150.0).for_crusader(*self), // Mine! Mine! Mine!
+                // FIXME: Lucky Set
+            ],
+            TheMetalSoldierette => vec![
+                Aura::dps_increase(200.0).for_crusader(*self), // New Paint Job
+                Aura::dps_increase(400.0) // Cocky Leader
+                    .affecting(SpecificCrusader(*self).and(InFrontColumn)),
+                Aura::dps_increase(200.0).for_crusader(*self), // Arms Race
+                // FIXME: Cool Under Pressure
+            ],
+            SnicketteTheSneaky => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Quick Fingers
+                Aura::dps_increase(50.0).affecting(AdjacentTo(*self)) // Focused Support
+                    .when(Condition::Lt(AdjacentTo(*self), 4)),
+                Aura::dps_increase(50.0).affecting(WithTag(HUMAN)) // Favorite Prey
+                    .plus(Aura::dps_global(10.0).times(WithTag(HUMAN))),
+                // FIXME: Critical Thinking
+                Aura::dps_global(50.0) // The Blame Game
+                    .when(Condition::Gt(WithTag(LEPRECHAUN), 2)),
+            ],
 
             // Slot 14
             // GoldPanda => vec![],
@@ -896,9 +919,9 @@ impl CrusaderName {
             // TheDarkHelper |
 
             // Slot 13
-            // SarahTheCollector |
-            // TheMetalSoldierette |
-            // SnicketteTheSneaky |
+            SarahTheCollector |
+            TheMetalSoldierette |
+            SnicketteTheSneaky => 6.5e9,
 
             // Slot 14
             // GoldPanda |

@@ -65,22 +65,22 @@ pub fn user_data() -> UserData {
         .add_crusader(SisaronTheDragonSorceress, Default::default())
 
         // Slot 11
-        // .add_crusader(KhouriTheWitchDoctor, Default::default())
+        .add_crusader(KhouriTheWitchDoctor, Default::default())
         // .add_crusader(MommaKaine, Default::default())
         // .add_crusader(BrogonPrinceOfDragons, Default::default())
         // .add_crusader(TheHalfBloodElf, Default::default())
-        // .add_crusader(Foresight, Default::default())
+        .add_crusader(Foresight, Default::default())
 
         // Slot 12
-        // .add_crusader(DarkGryphon, Default::default())
-        // .add_crusader(RockyTheRockstar, Default::default())
-        // .add_crusader(MontanaJames, Default::default())
+        .add_crusader(DarkGryphon, Default::default())
+        .add_crusader(RockyTheRockstar, Default::default())
+        .add_crusader(MontanaJames, Default::default())
         // .add_crusader(TheDarkHelper, Default::default())
 
         // Slot 13
-        // .add_crusader(SarahTheCollector, Default::default())
-        // .add_crusader(TheMetalSoldierette, Default::default())
-        // .add_crusader(SnicketteTheSneaky, Default::default())
+        .add_crusader(SarahTheCollector, Default::default())
+        .add_crusader(TheMetalSoldierette, Default::default())
+        .add_crusader(SnicketteTheSneaky, Default::default())
 
         // Slot 14
         // .add_crusader(GoldPanda, Default::default())
