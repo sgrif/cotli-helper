@@ -88,7 +88,7 @@ pub enum CrusaderName {
     SnicketteTheSneaky,
 
     // Slot 14
-    // GoldPanda,
+    GoldPanda,
     // RoboSanta,
     // LeerionTheRoyalDwarf,
     // KatieTheCupid,
@@ -193,7 +193,7 @@ impl CrusaderName {
             SarahTheCollector |
             TheMetalSoldierette |
             SnicketteTheSneaky => SLOT_13,
-            // GoldPanda |
+            GoldPanda => SLOT_14,
             // RoboSanta |
             // LeerionTheRoyalDwarf |
             // KatieTheCupid => SLOT_14,
@@ -311,7 +311,7 @@ impl CrusaderName {
             SnicketteTheSneaky => 2.04e6,
 
             // Slot 14
-            // GoldPanda |
+            GoldPanda => 8.33e6,
             // RoboSanta |
             // LeerionTheRoyalDwarf |
             // KatieTheCupid |
@@ -445,7 +445,7 @@ impl CrusaderName {
             SnicketteTheSneaky => FEMALE | SUPERNATURAL | EVENT | LEPRECHAUN | SUPPORT,
 
             // Slot 14
-            // GoldPanda => FEMALE | ANIMAL | SUPERNATURAL | GOLD_FINDER,
+            GoldPanda => FEMALE | ANIMAL | SUPERNATURAL | GOLD_FINDER,
             // RoboSanta => MALE | EVENT | ROBOT | GOLD_FINDER,
             // LeerionTheRoyalDwarf => MALE | HUMAN | ROYAL | EVENT | GOLD_FINDER | DWARF,
             // KatieTheCupid => FEMALE | SUPERNATURAL | EVENT | SUPPORT | GOLD_FINDER,
@@ -790,7 +790,10 @@ impl CrusaderName {
             ],
 
             // Slot 14
-            // GoldPanda => vec![],
+            GoldPanda => vec![
+                // FIXME: Gold buffs
+                // FIXME: Lucky Panda
+            ],
             // RoboSanta => vec![],
             // LeerionTheRoyalDwarf => vec![],
             // KatieTheCupid => vec![],
@@ -924,7 +927,7 @@ impl CrusaderName {
             SnicketteTheSneaky => 6.5e9,
 
             // Slot 14
-            // GoldPanda |
+            GoldPanda => 5e10,
             // RoboSanta |
             // LeerionTheRoyalDwarf |
             // KatieTheCupid |
