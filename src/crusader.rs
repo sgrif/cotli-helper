@@ -77,9 +77,9 @@ pub enum CrusaderName {
     Foresight,
 
     // Slot 12
-    // DarkGryphon,
-    // RockyTheRockstar,
-    // MontanaJames,
+    DarkGryphon,
+    RockyTheRockstar,
+    MontanaJames,
     // TheDarkHelper,
 
     // Slot 13
@@ -186,9 +186,9 @@ impl CrusaderName {
             // BrogonPrinceOfDragons |
             // TheHalfBloodElf |
             Foresight => SLOT_11,
-            // DarkGryphon |
-            // RockyTheRockstar |
-            // MontanaJames |
+            DarkGryphon |
+            RockyTheRockstar |
+            MontanaJames => SLOT_12,
             // TheDarkHelper => SLOT_12,
             // SarahTheCollector |
             // TheMetalSoldierette |
@@ -300,9 +300,9 @@ impl CrusaderName {
             Foresight => 938000.0,
 
             // Slot 12
-            // DarkGryphon |
-            // RockyTheRockstar |
-            // MontanaJames |
+            DarkGryphon |
+            RockyTheRockstar |
+            MontanaJames => 4.46e6,
             // TheDarkHelper |
 
             // Slot 13
@@ -434,9 +434,9 @@ impl CrusaderName {
             Foresight => SUPERNATURAL | EVENT | ROBOT | SUPPORT | HEALER,
 
             // Slot 12
-            // DarkGryphon => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
-            // RockyTheRockstar => MALE | HUMAN | EVENT | DPS,
-            // MontanaJames => MALE | HUMAN | EVENT | SUPPORT,
+            DarkGryphon => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
+            RockyTheRockstar => MALE | HUMAN | EVENT | DPS,
+            MontanaJames => MALE | HUMAN | EVENT | SUPPORT,
             // TheDarkHelper => FEMALE | EVENT | ELF | SUPPORT | GOLD_FINDER,
 
             // Slot 13
@@ -737,9 +737,28 @@ impl CrusaderName {
             ],
 
             // Slot 12
-            // DarkGryphon => vec![],
-            // RockyTheRockstar => vec![],
-            // MontanaJames => vec![],
+            DarkGryphon => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Brave Bonk
+                Aura::dps_increase(100.0).for_crusader(*self), // Chivalrous Cuff
+                Aura::dps_increase(100.0).for_crusader(*self), // Courageous Chop
+                Aura::dps_global(15.0), // Heart Brimming Bravery
+                // FIXME: Lion Swipe
+            ],
+            RockyTheRockstar => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Rock 'n Roll
+                Aura::dps_increase(50.0).for_crusader(*self) // Groupies + Pick and Choose
+                    .times(WithTag(FEMALE)),
+                Aura::dps_increase(100.0).for_crusader(*self), // Amp up
+                Aura::dps_increase(100.0).for_crusader(*self), // Sold Out Show
+            ],
+            MontanaJames => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // CRACK
+                Aura::dps_increase(50.0).affecting(WithTag(ANIMAL)), // Just In Time
+                // FIXME: Turn the tides
+                // FIXME: He's Got a Gun, Too
+                Aura::dps_global(40.0) // Damsel In Distress
+                    .when_exists(SpecificCrusader(ThePrincess)),
+            ],
             // TheDarkHelper => vec![],
 
             // Slot 13
@@ -871,9 +890,9 @@ impl CrusaderName {
             Foresight => 1e8,
 
             // Slot 12
-            // DarkGryphon |
-            // RockyTheRockstar |
-            // MontanaJames |
+            DarkGryphon |
+            RockyTheRockstar |
+            MontanaJames => 8e8,
             // TheDarkHelper |
 
             // Slot 13
