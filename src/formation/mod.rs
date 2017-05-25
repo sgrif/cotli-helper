@@ -2,6 +2,8 @@ mod coordinate;
 
 pub use self::coordinate::Coordinate;
 
+use std::cell::Cell;
+
 use aura::Aura;
 use crusader::*;
 use dps::*;
@@ -10,6 +12,7 @@ use dps::*;
 pub struct Formation<'a> {
     positions: Box<[FormationPosition<'a>]>,
     used_slots: Slot,
+    dps: Cell<Option<Dps>>,
 }
 
 impl<'a> Formation<'a> {
@@ -20,12 +23,14 @@ impl<'a> Formation<'a> {
         Formation {
             positions,
             used_slots: Slot::empty(),
+            dps: Cell::new(None),
         }
     }
 
     pub fn place_crusader(&mut self, position: usize, crusader: &'a Crusader) -> &mut Self {
         self.positions[position].crusader = Some(crusader);
         self.used_slots |= crusader.slot();
+        self.dps.set(None);
         self
     }
 
@@ -33,13 +38,18 @@ impl<'a> Formation<'a> {
         self.positions[position].crusader = None;
         let used_slots = self.crusaders().fold(Slot::empty(), |s, c| s | c.slot());
         self.used_slots = used_slots;
+        self.dps.set(None);
         self
     }
 
     pub fn total_dps(&self) -> Dps {
-        self.positions.iter()
-            .map(|p| p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras)))
-            .sum()
+        self.dps.get().unwrap_or_else(|| {
+            let dps = self.positions.iter()
+                .map(|p| p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras)))
+                .sum();
+            self.dps.set(Some(dps));
+            dps
+        })
     }
 
     pub fn empty_positions<'b>(&'b self) -> impl Iterator<Item=usize> + 'b {
