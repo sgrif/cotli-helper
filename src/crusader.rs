@@ -632,15 +632,39 @@ impl CrusaderName {
             // BernardTheBartender => vec![],
 
             // Slot 7
-            ThePrincess => vec![],
+            ThePrincess => vec![
+                Aura::dps_global(10.0), // Ignite
+                Aura::dps_global(10.0), // Char
+                Aura::dps_global(10.0), // Conflagrate
+                Aura::dps_global(10.0), // Incinerate
+                // FIXME: Burn Baby Burn!
+            ],
             // RoboTurkey => vec![],
             // RangerRayna => vec![],
-            BaenarallAngelOfHope => vec![],
+            BaenarallAngelOfHope => vec![
+                Aura::dps_global(10.0), // Warmth
+                Aura::dps_global(10.0), // Embolden
+                Aura::dps_global(20.0).with_modifier(Modifier::Diversity), // Diversity
+                Aura::dps_global(5.0).times(!WithTag(EVENT)), // The Old Guard
+            ],
 
             // Slot 8
-            NatalieDragon => vec![],
+            NatalieDragon => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Cloak and Dagger
+                Aura::dps_increase(100.0).for_crusader(*self), // Sisterly Love
+                Aura::dps_increase(100.0).for_crusader(*self), // The Julius Caesar
+                Aura::dps_global(15.0), // Daggerfall
+                // FIXME: Double Dragon
+                Aura::dps_increase(150.0).for_crusader(*self), // Trophy Hunter
+            ],
             // JackOLantern => vec![],
-            PresidentBillySmithsonian => vec![],
+            PresidentBillySmithsonian => vec![
+                Aura::dps_global(10.0), // Election Year
+                Aura::dps_increase(150.0).for_crusader(*self), // Secret Service
+                Aura::dps_global(15.0), // Rousing Speech
+                // FIXME: Peace Treaty
+                Aura::dps_increase(50.0).affecting(WithTag(HUMAN)), // Us Vs. Them
+            ],
             // KarlTheKicker => vec![],
 
             // Slot 9
@@ -794,6 +818,10 @@ impl Crusader {
 
     pub fn dps_auras(&self) -> &[Aura] {
         &self.dps_auras
+    }
+
+    pub fn tags(&self) -> Tags {
+        self.name.tags()
     }
 }
 

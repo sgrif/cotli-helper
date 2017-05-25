@@ -3,11 +3,11 @@ mod modifier;
 mod target;
 
 pub use self::condition::*;
+pub use self::modifier::*;
 pub use self::target::*;
 
 use crusader::*;
 use formation::*;
-use self::modifier::*;
 
 pub struct Aura {
     amount: f64,
@@ -46,6 +46,10 @@ impl Aura {
         self.with_modifier(Modifier::RandomlyAffecting(count, target))
     }
 
+    pub fn with_modifier(self, modifier: Modifier) -> Self {
+        Aura { modifier: Some(modifier), ..self }
+    }
+
     pub fn when_exists(self, target: Target) -> Self {
         self.when(Condition::Gt(target, 0))
     }
@@ -67,10 +71,6 @@ impl Aura {
             return 0.0;
         }
         self.modifier_amount(formation)
-    }
-
-    fn with_modifier(self, modifier: Modifier) -> Self {
-        Aura { modifier: Some(modifier), ..self }
     }
 
     fn applies_to(
