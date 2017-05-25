@@ -103,8 +103,7 @@ impl<'a> Node<'a> {
 
     fn best_child(&mut self) -> Option<(Placement<'a>, &mut Self)> {
         let mut rng = thread_rng();
-        let possible_children = self.children.len()
-            - self.children.values().filter(|c| !c.is_complete()).count();
+        let possible_children = self.children.values().filter(|c| !c.is_complete()).count();
         let selection = rng.gen_range(0, max(1, possible_children));
         self.children.iter_mut()
             .filter(|&(_, ref v)| !v.is_complete())
