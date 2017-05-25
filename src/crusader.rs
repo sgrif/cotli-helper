@@ -94,9 +94,9 @@ pub enum CrusaderName {
     // KatieTheCupid,
 
     // Slot 15
-    // PrinceSalTheMerman,
+    PrinceSalTheMerman,
     // WendyTheWitch,
-    // RobbieRaccoon,
+    RobbieRaccoon,
     // PrincessValTheMermaid,
 
     // Slot 16
@@ -197,9 +197,9 @@ impl CrusaderName {
             // RoboSanta |
             // LeerionTheRoyalDwarf |
             // KatieTheCupid => SLOT_14,
-            // PrinceSalTheMerman |
+            PrinceSalTheMerman |
             // WendyTheWitch |
-            // RobbieRaccoon |
+            RobbieRaccoon => SLOT_15,
             // PrincessValTheMermaid => SLOT_15,
             // FirePhoenix |
             // AlanTheArchAngel |
@@ -311,15 +311,15 @@ impl CrusaderName {
             SnicketteTheSneaky => 2.04e6,
 
             // Slot 14
-            GoldPanda => 8.33e6,
+            GoldPanda => 8.33e7,
             // RoboSanta |
             // LeerionTheRoyalDwarf |
             // KatieTheCupid |
 
             // Slot 15
-            // PrinceSalTheMerman |
+            PrinceSalTheMerman |
             // WendyTheWitch |
-            // RobbieRaccoon |
+            RobbieRaccoon => 5.52e8,
             // PrincessValTheMermaid |
 
             // Slot 16
@@ -451,9 +451,9 @@ impl CrusaderName {
             // KatieTheCupid => FEMALE | SUPERNATURAL | EVENT | SUPPORT | GOLD_FINDER,
 
             // Slot 15
-            // PrinceSalTheMerman => MALE | ANIMAL | ROYAL | DPS,
+            PrinceSalTheMerman => MALE | ANIMAL | ROYAL | DPS,
             // WendyTheWitch => FEMALE | HUMAN | MAGICAL | EVENT | DPS,
-            // RobbieRaccoon => MALE | ANIMAL | EVENT | DPS | SUPPORT,
+            RobbieRaccoon => MALE | ANIMAL | EVENT | DPS | SUPPORT,
             // PrincessValTheMermaid => FEMALE | ANIMAL | ROYAL | EVENT | SUPPORT | HEALER,
 
             // Slot 16
@@ -799,9 +799,21 @@ impl CrusaderName {
             // KatieTheCupid => vec![],
 
             // Slot 15
-            // PrinceSalTheMerman => vec![],
+            PrinceSalTheMerman => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Mad Trident Skillz
+                Aura::dps_global(10.0), // Salt Water Taffy
+                Aura::dps_increase(100.0).for_crusader(*self), // Shark Attack
+                Aura::dps_increase(150.0).for_crusader(*self), // Triton's Blessing
+                // FIXME: Neptune's Wrath
+                Aura::dps_increase(150.0).for_crusader(*self), // 20,000 Leagues
+            ],
             // WendyTheWitch => vec![],
-            // RobbieRaccoon => vec![],
+            RobbieRaccoon => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Soloist
+                Aura::dps_increase(100.0).for_crusader(*self), // Tinkerer
+                Aura::dps_increase(150.0).for_crusader(*self), // Acoustics
+                Aura::dps_increase(200.0).for_crusader(*self), // Plan B
+            ],
             // PrincessValTheMermaid => vec![],
 
             // Slot 16
@@ -933,9 +945,9 @@ impl CrusaderName {
             // KatieTheCupid |
 
             // Slot 15
-            // PrinceSalTheMerman |
+            PrinceSalTheMerman |
             // WendyTheWitch |
-            // RobbieRaccoon |
+            RobbieRaccoon => 4.50e11
             // PrincessValTheMermaid |
 
             // Slot 16
