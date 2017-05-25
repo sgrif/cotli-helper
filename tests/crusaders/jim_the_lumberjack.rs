@@ -33,12 +33,10 @@ fn jim_increases_dps_of_crusaders_in_same_column() {
     let mut formation = worlds_wake();
 
     formation.place_crusader(0, &sally);
-    // assert_formation_dps!("1.62e6", formation);
-    assert_formation_dps!("2.11e4", formation);
-    formation.place_crusader(1, &jim);
-    // assert_formation_dps!("2.43e6", formation);
-    assert_formation_dps!("3.16e4", formation);
-    formation.remove_crusader(1);
-    formation.place_crusader(4, &jim);
-    assert_formation_dps!("2.11e4", formation);
+    assert_formation_dps!("1.62e6", formation);
+    formation.place_crusader(2, &jim);
+    assert_formation_dps!("2.43e6", formation);
+    formation.remove_crusader(2);
+    formation.place_crusader(5, &jim);
+    assert_formation_dps!("1.62e6", formation);
 }

@@ -506,7 +506,17 @@ impl CrusaderName {
 
             // Slot 3
             EmoWerewolf => vec![],
-            SallyTheSuccubus => vec![],
+            SallyTheSuccubus => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Enchantress
+                Aura::dps_increase(100.0).for_crusader(*self), // Charm
+                Aura::dps_increase(300.0).for_crusader(*self) // Seduction
+                    .minus(Aura::dps_global(25.0).times(
+                        AdjacentTo(*self).and(WithTag(FEMALE))
+                    )),
+                Aura::dps_increase(100.0).for_crusader(*self), // Crack The Whip
+                Aura::dps_increase(100.0).for_crusader(*self), // Absorb Lifeblood
+                Aura::dps_increase(20.0).affecting(WithTag(FEMALE)), // Jealousy
+            ],
             // KarenTheCatTeenager => vec![],
 
             // Slot 4
