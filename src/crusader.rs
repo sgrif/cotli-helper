@@ -786,7 +786,7 @@ impl CrusaderName {
                     .plus(Aura::dps_global(10.0).times(WithTag(HUMAN))),
                 // FIXME: Critical Thinking
                 Aura::dps_global(50.0) // The Blame Game
-                    .when(Condition::Gt(WithTag(LEPRECHAUN), 2)),
+                    .when(Condition::Gt(WithTag(LEPRECHAUN), 1)),
             ],
 
             // Slot 14
