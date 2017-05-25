@@ -300,3 +300,62 @@ fn search_state(crusaders: &[Crusader]) -> State {
         crusaders,
     }
 }
+
+#[cfg(test)]
+mod benchmarks {
+    extern crate test;
+    use create_user_data;
+    use self::test::Bencher;
+    use super::*;
+
+    #[bench]
+    fn bench_expand_root_node(b: &mut Bencher) {
+        let positions = vec![
+            Coordinate::new(0, 0),
+            Coordinate::new(0, 1),
+            Coordinate::new(0, 2),
+            Coordinate::new(0, 3),
+            Coordinate::new(1, 0),
+            Coordinate::new(1, 1),
+            Coordinate::new(1, 2),
+            Coordinate::new(2, 1),
+            Coordinate::new(2, 2),
+            Coordinate::new(3, 1),
+        ];
+        let formation = Formation::empty(positions);
+        let crusaders = create_user_data().unlocked_crusaders();
+        let mut search = Node::new();
+        let state = State { formation, crusaders: &crusaders };
+
+        b.iter(|| {
+            search.expand(&mut state.clone())
+        })
+    }
+
+    #[bench]
+    fn bench_search_root_after_1k_expands(b: &mut Bencher) {
+        let positions = vec![
+            Coordinate::new(0, 0),
+            Coordinate::new(0, 1),
+            Coordinate::new(0, 2),
+            Coordinate::new(0, 3),
+            Coordinate::new(1, 0),
+            Coordinate::new(1, 1),
+            Coordinate::new(1, 2),
+            Coordinate::new(2, 1),
+            Coordinate::new(2, 2),
+            Coordinate::new(3, 1),
+        ];
+        let formation = Formation::empty(positions);
+        let crusaders = create_user_data().unlocked_crusaders();
+        let mut search = Node::new();
+        let state = State { formation, crusaders: &crusaders };
+        for _ in 0..1_000 {
+            search.expand(&mut state.clone());
+        }
+
+        b.iter(|| {
+            search.check_single_formation(&mut state.clone())
+        })
+    }
+}
