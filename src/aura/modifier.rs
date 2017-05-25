@@ -2,6 +2,7 @@ use super::*;
 
 pub enum Modifier {
     Minus(Box<Aura>),
+    Plus(Box<Aura>),
     Times(Target),
 }
 
@@ -10,6 +11,7 @@ impl Modifier {
         use self::Modifier::*;
         match *self {
             Minus(ref aura) => base - aura.modifier_amount(formation),
+            Plus(ref aura) => base + aura.modifier_amount(formation),
             Times(ref target) => base * target.count_in_formation(formation) as f64,
         }
     }

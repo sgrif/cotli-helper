@@ -9,6 +9,7 @@ pub enum Target {
     And(Box<Target>, Box<Target>),
     InSameColumn(CrusaderName),
     Not(Box<Target>),
+    Or(Box<Target>, Box<Target>),
     SpecificCrusader(CrusaderName),
     WithTag(Tags),
 }
@@ -16,6 +17,10 @@ pub enum Target {
 impl Target {
     pub fn and(self, other: Target) -> Self {
         Target::And(Box::new(self), Box::new(other))
+    }
+
+    pub fn or(self, other: Target) -> Self {
+        Target::Or(Box::new(self), Box::new(other))
     }
 
     pub fn matches(
@@ -38,6 +43,8 @@ impl Target {
                 formation.position_of(crusader).map(|c| c.x) ==
                     formation.position_of(source).map(|c| c.x),
             Not(ref t1) => !t1.matches(crusader, formation),
+            Or(ref t1, ref t2) => t1.matches(crusader, formation) ||
+                t2.matches(crusader, formation),
             SpecificCrusader(name) => crusader == name,
             WithTag(tag) => crusader.tags().contains(tag),
         }

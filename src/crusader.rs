@@ -519,7 +519,16 @@ impl CrusaderName {
                 // FIXME: Uber Axing
             ],
             // PilotPam => vec![],
-            VeronicaTheAndroidArcher => vec![],
+            VeronicaTheAndroidArcher => vec![
+                Aura::dps_increase(150.0).for_crusader(*self), // Turing Complete
+                Aura::dps_increase(50.0) // Precise Aim
+                    .affecting(InSameColumn(*self).or(AdjacentTo(*self))) // Line of Sight
+                    .plus(Aura::dps_global(25.0).times( // Multicore Processing
+                        WithTag(ROBOT).and(!SpecificCrusader(*self))
+                    )),
+                // FIXME: Fire!
+                Aura::dps_global(15.0),
+            ],
             Arachnobuddy => vec![],
 
             // Slot 3

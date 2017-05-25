@@ -25,6 +25,10 @@ impl Aura {
         Aura::dps_increase(amount).affecting(Target::AllCrusaders)
     }
 
+    pub fn plus(self, aura: Aura) -> Self {
+        self.with_modifier(Modifier::Plus(Box::new(aura)))
+    }
+
     pub fn minus(self, aura: Aura) -> Self {
         self.with_modifier(Modifier::Minus(Box::new(aura)))
     }
