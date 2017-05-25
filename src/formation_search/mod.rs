@@ -13,6 +13,8 @@ use formation::*;
 use self::unused_slots::unused_slots;
 use self::set_like::*;
 
+const EXPLORATION_COEF: f64 = 1.6;
+
 pub struct FormationSearch<'a> {
     state: State<'a>,
     search_root: Node<'a>,
@@ -43,13 +45,10 @@ impl<'a> FormationSearch<'a> {
                 }
             }
             let current_dps = self.state.formation.total_dps();
-            let root_dps = self.search_root.highest_dps_seen;
             let best_option = self.search_root.children
                 .drain(..)
-                .filter(|&(_, ref c)| {
-                    c.highest_dps_seen >= current_dps &&
-                        c.highest_dps_seen >= root_dps
-                }).nth(0); // FIXME: If multiple options have same, take most searched
+                .filter(|&(_, ref c)| c.highest_dps_seen >= current_dps)
+                .max_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen));
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
                 self.state.formation.print();
@@ -76,6 +75,7 @@ enum Progress {
 
 struct Node<'a> {
     highest_dps_seen: Dps,
+    total_dps_seen: Dps,
     progress: Progress,
     children: OrderMap<Placement<'a>, Node<'a>>,
     times_checked: u32,
@@ -86,6 +86,7 @@ impl<'a> Node<'a> {
         Node {
             progress: Progress::Expandable,
             highest_dps_seen: Default::default(),
+            total_dps_seen: Default::default(),
             children: Default::default(),
             times_checked: 0,
         }
@@ -99,6 +100,7 @@ impl<'a> Node<'a> {
                     let mut child = Node::new();
                     child.check_single_formation(state);
                     self.maybe_assign_dps(child.highest_dps_seen);
+                    self.total_dps_seen += state.formation.total_dps();
                     self.children.insert(placement, child);
                 } else {
                     self.progress = Progress::FullyExpanded;
@@ -112,13 +114,18 @@ impl<'a> Node<'a> {
     }
 
     fn best_child(&mut self) -> Option<(Placement<'a>, &mut Self)> {
-        let mut rng = thread_rng();
-        let possible_children = self.children.values().filter(|c| !c.is_complete()).count();
-        let selection = rng.gen_range(0, max(1, possible_children));
+        let log_total = (self.times_checked as f64).ln();
+        let highest_dps = self.highest_dps_seen.0;
+        let score = |c: &Self| {
+            let normalized_dps_seen = c.total_dps_seen.0 / (c.times_checked as f64) / highest_dps;
+            let exploration_adjustment = EXPLORATION_COEF
+                * (log_total / c.times_checked as f64).sqrt();
+            Dps(normalized_dps_seen + exploration_adjustment)
+        };
         self.children.iter_mut()
             .filter(|&(_, ref v)| !v.is_complete())
             .map(|(&k, v)| (k, v))
-            .nth(selection)
+            .max_by_key(|&(_, ref c1)| score(c1))
     }
 
     fn check_single_formation(&mut self, state: &mut State<'a>) {
@@ -134,10 +141,12 @@ impl<'a> Node<'a> {
                         state.fill_formation_randomly();
                         search_dps = state.formation.total_dps()
                     }
-                    self.maybe_assign_dps(search_dps)
+                    self.maybe_assign_dps(search_dps);
+                    self.total_dps_seen += state.formation.total_dps();
                 } else {
                     self.progress = Progress::Complete;
                     self.maybe_assign_dps(state.formation.total_dps());
+                    self.total_dps_seen += state.formation.total_dps();
                 }
             }
             Progress::FullyExpanded => self.to_best_child(state, Self::check_single_formation),
@@ -169,6 +178,7 @@ impl<'a> Node<'a> {
         }
         if let Some(dps) = search_dps {
             self.maybe_assign_dps(dps);
+            self.total_dps_seen += dps;
         } else {
             self.progress = Progress::Complete;
         }

@@ -1,6 +1,7 @@
+use std::cmp::Ordering;
 use std::fmt;
 use std::iter::Sum;
-use std::ops::{Mul, Add};
+use std::ops::{Mul, Add, AddAssign};
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Default)]
 pub struct Dps(pub f64);
@@ -14,6 +15,14 @@ impl Dps {
         }
 
         Dps(self.0 * (1.0 + percent / 100.0))
+    }
+}
+
+// We're super sure we don't have NaN
+impl Eq for Dps {}
+impl Ord for Dps {
+    fn cmp(&self, rhs: &Dps) -> Ordering {
+        self.partial_cmp(&rhs).unwrap()
     }
 }
 
@@ -31,6 +40,12 @@ impl Add for Dps {
 
     fn add(self, other: Dps) -> Self::Output {
         Dps(self.0 + other.0)
+    }
+}
+
+impl AddAssign for Dps {
+    fn add_assign(&mut self, other: Dps) {
+        *self = *self + other;
     }
 }
 
