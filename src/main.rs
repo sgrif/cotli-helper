@@ -18,11 +18,11 @@ fn main() {
         Coordinate::new(2, 2),
         Coordinate::new(3, 1),
     ];
-    let formation = Formation::empty(positions);
     // Nate at 3000
     let crusaders = create_user_data().unlocked_crusaders(Some(4.86e105));
     // Nate at 5125
     // let crusaders = create_user_data().unlocked_crusaders(Some(1.34e168));
+    let formation = Formation::empty(positions);
     let mut search = FormationSearch::new(formation, &crusaders);
     search.perform_search(::std::time::Duration::from_secs(30));
     search.formation().print();
