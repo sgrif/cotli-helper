@@ -168,7 +168,9 @@ pub enum AuraTag {
     LoneWolf,
 
     // Slot 4
+    Bulwark,
     EligibleReceivers,
+    Gunslinger,
 
     // Slot 10
     LooseMagic,

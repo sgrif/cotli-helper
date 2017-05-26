@@ -583,7 +583,8 @@ impl CrusaderName {
 
             // Slot 4
             SashaTheFierceWarrior => vec![
-                Aura::dps_increase(30.0).affecting(InColumnBehind(*self)), // Bulwark
+                Aura::dps_increase(30.0).affecting(InColumnBehind(*self)) // Bulwark
+                    .with_tag(AuraTag::Bulwark),
                 Aura::dps_increase(100.0).for_crusader(*self), // Bad Guy Butt Kicking
                 Aura::dps_increase(100.0).for_crusader(*self), // Power of the Warrior
                 Aura::dps_increase(100.0).for_crusader(*self), // Soul of the Warrior
@@ -594,7 +595,8 @@ impl CrusaderName {
                 Aura::dps_increase(150.0).for_crusader(*self), // Checkdown
                 // FIXME: Defensive Team
                 Aura::dps_increase(150.0).for_crusader(*self) // Gunslinger
-                    .when_exists(EmptySlot),
+                    .when_exists(EmptySlot)
+                    .with_tag(AuraTag::Gunslinger),
                 Aura::dps_increase(150.0).affecting(InColumnAhead(*self)) // Eligible Receivers
                     .divided_by(InColumnAhead(*self))
                     .with_tag(AuraTag::EligibleReceivers),
@@ -1073,8 +1075,23 @@ impl CrusaderName {
             // KarenTheCatTeenager => vec![],
 
             // Slot 4
-            SashaTheFierceWarrior => vec![],
-            GroklokTheOrc => vec![],
+            SashaTheFierceWarrior => vec![
+                // Gloves
+                dps_all(gear[0]),
+                // Shield
+                dps_self(gear[1]),
+                legendary_effect(50.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(TANK)),
+                // Helmet
+                legendary_effect(33.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(InColumnBehind(*self)),
+            ],
+            GroklokTheOrc => vec![
+                // Football
+                dps_self(gear[2]),
+            ],
             // MindyTheMime => vec![],
 
             // Slot 5
@@ -1290,8 +1307,20 @@ impl CrusaderName {
             // KarenTheCatTeenager => vec![],
 
             // Slot 4
-            SashaTheFierceWarrior => vec![],
-            GroklokTheOrc => vec![],
+            SashaTheFierceWarrior => vec![
+                // Gloves
+                legendary_ability_mod(Bulwark, gear[0]),
+                // Helm
+                ability_mod(Bulwark, gear[2]),
+            ],
+            GroklokTheOrc => vec![
+                // Tooth
+                ability_mod(EligibleReceivers, gear[0]),
+                // Bracer
+                legendary_ability_mod(Gunslinger, gear[1]),
+                // Football
+                legendary_ability_mod(EligibleReceivers, gear[2]),
+            ],
             // MindyTheMime => vec![],
 
             // Slot 5
