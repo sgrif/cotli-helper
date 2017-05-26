@@ -13,7 +13,7 @@ use formation::*;
 use self::unused_slots::unused_slots;
 use self::set_like::*;
 
-const EXPLORATION_COEF: f64 = 1.6;
+const EXPLORATION_COEF: f64 = 1.4;
 
 pub struct FormationSearch<'a> {
     state: State<'a>,
@@ -80,6 +80,15 @@ enum Progress {
     Complete,
 }
 
+// NOTE: We're storing/checking redundant information here due to how the
+// tree is set up. e.g. Placing Grandmora and then Sally will not share data
+// with placing Sally then Grandmora even if the formation is the same. The
+// alternative would be to store everything in a flat map, where the key
+// is the formation. What we have now is probably better than at least the
+// naive implementation of the alternative, since that would require duplicating
+// the vec of placements once per option, and would balloon memory usage.
+// However, if we track the placements using some sort of persistent data
+// structure, we may be able to see a decent boost from flattening the tree
 struct Node<'a> {
     highest_dps_seen: Dps,
     total_dps_seen: Dps,
@@ -106,8 +115,7 @@ impl<'a> Node<'a> {
                     state.place(placement);
                     let mut child = Node::new();
                     child.check_single_formation(state);
-                    self.maybe_assign_dps(child.highest_dps_seen);
-                    self.total_dps_seen += state.formation.total_dps();
+                    self.track_dps_changes(state);
                     self.children.insert(placement, child);
                 } else {
                     self.progress = Progress::FullyExpanded;
@@ -140,21 +148,15 @@ impl<'a> Node<'a> {
             Progress::Expandable => {
                 if let Some(placement) = state.random_placement(&EmptySet) {
                     state.place(placement);
-                    let search_dps;
                     if let Some(child) = self.children.get_mut(&placement) {
                         child.check_single_formation(state);
-                        search_dps = child.highest_dps_seen;
                     } else {
                         state.fill_formation_randomly();
-                        search_dps = state.formation.total_dps()
                     }
-                    self.maybe_assign_dps(search_dps);
-                    self.total_dps_seen += state.formation.total_dps();
                 } else {
                     self.progress = Progress::Complete;
-                    self.maybe_assign_dps(state.formation.total_dps());
-                    self.total_dps_seen += state.formation.total_dps();
                 }
+                self.track_dps_changes(state);
             }
             Progress::FullyExpanded => self.to_best_child(state, Self::check_single_formation),
             Progress::Complete => {}
@@ -162,7 +164,9 @@ impl<'a> Node<'a> {
         self.times_checked += 1;
     }
 
-    fn maybe_assign_dps(&mut self, dps: Dps) {
+    fn track_dps_changes(&mut self, state: &State) {
+        let dps = state.formation.total_dps();
+        self.total_dps_seen += dps;
         if dps > self.highest_dps_seen {
             self.highest_dps_seen = dps;
         }
@@ -177,15 +181,14 @@ impl<'a> Node<'a> {
         state: &mut State<'a>,
         action: fn(&mut Self, &mut State<'a>),
     ) {
-        let mut search_dps = None;
+        let mut found_child = false;
         if let Some((placement, child)) = self.best_child() {
             state.place(placement);
             action(child, state);
-            search_dps = Some(child.highest_dps_seen);
+            found_child = true;
         }
-        if let Some(dps) = search_dps {
-            self.maybe_assign_dps(dps);
-            self.total_dps_seen += dps;
+        if found_child {
+            self.track_dps_changes(state);
         } else {
             self.progress = Progress::Complete;
         }
