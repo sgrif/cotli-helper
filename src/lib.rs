@@ -23,28 +23,29 @@ use user_data::*;
 
 pub fn create_user_data() -> UserData {
     UserData::default()
-        .with_dps_from_rings(455.0)
-        .with_cooldown_percent(177.0)
-        .with_dps_from_achievements(381.0)
-        .with_unspent_idols(779)
+        .with_dps_from_rings(503.0)
+        .with_cooldown_percent(208.0)
+        .with_dps_from_achievements(393.0)
+        .with_unspent_idols(1851)
         .level_talent(Talent::SpeedRunner, 10)
-        .level_talent(Talent::RideTheStorm, 4)
-        .level_talent(Talent::StormsBuilding, 6)
-        .level_talent(Talent::PassiveCriticals, 22)
-        .level_talent(Talent::SurplusCooldown, 19)
-        .level_talent(Talent::Overenchanted, 9)
-        .level_talent(Talent::SetBonus, 9)
+        .level_talent(Talent::EnduranceTraining, 1)
+        .level_talent(Talent::RideTheStorm, 6)
+        .level_talent(Talent::StormsBuilding, 8)
+        .level_talent(Talent::PassiveCriticals, 23)
+        .level_talent(Talent::SurplusCooldown, 22)
+        .level_talent(Talent::Overenchanted, 11)
+        .level_talent(Talent::SetBonus, 11)
         .level_talent(Talent::FastLearners, 2)
-        .level_talent(Talent::WellEquipped, 4)
-        .level_talent(Talent::SwapDay, 3)
+        .level_talent(Talent::WellEquipped, 5)
+        .level_talent(Talent::SwapDay, 4)
         .level_talent(Talent::SpendItAll, 1)
         .level_talent(Talent::UpgradeThemAll, 1)
         .level_talent(Talent::Scavenger, 1)
         .level_talent(Talent::SpeedLooter, 1)
         .level_talent(Talent::EfficientCrusading, 25)
         .level_talent(Talent::DoingItAgain, 1)
-        .level_talent(Talent::DeepIdolScavenger, 13)
-        .level_talent(Talent::ExtraTraining, 2)
+        .level_talent(Talent::DeepIdolScavenger, 15)
+        .level_talent(Talent::ExtraTraining, 5)
         .level_talent(Talent::TripleTierTrouble, 1)
         .add_crusader(CrusaderName::TheBushWhacker, CrusaderData {
             enchantment_points: 114,
@@ -53,10 +54,10 @@ pub fn create_user_data() -> UserData {
             enchantment_points: 91,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
         }).add_crusader(CrusaderName::JimTheLumberjack, CrusaderData {
-            enchantment_points: 77,
+            enchantment_points: 85,
             gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Epic],
         }).add_crusader(CrusaderName::Arachnobuddy, CrusaderData {
-            enchantment_points: 47,
+            enchantment_points: 79,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
         }).add_crusader(CrusaderName::VeronicaTheAndroidArcher, CrusaderData {
             enchantment_points: 4,

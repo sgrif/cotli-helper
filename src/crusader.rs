@@ -3,6 +3,7 @@ use std::cmp::{Ordering, min};
 use aura::*;
 use aura::Target::*;
 use dps::*;
+use user_data::UserData;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum CrusaderName {
@@ -232,7 +233,7 @@ impl CrusaderName {
         }
     }
 
-    fn base_dps(&self) -> f64 {
+    pub fn base_dps(&self) -> f64 {
         use self::CrusaderName::*;
         match *self {
             // Testing only
@@ -779,8 +780,8 @@ impl CrusaderName {
             // Slot 13
             SarahTheCollector => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Ooh Shiny!
-                // Aura::dps_increase(150.0).for_crusader(*self) // Full Set
-                //     .when_none(EmptySlot),
+                Aura::dps_increase(150.0).for_crusader(*self) // Full Set
+                    .when_none(EmptySlot),
                 Aura::dps_increase(100.0).for_crusader(*self), // Collect Them All!
                 Aura::dps_increase(100.0).for_crusader(*self), // My Precioussss
                 Aura::dps_increase(150.0).for_crusader(*self), // Mine! Mine! Mine!
@@ -1144,13 +1145,14 @@ impl fmt::Debug for Crusader {
 }
 
 impl Crusader {
-    pub fn new(name: CrusaderName, level: Level, max_cost: Option<f64>) -> Self {
+    pub fn new(name: CrusaderName, user_data: &UserData, max_cost: Option<f64>) -> Self {
+        let max_level = user_data.max_level();
         let level = max_cost
-            .map(|max_cost| min(level, name.level_at_cost(max_cost)))
-            .unwrap_or(level);
+            .map(|max_cost| min(max_level, name.level_at_cost(max_cost)))
+            .unwrap_or(max_level);
         Crusader {
             name,
-            base_dps: Dps(name.base_dps()),
+            base_dps: user_data.base_dps_for_crusader(name),
             level,
             dps_auras: name.dps_auras(),
         }
@@ -1158,7 +1160,8 @@ impl Crusader {
 
     #[cfg(any(test, debug_assertions))]
     pub fn dummy(tags: Tags) -> Self {
-        Crusader::new(CrusaderName::Dummy(tags), Level(1), None)
+        Crusader::new(CrusaderName::Dummy(tags), &Default::default(), None)
+            .at_level(1)
     }
 
     pub fn at_level(self, level: u16) -> Self {

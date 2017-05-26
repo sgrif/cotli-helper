@@ -297,9 +297,9 @@ fn test_formation<'a>() -> Formation<'a> {
 #[cfg(test)]
 fn test_crusaders() -> Vec<Crusader> {
     vec![
-        Crusader::new(CrusaderName::JimTheLumberjack, Level(5000), None),
-        Crusader::new(CrusaderName::VeronicaTheAndroidArcher, Level(5000), None),
-        Crusader::new(CrusaderName::SallyTheSuccubus, Level(5000), None),
+        Crusader::new(CrusaderName::JimTheLumberjack, &Default::default(), None),
+        Crusader::new(CrusaderName::VeronicaTheAndroidArcher, &Default::default(), None),
+        Crusader::new(CrusaderName::SallyTheSuccubus, &Default::default(), None),
     ]
 }
 

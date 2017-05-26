@@ -27,5 +27,5 @@ fn sarah_is_buffed_by_full_formation() {
     formation.place_crusader(1, &dummy);
     assert_formation_dps!("3.26e10", formation);
     formation.place_crusader(2, &dummy);
-    assert_formation_dps!("8.15e10", formation);
+    assert_formation_dps!("8.16e10", formation);
 }

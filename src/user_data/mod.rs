@@ -6,6 +6,7 @@ mod talent_data;
 pub use self::crusader_data::CrusaderData;
 
 use crusader::*;
+use dps::*;
 use self::crusader_data::AllCrusaderData;
 use self::talent_data::TalentData;
 use talent::*;
@@ -54,56 +55,43 @@ impl UserData {
     pub fn unlocked_crusaders(&self, gold: Option<f64>) -> Vec<Crusader> {
         self.crusader_data.unlocked_crusaders()
             .cloned()
-            .map(|name| Crusader::new(name, self.talents.max_level(), gold))
+            .map(|name| Crusader::new(name, self, gold))
             .collect()
     }
 
-    // pub fn auras(&self) -> Vec<Aura> {
-    //     let mut auras = vec![
-    //         Aura::dps_increase(self.dps_percent_from_idols()),
-    //         Aura::dps_increase(self.dps_from_rings),
-    //         Aura::dps_increase(self.dps_from_achievements),
-    //         // FIXME: This needs to be multiplied times crit percent
-    //         Aura::dps_increase(self.talents.dps_percent_per_crit_chance()),
-    //         Aura::dps_increase(
-    //             (self.cooldown_percent - MAX_COOLDOWN)
-    //                 * self.talents.dps_perent_per_cooldown_percent()
-    //         ),
-    //     ];
-    //     auras.extend(self.crusader_data.unlocked_crusaders()
-    //         .map(move |name| {
-    //             let dps_bonus = self.ep_for_crusader(name) as f64
-    //                 * self.talents.dps_percent_per_ep();
-    //             Aura::dps_increase(dps_bonus).for_crusader(*name)
-    //         }));
-    //     // FIXME: This needs to only include gear on crusaders in the formation
-    //     auras.extend(self.crusader_data.iter()
-    //         .flat_map(|(name, data)| {
-    //             GearQuality::auras_for(*name, &data.gear)
-    //         }));
-    //     auras.extend(self.crusader_data.iter()
-    //         .filter(|&(_, data)| data.has_full_set())
-    //         .map(move |(name, _)| {
-    //             Aura::dps_increase(self.talents.dps_percent_from_set_bonus())
-    //                 .for_crusader(*name)
-    //         }));
-    //     auras.extend(self.crusader_data.iter()
-    //         .map(move |(name, data)| {
-    //             let multiplier = self.talents.dps_percent_from_well_equipped();
-    //             Aura::dps_increase(data.num_epics() as f64 * multiplier).for_crusader(*name)
-    //         }));
-    //     auras.extend(self.crusader_data.unlocked_crusaders()
-    //         .map(move |name| {
-    //             let num_epics = self.crusader_data.epics_in_same_slot(name);
-    //             let multiplier = self.talents.dps_percent_from_swap_day();
-    //             Aura::dps_increase(num_epics as f64 * multiplier).for_crusader(*name)
-    //         }));
-    //     auras
-    // }
+    pub fn max_level(&self) -> Level {
+        self.talents.max_level()
+    }
+
+    pub fn base_dps_for_crusader(&self, crusader: CrusaderName) -> Dps {
+        let mut dps = Dps(crusader.base_dps())
+            .percent_increase(self.dps_percent_from_idols())
+            .percent_increase(self.dps_from_rings)
+            .percent_increase(self.dps_from_achievements)
+            .percent_increase(self.dps_percent_from_cooldown())
+            .percent_increase(self.ep_for_crusader(&crusader) as f64
+                * self.talents.dps_percent_per_ep());
+        if let Some(data) = self.crusader_data.get(&crusader) {
+            if data.has_full_set() {
+                dps = dps.percent_increase(self.talents.dps_percent_from_set_bonus());
+            }
+            let multiplier = self.talents.dps_percent_from_well_equipped();
+            dps = dps.percent_increase(data.num_epics() as f64 * multiplier);
+            let num_epics = self.crusader_data.epics_in_same_slot(&crusader);
+            let multiplier = self.talents.dps_percent_from_swap_day();
+            dps = dps.percent_increase(num_epics as f64 * multiplier);
+        }
+        dps
+    }
 
     fn dps_percent_from_idols(&self) -> f64 {
         let total_idols = self.unspent_idols + self.talents.spent_idols();
         (DPS_PERCENT_PER_IDOL * total_idols) as f64
+    }
+
+    fn dps_percent_from_cooldown(&self) -> f64 {
+        (self.cooldown_percent - MAX_COOLDOWN)
+            * self.talents.dps_perent_per_cooldown_percent()
     }
 
     fn ep_for_crusader(&self, crusader: &CrusaderName) -> u32 {

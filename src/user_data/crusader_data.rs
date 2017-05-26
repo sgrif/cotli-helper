@@ -17,6 +17,10 @@ impl AllCrusaderData {
         self.data.keys()
     }
 
+    pub fn get(&self, name: &CrusaderName) -> Option<&CrusaderData> {
+        self.data.get(name)
+    }
+
     pub fn iter<'a>(&'a self) -> impl Iterator<Item=(&'a CrusaderName, &'a CrusaderData)> {
         self.data.iter()
     }
