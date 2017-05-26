@@ -173,5 +173,11 @@ pub fn create_user_data() -> UserData {
         }).add_crusader(CrusaderName::Spaceking, CrusaderData {
             enchantment_points: 83,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],
+        }).add_crusader(CrusaderName::KingReginaldIV, CrusaderData {
+            enchantment_points: 94,
+            gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Rare],
+        }).add_crusader(CrusaderName::SquigglesTheClown, CrusaderData {
+            enchantment_points: 77,
+            gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Epic],
         })
 }

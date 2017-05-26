@@ -106,10 +106,10 @@ pub enum CrusaderName {
     Spaceking,
 
     // Slot 17
-    // KingReginaldIV,
+    KingReginaldIV,
     // QueenSiri,
     // MrBogginsTheSubstitute,
-    // SquigglesTheClown,
+    SquigglesTheClown,
 
     // Slot 18
     // ThaliaTheThunderKing,
@@ -205,10 +205,10 @@ impl CrusaderName {
             AlanTheArchAngel |
             // FrightOTronSLOT_4000 |
             Spaceking => SLOT_16,
-            // KingReginaldIV |
+            KingReginaldIV |
             // QueenSiri |
             // MrBogginsTheSubstitute |
-            // SquigglesTheClown => SLOT_17,
+            SquigglesTheClown => SLOT_17,
             // ThaliaTheThunderKing |
             // FrostyTheSnowman |
             // Littlefoot |
@@ -329,10 +329,10 @@ impl CrusaderName {
             Spaceking => 3.62e9,
 
             // Slot 17
-            // KingReginaldIV |
+            KingReginaldIV |
             // QueenSiri |
             // MrBogginsTheSubstitute |
-            // SquigglesTheClown |
+            SquigglesTheClown => 2.4e10,
 
             // Slot 18
             // ThaliaTheThunderKing |
@@ -463,10 +463,10 @@ impl CrusaderName {
             Spaceking => MALE | HUMAN | ROYAL | EVENT | DPS,
 
             // Slot 17
-            // KingReginaldIV => MALE | HUMAN | ROYAL | SUPPORT,
+            KingReginaldIV => MALE | HUMAN | ROYAL | SUPPORT,
             // QueenSiri => FEMALE | HUMAN | ROYAL | EVENT | SUPPORT | GOLD_FINDER,
             // MrBogginsTheSubstitute => MALE | EVENT | LEPRECHAUN | SUPPORT | GOLD_FINDER,
-            // SquigglesTheClown => MALE | HUMAN | EVENT | DPS,
+            SquigglesTheClown => MALE | HUMAN | EVENT | DPS,
 
             // Slot 18
             // ThaliaTheThunderKing => MALE | HUMAN | ROYAL | MAGICAL | TANK | SUPPORT,
@@ -843,10 +843,28 @@ impl CrusaderName {
             ],
 
             // Slot 17
-            // KingReginaldIV => vec![],
+            KingReginaldIV => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Unicorn Academy
+                Aura::dps_increase(100.0).for_crusader(*self), // Hunting Trophies
+                Aura::dps_global(10.0), // The Royal Army
+                Aura::dps_increase(200.0).affecting(WithTag(ROYAL)), // Royal Grail
+            ],
             // QueenSiri => vec![],
             // MrBogginsTheSubstitute => vec![],
-            // SquigglesTheClown => vec![],
+            SquigglesTheClown => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Hilarious
+                Aura::dps_increase(100.0).for_crusader(*self), // Face Pain
+                Aura::dps_increase(150.0).for_crusader(*self) // Royal Past
+                    .minus(Aura::dps_global(25.0).times(WithTag(ROYAL))),
+                Aura::dps_increase(150.0).for_crusader(*self), // Tummy Heart
+                Aura::dps_increase(10.0).for_crusader(*self) // Warming Up
+                    .times(!WithTag(ROYAL)),
+                Aura::dps_increase(200.0).for_crusader(*self) // Receptive Audience
+                    .when(Condition::Gt(
+                        WithTag(HUMAN).and(AdjacentTo(*self)),
+                        1,
+                    )),
+            ],
 
             // Slot 18
             // ThaliaTheThunderKing => vec![],
@@ -977,10 +995,10 @@ impl CrusaderName {
             Spaceking => 4e12,
 
             // Slot 17
-            // KingReginaldIV |
+            KingReginaldIV |
             // QueenSiri |
             // MrBogginsTheSubstitute |
-            // SquigglesTheClown |
+            SquigglesTheClown => 3.6e13
 
             // Slot 18
             // ThaliaTheThunderKing |
