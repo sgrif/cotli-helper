@@ -112,28 +112,32 @@ pub enum CrusaderName {
     SquigglesTheClown,
 
     // Slot 18
-    // ThaliaTheThunderKing,
+    ThaliaTheThunderKing,
     // FrostyTheSnowman,
     // Littlefoot,
     // CindyTheCheerOrc,
 
     // Slot 19
-    // MerciTheMadWizard,
-    // TheBatBillionaire,
+    MerciTheMadWizard,
+    TheBatBillionaire,
     // PetraThePilgrim,
+    PollyTheParrot,
 
     // Slot 20
-    // NateDragon,
+    NateDragon,
     // KizlblypTheAlienTraitor,
     // RoboRudolph,
 
     // Slot 21
-    // TheExterminator,
+    TheExterminator,
     // GloriaTheGoodWitch,
 
     // Slot 22
-    // TheShadowQueen,
+    TheShadowQueen,
     // IlsaTheInsaneWizard,
+
+    // Slot 23
+    GreyskullThePirate,
 }
 
 impl CrusaderName {
@@ -209,20 +213,22 @@ impl CrusaderName {
             // QueenSiri |
             // MrBogginsTheSubstitute |
             SquigglesTheClown => SLOT_17,
-            // ThaliaTheThunderKing |
+            ThaliaTheThunderKing => SLOT_18,
             // FrostyTheSnowman |
             // Littlefoot |
             // CindyTheCheerOrc => SLOT_18,
-            // MerciTheMadWizard |
-            // TheBatBillionaire |
-            // PetraThePilgrim => SLOT_19,
-            // NateDragon |
+            MerciTheMadWizard |
+            TheBatBillionaire |
+            // PetraThePilgrim |
+            PollyTheParrot => SLOT_19,
+            NateDragon => SLOT_20,
             // KizlblypTheAlienTraitor |
             // RoboRudolph => SLOT_20,
-            // TheExterminator |
+            TheExterminator => SLOT_21,
             // GloriaTheGoodWitch => SLOT_21,
-            // TheShadowQueen |
+            TheShadowQueen => SLOT_22,
             // IlsaTheInsaneWizard => SLOT_22,
+            GreyskullThePirate => SLOT_23,
         }
     }
 
@@ -335,28 +341,32 @@ impl CrusaderName {
             SquigglesTheClown => 2.4e10,
 
             // Slot 18
-            // ThaliaTheThunderKing |
+            ThaliaTheThunderKing => 1.57e11,
             // FrostyTheSnowman |
             // Littlefoot |
             // CindyTheCheerOrc |
 
             // Slot 19
-            // MerciTheMadWizard |
-            // TheBatBillionaire |
+            MerciTheMadWizard |
+            TheBatBillionaire |
             // PetraThePilgrim |
+            PollyTheParrot => 9.77e11,
 
             // Slot 20
-            // NateDragon |
+            NateDragon => 6.4e12,
             // KizlblypTheAlienTraitor |
             // RoboRudolph |
 
             // Slot 21
-            // TheExterminator |
+            TheExterminator => 1.89e14,
             // GloriaTheGoodWitch |
 
             // Slot 22
-            // TheShadowQueen |
+            TheShadowQueen => 5.56e15,
             // IlsaTheInsaneWizard |
+
+            // Slot 23
+            GreyskullThePirate => 1.63e17, // FIXME: This is probably wrong
         }
     }
 
@@ -469,28 +479,32 @@ impl CrusaderName {
             SquigglesTheClown => MALE | HUMAN | EVENT | DPS,
 
             // Slot 18
-            // ThaliaTheThunderKing => MALE | HUMAN | ROYAL | MAGICAL | TANK | SUPPORT,
+            ThaliaTheThunderKing => MALE | HUMAN | ROYAL | MAGICAL | TANK | SUPPORT,
             // FrostyTheSnowman => MALE | ANIMAL | SUPERNATURAL | EVENT | DPS,
             // Littlefoot => FEMALE | ANIMAL | SUPERNATURAL | EVENT | TANK | SUPPORT,
             // CindyTheCheerOrc => FEMALE | EVENT | ORC | SUPPORT,
 
             // Slot 19
-            // MerciTheMadWizard => MALE | HUMAN | MAGICAL | SUPPORT,
-            // TheBatBillionaire => MALE | HUMAN | EVENT | SUPPORT,
+            MerciTheMadWizard => MALE | HUMAN | MAGICAL | SUPPORT,
+            TheBatBillionaire => MALE | HUMAN | EVENT | SUPPORT,
             // PetraThePilgrim => FEMALE | EVENT | ELF | DPS,
+            PollyTheParrot => MALE | ANIMAL | EVENT | SUPPORT,
 
             // Slot 20
-            // NateDragon => MALE | HUMAN | DPS | SUPPORT,
+            NateDragon => MALE | HUMAN | DPS | SUPPORT,
             // KizlblypTheAlienTraitor => FEMALE | MAGICAL | EVENT | DPS | SUPPORT | ALIEN,
             // RoboRudolph => MALE | EVENT | ROBOT | DPS,
 
             // Slot 21
-            // TheExterminator => MALE | ROBOT | DPS | GOLD_FINDER,
+            TheExterminator => MALE | ROBOT | DPS | GOLD_FINDER,
             // GloriaTheGoodWitch => FEMALE | ANIMAL | MAGICAL | SUPPORT | HEALER,
 
             // Slot 22
-            // TheShadowQueen => FEMALE | HUMAN | ROYAL | SUPERNATURAL | SUPPORT,
+            TheShadowQueen => FEMALE | HUMAN | ROYAL | SUPERNATURAL | SUPPORT,
             // IlsaTheInsaneWizard => FEMALE | HUMAN | MAGICAL | DPS,
+
+            // Slot 23
+            GreyskullThePirate => MALE | HUMAN | TANK | GOLD_FINDER,
         }
     }
 
@@ -659,7 +673,8 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Sisterly Love
                 Aura::dps_increase(100.0).for_crusader(*self), // The Julius Caesar
                 Aura::dps_global(15.0), // Daggerfall
-                // FIXME: Double Dragon
+                Aura::dps_increase(200.0).for_crusader(*self) // Double Dragon
+                    .when_exists(SpecificCrusader(NateDragon)),
                 Aura::dps_increase(150.0).for_crusader(*self), // Trophy Hunter
             ],
             // JackOLantern => vec![],
@@ -867,28 +882,82 @@ impl CrusaderName {
             ],
 
             // Slot 18
-            // ThaliaTheThunderKing => vec![],
+            ThaliaTheThunderKing => vec![
+                Aura::dps_increase(125.0).for_crusader(*self), // Lightning Bolted
+                Aura::dps_increase(125.0).for_crusader(*self), // Forked Lightning
+                Aura::dps_global(15.0), // Lightning Ore
+                // FIXME: Storm Rider
+            ],
             // FrostyTheSnowman => vec![],
             // Littlefoot => vec![],
             // CindyTheCheerOrc => vec![],
 
             // Slot 19
-            // MerciTheMadWizard => vec![],
-            // TheBatBillionaire => vec![],
+            MerciTheMadWizard => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Sorry!
+                Aura::dps_global(15.0), // Zombie Friends?
+                // FIXME: Deflect Evil
+                Aura::dps_increase(100.0).for_crusader(*self), // Lotus Land
+                Aura::dps_increase(150.0).for_crusader(*self), // All Apologies
+            ],
+            TheBatBillionaire => vec![
+                Aura::dps_global(20.0), // The Bat Signal
+                Aura::dps_global(20.0), // Bat-o-Level
+                Aura::dps_increase(50.0).affecting(AdjacentTo(*self)), // Sidekicks
+                // FIXME: Smart Investing
+            ],
             // PetraThePilgrim => vec![],
+            PollyTheParrot => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Peck
+                // FIXME: Got a Cracker! (maybe don't care)
+                // FIXME: Instant Regret
+                Aura::dps_global(20.0), // Flit and Flutter
+                Aura::dps_global(50.0).times(WithTag(TANK)), // Tough Nut to Crack
+            ],
 
             // Slot 20
-            // NateDragon => vec![],
+            NateDragon => vec![
+                Aura::dps_increase(200.0).for_crusader(*self) // Double Dragon
+                    .when_exists(SpecificCrusader(NatalieDragon)),
+                Aura::dps_increase(100.0).for_crusader(*self), // Forest Fire
+                Aura::dps_global(10.0), // Dynamite!!!
+                Aura::dps_global(10.0), // Desecration
+                Aura::dps_increase(150.0).for_crusader(*self), // Unexpected Explosion
+            ],
             // KizlblypTheAlienTraitor => vec![],
             // RoboRudolph => vec![],
 
             // Slot 21
-            // TheExterminator => vec![],
+            TheExterminator => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Give Me Your Jacket
+                Aura::dps_increase(50.0).for_crusader(*self) // Spare Parts
+                    .times(WithTag(ROBOT).and(!SpecificCrusader(*self))),
+                Aura::dps_increase(100.0).for_crusader(*self) // Slaved Systems
+                    .times(WithTag(ROBOT).and(AdjacentTo(*self))),
+                // FIXME: Triangulation
+                Aura::dps_increase(200.0).for_crusader(*self), // Time Travelled
+                // FIXME: Thumb's Up
+            ],
             // GloriaTheGoodWitch => vec![],
 
             // Slot 22
-            // TheShadowQueen => vec![],
+            TheShadowQueen => vec![
+                Aura::dps_increase(150.0).for_crusader(*self), // The Shadow's Strike
+                Aura::dps_increase(300.0).affecting(AdjacentTo(*self)) // The Shadow's Cowl
+                    .divided_by(AdjacentTo(*self)),
+                Aura::dps_increase(250.0).for_crusader(*self), // The Shadow's Grasp
+                // FIXME: The Shadow Mastered
+                Aura::dps_global(50.0), // All In Shadow
+            ],
             // IlsaTheInsaneWizard => vec![],
+
+            // Slot 23
+            GreyskullThePirate => vec![
+                Aura::dps_increase(200.0).for_crusader(*self), // Pirate's Cunning
+                // FIXME: Plunder
+                Aura::dps_global(10.0), // Pay Me Crew
+                // FIXME: Greyskull's Handcannon
+            ],
         }
     }
 
@@ -998,31 +1067,35 @@ impl CrusaderName {
             KingReginaldIV |
             // QueenSiri |
             // MrBogginsTheSubstitute |
-            SquigglesTheClown => 3.6e13
+            SquigglesTheClown => 3.6e13,
 
             // Slot 18
-            // ThaliaTheThunderKing |
+            ThaliaTheThunderKing => 3.2e14,
             // FrostyTheSnowman |
             // Littlefoot |
             // CindyTheCheerOrc |
 
             // Slot 19
-            // MerciTheMadWizard |
-            // TheBatBillionaire |
+            MerciTheMadWizard |
+            TheBatBillionaire |
             // PetraThePilgrim |
+            PollyTheParrot => 2.7e15,
 
             // Slot 20
-            // NateDragon |
+            NateDragon => 2.4e16,
             // KizlblypTheAlienTraitor |
             // RoboRudolph |
 
             // Slot 21
-            // TheExterminator |
+            TheExterminator => 9.6e17,
             // GloriaTheGoodWitch |
 
             // Slot 22
-            // TheShadowQueen |
+            TheShadowQueen => 3.84e19,
             // IlsaTheInsaneWizard |
+
+            // Slot 23
+            GreyskullThePirate => 1.53e21,
         };
         let lvl = ((cost * -0.07 / base_cost - 1.0) / -1.0).ln() / 1.07f64.ln();
         Level(lvl as u16)
@@ -1133,6 +1206,7 @@ bitflags! {
         const SLOT_20  = 1 << 19,
         const SLOT_21  = 1 << 20,
         const SLOT_22  = 1 << 21,
+        const SLOT_23  = 1 << 22,
     }
 }
 

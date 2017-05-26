@@ -179,5 +179,33 @@ pub fn create_user_data() -> UserData {
         }).add_crusader(CrusaderName::SquigglesTheClown, CrusaderData {
             enchantment_points: 77,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Epic],
+        }).add_crusader(CrusaderName::ThaliaTheThunderKing, CrusaderData {
+            enchantment_points: 108,
+            gear: [GearQuality::Rare, GearQuality::GoldenLegendary(Level(4)), GearQuality::Rare],
+        }).add_crusader(CrusaderName::MerciTheMadWizard, CrusaderData {
+            enchantment_points: 26,
+            gear: [GearQuality::Rare, GearQuality::Legendary(Level(2)), GearQuality::Rare],
+        }).add_crusader(CrusaderName::TheBatBillionaire, CrusaderData {
+            enchantment_points: 85,
+            gear: [GearQuality::Epic, GearQuality::Rare, GearQuality::Rare],
+        }).add_crusader(CrusaderName::PollyTheParrot, CrusaderData {
+            enchantment_points: 23,
+            gear: [GearQuality::Rare, GearQuality::Epic, GearQuality::Uncommon],
+        }).add_crusader(CrusaderName::NateDragon, CrusaderData {
+            enchantment_points: 53,
+            gear: [
+                GearQuality::Legendary(Level(1)),
+                GearQuality::Rare,
+                GearQuality::Legendary(Level(3)),
+            ],
+        }).add_crusader(CrusaderName::TheExterminator, CrusaderData {
+            enchantment_points: 80,
+            gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Epic],
+        }).add_crusader(CrusaderName::TheShadowQueen, CrusaderData {
+            enchantment_points: 66,
+            gear: [GearQuality::Uncommon, GearQuality::Uncommon, GearQuality::Rare],
+        }).add_crusader(CrusaderName::GreyskullThePirate, CrusaderData {
+            enchantment_points: 19,
+            gear: [GearQuality::Rare, GearQuality::Uncommon, GearQuality::Rare],
         })
 }
