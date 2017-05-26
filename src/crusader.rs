@@ -3,6 +3,7 @@ use std::cmp::{Ordering, min};
 use aura::*;
 use aura::Target::*;
 use dps::*;
+use gear::GearQuality;
 use user_data::UserData;
 
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -530,10 +531,12 @@ impl CrusaderName {
             // Slot 2
             JimTheLumberjack => vec![
                 Aura::dps_increase(100.0).for_crusader(*self) // Buddy System
-                    .when_exists(AdjacentTo(*self)),
+                    .when_exists(AdjacentTo(*self))
+                    .with_tag(AuraTag::BuddySystem),
                 Aura::dps_increase(100.0).for_crusader(*self), // Chainsaw Kickback
                 Aura::dps_increase(50.0) // Sharpen Party
-                    .affecting(InSameColumn(*self)),
+                    .affecting(InSameColumn(*self))
+                    .with_tag(AuraTag::SharpenParty),
                 Aura::dps_increase(100.0).for_crusader(*self), // Slick Shave
                 Aura::dps_increase(150.0).for_crusader(*self), // Institute of Lumberjackology
             ],
@@ -542,6 +545,7 @@ impl CrusaderName {
                 Aura::dps_increase(150.0).for_crusader(*self), // Turing Complete
                 Aura::dps_increase(50.0) // Precise Aim
                     .affecting(InSameColumn(*self).or(AdjacentTo(*self))) // Line of Sight
+                    .with_tag(AuraTag::PreciseAim)
                     .plus(Aura::dps_global(25.0).times( // Multicore Processing
                         WithTag(ROBOT).and(!SpecificCrusader(*self))
                     )),
@@ -955,6 +959,208 @@ impl CrusaderName {
         }
     }
 
+    fn dps_auras_from_gear(&self, gear: &[GearQuality; 3]) -> Vec<Aura> {
+        use self::CrusaderName::*;
+
+        let dps_self = |gear| {
+            let multiplier = match gear {
+                GearQuality::None => 0.0,
+                GearQuality::Common => 25.0,
+                GearQuality::Uncommon => 50.0,
+                GearQuality::Rare => 100.0,
+                GearQuality::Epic => 400.0,
+                GearQuality::GoldenEpic => 600.0,
+                GearQuality::Legendary(_) => 800.0,
+                GearQuality::GoldenLegendary(_) => 1200.0,
+            };
+            Aura::dps_increase(multiplier).for_crusader(*self)
+        };
+        let dps_all = |gear| {
+            let multiplier = match gear {
+                GearQuality::None => 0.0,
+                GearQuality::Common => 5.0,
+                GearQuality::Uncommon => 10.0,
+                GearQuality::Rare => 15.0,
+                GearQuality::Epic => 40.0,
+                GearQuality::GoldenEpic => 60.0,
+                GearQuality::Legendary(_) => 80.0,
+                GearQuality::GoldenLegendary(_) => 120.0,
+            };
+            Aura::dps_global(multiplier)
+        };
+        let legendary_effect = |base: f64, gear: GearQuality| {
+            let multiplier = gear.legendary_level()
+                .map(|lvl| 2u16.pow(lvl as u32 - 1) as f64)
+                .unwrap_or(0.0);
+            Aura::dps_increase(base * multiplier)
+        };
+
+        match *self {
+            // Testing only
+            #[cfg(any(test, debug_assertions))]
+            Dummy(..) => vec![],
+
+            // Slot 1
+            TheBushWhacker => vec![],
+            RoboRabbit => vec![],
+            // GrahamTheDriver => vec![],
+            // WarwickTheWarlock => vec![],
+
+            // Slot 2
+            JimTheLumberjack => vec![
+                // Axe
+                dps_self(gear[0]),
+                // Cap
+                dps_all(gear[1]),
+                // Gloves
+                dps_self(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(SashaTheFierceWarrior)),
+            ],
+            // PilotPam => vec![],
+            VeronicaTheAndroidArcher => vec![
+                // Bow
+                dps_all(gear[1]),
+                legendary_effect(25.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ROBOT)),
+                // Quiver
+                legendary_effect(50.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ELF)),
+            ],
+            Arachnobuddy => vec![
+                // Suit
+                legendary_effect(100.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(TheMetalSoldierette)),
+                // Mask
+                dps_all(gear[2]),
+                legendary_effect(25.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(SUPERNATURAL)),
+            ],
+
+            // Slot 3
+            EmoWerewolf => vec![],
+            SallyTheSuccubus => vec![],
+            // KarenTheCatTeenager => vec![],
+
+            // Slot 4
+            SashaTheFierceWarrior => vec![],
+            GroklokTheOrc => vec![],
+            // MindyTheMime => vec![],
+
+            // Slot 5
+            TheWashedUpHermit => vec![],
+            KyleThePartyBro => vec![],
+            // SerpentKingDraco => vec![],
+            // HenryTheScaredyGhoul => vec![],
+            Grandmora => vec![],
+
+            // Slot 6
+            DetectiveKaine => vec![],
+            // MisterTheMonkey => vec![],
+            LarryTheLeprechaun => vec![],
+            // BernardTheBartender => vec![],
+
+            // Slot 7
+            ThePrincess => vec![],
+            // RoboTurkey => vec![],
+            // RangerRayna => vec![],
+            BaenarallAngelOfHope => vec![],
+
+            // Slot 8
+            NatalieDragon => vec![],
+            // JackOLantern => vec![],
+            PresidentBillySmithsonian => vec![],
+            // KarlTheKicker => vec![],
+
+            // Slot 9
+            JasonMasterOfShadows => vec![],
+            // PeteTheCarney => vec![],
+            Broot => vec![],
+            // PaulThePilgrim => vec![],
+
+            // Slot 10
+            ArtaxesTheLion => vec![],
+            DrizzleTheDarkElf => vec![],
+            // BubbaTheSwimmingOrc => vec![],
+            SisaronTheDragonSorceress => vec![],
+
+            // Slot 11
+            KhouriTheWitchDoctor => vec![],
+            // MommaKaine => vec![],
+            // BrogonPrinceOfDragons => vec![],
+            // TheHalfBloodElf => vec![],
+            Foresight => vec![],
+
+            // Slot 12
+            DarkGryphon => vec![],
+            RockyTheRockstar => vec![],
+            MontanaJames => vec![],
+            // TheDarkHelper => vec![],
+
+            // Slot 13
+            SarahTheCollector => vec![],
+            TheMetalSoldierette => vec![],
+            SnicketteTheSneaky => vec![],
+
+            // Slot 14
+            GoldPanda => vec![],
+            // RoboSanta => vec![],
+            // LeerionTheRoyalDwarf => vec![],
+            // KatieTheCupid => vec![],
+
+            // Slot 15
+            PrinceSalTheMerman => vec![],
+            // WendyTheWitch => vec![],
+            RobbieRaccoon => vec![],
+            // PrincessValTheMermaid => vec![],
+
+            // Slot 16
+            FirePhoenix => vec![],
+            AlanTheArchAngel => vec![],
+            // FrightOTron4000 => vec![],
+            Spaceking => vec![],
+
+            // Slot 17
+            KingReginaldIV => vec![],
+            // QueenSiri => vec![],
+            // MrBogginsTheSubstitute => vec![],
+            SquigglesTheClown => vec![],
+
+            // Slot 18
+            ThaliaTheThunderKing => vec![],
+            // FrostyTheSnowman => vec![],
+            // Littlefoot => vec![],
+            // CindyTheCheerOrc => vec![],
+
+            // Slot 19
+            MerciTheMadWizard => vec![],
+            TheBatBillionaire => vec![],
+            // PetraThePilgrim => vec![],
+            PollyTheParrot => vec![],
+
+            // Slot 20
+            NateDragon => vec![],
+            // KizlblypTheAlienTraitor => vec![],
+            // RoboRudolph => vec![],
+
+            // Slot 21
+            TheExterminator => vec![],
+            // GloriaTheGoodWitch => vec![],
+
+            // Slot 22
+            TheShadowQueen => vec![],
+            // IlsaTheInsaneWizard => vec![],
+
+            // Slot 23
+            GreyskullThePirate => vec![],
+        }
+    }
+
     fn ability_buffs(&self) -> Vec<AbilityBuff> {
         use self::CrusaderName::*;
         match *self {
@@ -993,6 +1199,182 @@ impl CrusaderName {
             ],
             _ => vec![],
         }
+    }
+
+    fn ability_buffs_from_gear(&self, gear: &[GearQuality; 3]) -> Vec<AbilityBuff> {
+        use self::CrusaderName::*;
+        use self::AuraTag::*;
+
+        let ability_mod = |tag, gear| {
+            let multiplier = match gear {
+                GearQuality::None => 0.0,
+                GearQuality::Common => 10.0,
+                GearQuality::Uncommon => 25.0,
+                GearQuality::Rare => 50.0,
+                GearQuality::Epic => 100.0,
+                GearQuality::GoldenEpic => 150.0,
+                GearQuality::Legendary(_) => 200.0,
+                GearQuality::GoldenLegendary(_) => 300.0,
+            };
+            AbilityBuff::new(multiplier, tag)
+        };
+        let legendary_ability_mod = |tag, gear: GearQuality| {
+            let multiplier = gear.legendary_level()
+                .map(|lvl| 100.0 * 2u16.pow(lvl as u32 - 1) as f64)
+                .unwrap_or(0.0);
+            AbilityBuff::new(multiplier, tag)
+        };
+
+        match *self {
+            // Testing only
+            #[cfg(any(test, debug_assertions))]
+            Dummy(..) => vec![],
+
+            // Slot 1
+            TheBushWhacker => vec![],
+            RoboRabbit => vec![],
+            // GrahamTheDriver => vec![],
+            // WarwickTheWarlock => vec![],
+
+            // Slot 2
+            JimTheLumberjack => vec![
+                // Axe
+                legendary_ability_mod(SharpenParty, gear[0]),
+                // Cap
+                legendary_ability_mod(BuddySystem, gear[1]),
+            ],
+            // PilotPam => vec![],
+            VeronicaTheAndroidArcher => vec![
+                // Armguard
+                ability_mod(PreciseAim, gear[0]),
+                legendary_ability_mod(PreciseAim, gear[0]),
+                // Quiver
+                ability_mod(Fire, gear[2]),
+            ],
+            Arachnobuddy => vec![
+                // FIXME: Web
+                legendary_ability_mod(WebBlast, gear[0]),
+                // FIXME: Suit
+            ],
+
+            // Slot 3
+            EmoWerewolf => vec![],
+            SallyTheSuccubus => vec![],
+            // KarenTheCatTeenager => vec![],
+
+            // Slot 4
+            SashaTheFierceWarrior => vec![],
+            GroklokTheOrc => vec![],
+            // MindyTheMime => vec![],
+
+            // Slot 5
+            TheWashedUpHermit => vec![],
+            KyleThePartyBro => vec![],
+            // SerpentKingDraco => vec![],
+            // HenryTheScaredyGhoul => vec![],
+            Grandmora => vec![],
+
+            // Slot 6
+            DetectiveKaine => vec![],
+            // MisterTheMonkey => vec![],
+            LarryTheLeprechaun => vec![],
+            // BernardTheBartender => vec![],
+
+            // Slot 7
+            ThePrincess => vec![],
+            // RoboTurkey => vec![],
+            // RangerRayna => vec![],
+            BaenarallAngelOfHope => vec![],
+
+            // Slot 8
+            NatalieDragon => vec![],
+            // JackOLantern => vec![],
+            PresidentBillySmithsonian => vec![],
+            // KarlTheKicker => vec![],
+
+            // Slot 9
+            JasonMasterOfShadows => vec![],
+            // PeteTheCarney => vec![],
+            Broot => vec![],
+            // PaulThePilgrim => vec![],
+
+            // Slot 10
+            ArtaxesTheLion => vec![],
+            DrizzleTheDarkElf => vec![],
+            // BubbaTheSwimmingOrc => vec![],
+            SisaronTheDragonSorceress => vec![],
+
+            // Slot 11
+            KhouriTheWitchDoctor => vec![],
+            // MommaKaine => vec![],
+            // BrogonPrinceOfDragons => vec![],
+            // TheHalfBloodElf => vec![],
+            Foresight => vec![],
+
+            // Slot 12
+            DarkGryphon => vec![],
+            RockyTheRockstar => vec![],
+            MontanaJames => vec![],
+            // TheDarkHelper => vec![],
+
+            // Slot 13
+            SarahTheCollector => vec![],
+            TheMetalSoldierette => vec![],
+            SnicketteTheSneaky => vec![],
+
+            // Slot 14
+            GoldPanda => vec![],
+            // RoboSanta => vec![],
+            // LeerionTheRoyalDwarf => vec![],
+            // KatieTheCupid => vec![],
+
+            // Slot 15
+            PrinceSalTheMerman => vec![],
+            // WendyTheWitch => vec![],
+            RobbieRaccoon => vec![],
+            // PrincessValTheMermaid => vec![],
+
+            // Slot 16
+            FirePhoenix => vec![],
+            AlanTheArchAngel => vec![],
+            // FrightOTron4000 => vec![],
+            Spaceking => vec![],
+
+            // Slot 17
+            KingReginaldIV => vec![],
+            // QueenSiri => vec![],
+            // MrBogginsTheSubstitute => vec![],
+            SquigglesTheClown => vec![],
+
+            // Slot 18
+            ThaliaTheThunderKing => vec![],
+            // FrostyTheSnowman => vec![],
+            // Littlefoot => vec![],
+            // CindyTheCheerOrc => vec![],
+
+            // Slot 19
+            MerciTheMadWizard => vec![],
+            TheBatBillionaire => vec![],
+            // PetraThePilgrim => vec![],
+            PollyTheParrot => vec![],
+
+            // Slot 20
+            NateDragon => vec![],
+            // KizlblypTheAlienTraitor => vec![],
+            // RoboRudolph => vec![],
+
+            // Slot 21
+            TheExterminator => vec![],
+            // GloriaTheGoodWitch => vec![],
+
+            // Slot 22
+            TheShadowQueen => vec![],
+            // IlsaTheInsaneWizard => vec![],
+
+            // Slot 23
+            GreyskullThePirate => vec![],
+        }
+
     }
 
     fn level_at_cost(&self, cost: f64) -> Level {
@@ -1184,12 +1566,19 @@ impl Crusader {
         let level = max_cost
             .map(|max_cost| min(max_level, name.level_at_cost(max_cost)))
             .unwrap_or(max_level);
+        let gear = user_data.gear_for(name);
+        let mut dps_auras = name.dps_auras();
+        let mut ability_buffs = name.ability_buffs();
+        if let Some(gear) = gear {
+            dps_auras.extend(name.dps_auras_from_gear(gear));
+            ability_buffs.extend(name.ability_buffs_from_gear(gear));
+        }
         Crusader {
             name,
             base_dps: user_data.base_dps_for_crusader(name),
             level,
-            dps_auras: name.dps_auras(),
-            ability_buffs: name.ability_buffs(),
+            dps_auras,
+            ability_buffs,
         }
     }
 

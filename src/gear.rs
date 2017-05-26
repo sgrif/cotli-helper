@@ -17,3 +17,13 @@ impl Default for GearQuality {
         GearQuality::None
     }
 }
+
+impl GearQuality {
+    pub fn legendary_level(&self) -> Option<u16> {
+        match *self {
+            GearQuality::Legendary(Level(lvl)) |
+            GearQuality::GoldenLegendary(Level(lvl)) => Some(lvl),
+            _ => None,
+        }
+    }
+}

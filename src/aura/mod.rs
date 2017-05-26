@@ -157,6 +157,13 @@ pub enum AuraTag {
     // Slot 1
     Swordplay,
 
+    // Slot 2
+    SharpenParty,
+    BuddySystem,
+    PreciseAim,
+    Fire,
+    WebBlast,
+
     // Slot 4
     EligibleReceivers,
 

@@ -7,6 +7,7 @@ pub use self::crusader_data::CrusaderData;
 
 use crusader::*;
 use dps::*;
+use gear::GearQuality;
 use self::crusader_data::AllCrusaderData;
 use self::talent_data::TalentData;
 use talent::*;
@@ -82,6 +83,10 @@ impl UserData {
             dps = dps.percent_increase(num_epics as f64 * multiplier);
         }
         dps
+    }
+
+    pub fn gear_for(&self, crusader: CrusaderName) -> Option<&[GearQuality; 3]> {
+        self.crusader_data.get(&crusader).map(|d| &d.gear)
     }
 
     fn dps_percent_from_idols(&self) -> f64 {
