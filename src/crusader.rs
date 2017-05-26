@@ -536,7 +536,6 @@ impl CrusaderName {
                     .affecting(InSameColumn(*self)),
                 Aura::dps_increase(100.0).for_crusader(*self), // Slick Shave
                 Aura::dps_increase(150.0).for_crusader(*self), // Institute of Lumberjackology
-                // FIXME: Uber Axing
             ],
             // PilotPam => vec![],
             VeronicaTheAndroidArcher => vec![
@@ -563,7 +562,6 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Fashion Sense
                 Aura::dps_increase(100.0).for_crusader(*self), // Teenage Agnst
                 Aura::dps_increase(150.0).for_crusader(*self), // Parental Shame
-                // FIXME: Whimper at the Moon
             ],
             SallyTheSuccubus => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Enchantress
@@ -593,7 +591,8 @@ impl CrusaderName {
                 Aura::dps_increase(150.0).for_crusader(*self) // Gunslinger
                     .when_exists(EmptySlot),
                 Aura::dps_increase(150.0).affecting(InColumnAhead(*self)) // Eligible Receivers
-                    .divided_by(InColumnAhead(*self)),
+                    .divided_by(InColumnAhead(*self))
+                    .with_tag(AuraTag::EligibleReceivers),
                 Aura::dps_increase(150.0).for_crusader(*self), // Fumblerooski
             ],
             // MindyTheMime => vec![],
@@ -606,7 +605,6 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Alien Attack
                 Aura::dps_increase(100.0).for_crusader(*self), // Attorney Attack
                 Aura::dps_increase(100.0).for_crusader(*self), // Dark Warstories
-                // FIXME: Arrow Attack
             ],
             KyleThePartyBro => vec![
                 Aura::dps_increase(25.0).affecting(AdjacentTo(*self)) // Get Smashed
@@ -657,7 +655,6 @@ impl CrusaderName {
                 Aura::dps_global(10.0), // Char
                 Aura::dps_global(10.0), // Conflagrate
                 Aura::dps_global(10.0), // Incinerate
-                // FIXME: Burn Baby Burn!
             ],
             // RoboTurkey => vec![],
             // RangerRayna => vec![],
@@ -704,10 +701,10 @@ impl CrusaderName {
                 Aura::dps_increase(25.0).for_crusader(*self)
                     .when_exists(SpecificCrusader(*self).and(InFrontColumn)),
                 // FIXME: Test if this is immediately behind or any column behind
-                // Aura::dps_increase(100.0)
-                //     .affecting(SpecificCrusader(RobbieRaccoon).and(InColumnBehind(*self))),
-                // Aura::dps_increase(100.0)
-                //     .affecting(SpecificCrusader(RobbieRaccoon).and(AdjacentTo(*self))),
+                Aura::dps_increase(100.0)
+                    .affecting(SpecificCrusader(RobbieRaccoon).and(InColumnBehind(*self))),
+                Aura::dps_increase(100.0)
+                    .affecting(SpecificCrusader(RobbieRaccoon).and(AdjacentTo(*self))),
             ],
             // PaulThePilgrim => vec![],
 
@@ -716,21 +713,19 @@ impl CrusaderName {
                 Aura::dps_increase(125.0).for_crusader(*self), // Claw Your Way Up
                 Aura::dps_increase(50.0).affecting(InColumnAhead(*self)), // Roar!
                 Aura::dps_increase(125.0).for_crusader(*self), // Lion's Mane
-                // FIXME: Jungle Speed
             ],
             DrizzleTheDarkElf => vec![
                 Aura::dps_global(20.0), // All Star
                 Aura::dps_increase(20.0).affecting(AdjacentTo(*self)), // Inspiring Presence
                 Aura::dps_increase(400.0) // Lateral
                     .affecting(SpecificCrusader(GroklokTheOrc).and(InSameColumn(*self))),
-                // FIXME: Running Play
             ],
             // BubbaTheSwimmingOrc => vec![],
             SisaronTheDragonSorceress => vec![
                 Aura::dps_increase(150.0).for_crusader(*self), // Swoop
                 Aura::dps_increase(100.0).affecting(AdjacentTo(*self)) // Loose Magic
-                    .divided_by(AdjacentTo(*self)),
-                // FIXME: Focused Magic
+                    .divided_by(AdjacentTo(*self))
+                    .with_tag(AuraTag::LooseMagic),
                 Aura::dps_global(10.0), // Recovered Magic
             ],
 
@@ -758,7 +753,6 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Chivalrous Cuff
                 Aura::dps_increase(100.0).for_crusader(*self), // Courageous Chop
                 Aura::dps_global(15.0), // Heart Brimming Bravery
-                // FIXME: Lion Swipe
             ],
             RockyTheRockstar => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Rock 'n Roll
@@ -820,7 +814,6 @@ impl CrusaderName {
                 Aura::dps_global(10.0), // Salt Water Taffy
                 Aura::dps_increase(100.0).for_crusader(*self), // Shark Attack
                 Aura::dps_increase(150.0).for_crusader(*self), // Triton's Blessing
-                // FIXME: Neptune's Wrath
                 Aura::dps_increase(150.0).for_crusader(*self), // 20,000 Leagues
             ],
             // WendyTheWitch => vec![],
@@ -945,9 +938,9 @@ impl CrusaderName {
             TheShadowQueen => vec![
                 Aura::dps_increase(150.0).for_crusader(*self), // The Shadow's Strike
                 Aura::dps_increase(300.0).affecting(AdjacentTo(*self)) // The Shadow's Cowl
-                    .divided_by(AdjacentTo(*self)),
+                    .divided_by(AdjacentTo(*self))
+                    .with_tag(AuraTag::TheShadowsCowl),
                 Aura::dps_increase(250.0).for_crusader(*self), // The Shadow's Grasp
-                // FIXME: The Shadow Mastered
                 Aura::dps_global(50.0), // All In Shadow
             ],
             // IlsaTheInsaneWizard => vec![],
@@ -959,6 +952,46 @@ impl CrusaderName {
                 Aura::dps_global(10.0), // Pay Me Crew
                 // FIXME: Greyskull's Handcannon
             ],
+        }
+    }
+
+    fn ability_buffs(&self) -> Vec<AbilityBuff> {
+        use self::CrusaderName::*;
+        match *self {
+            JimTheLumberjack => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Uber Axing
+            ],
+            EmoWerewolf => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Whimper at the Moon
+            ],
+            TheWashedUpHermit => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Arrow Attack
+            ],
+            ThePrincess => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Burn Baby Burn!
+            ],
+            ArtaxesTheLion => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Jungle Speed
+            ],
+            DrizzleTheDarkElf => vec![
+                AbilityBuff::new(100.0, AuraTag::EligibleReceivers) // Running Play
+                    .when_exists(SpecificCrusader(GroklokTheOrc).and(Behind(*self))),
+            ],
+            SisaronTheDragonSorceress => vec![
+                AbilityBuff::new(300.0, AuraTag::LooseMagic) // Focused Magic
+                    .when(Condition::Gt(AdjacentTo(*self), 3)),
+            ],
+            DarkGryphon => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Lion Swipe
+            ],
+            PrinceSalTheMerman => vec![
+                AbilityBuff::new(20.0, AuraTag::Swordplay), // Neptune's Wrath
+            ],
+            TheShadowQueen => vec![
+                AbilityBuff::new(100.0, AuraTag::TheShadowsCowl) // The Shadow Mastered
+                    .when_exists(SpecificCrusader(JasonMasterOfShadows).and(AdjacentTo(*self))),
+            ],
+            _ => vec![],
         }
     }
 
@@ -1106,6 +1139,7 @@ impl CrusaderName {
 pub struct Crusader {
     pub name: CrusaderName,
     dps_auras: Vec<Aura>,
+    ability_buffs: Vec<AbilityBuff>,
     base_dps: Dps,
     level: Level,
 }
@@ -1155,6 +1189,7 @@ impl Crusader {
             base_dps: user_data.base_dps_for_crusader(name),
             level,
             dps_auras: name.dps_auras(),
+            ability_buffs: name.ability_buffs(),
         }
     }
 
@@ -1182,6 +1217,10 @@ impl Crusader {
 
     pub fn tags(&self) -> Tags {
         self.name.tags()
+    }
+
+    pub fn ability_buffs(&self) -> &[AbilityBuff] {
+        &self.ability_buffs
     }
 }
 

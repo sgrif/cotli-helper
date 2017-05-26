@@ -1,5 +1,5 @@
 use cotli_helper::crusader::{Crusader, Tags};
-use cotli_helper::crusader::CrusaderName::GroklokTheOrc;
+use cotli_helper::crusader::CrusaderName::{GroklokTheOrc, DrizzleTheDarkElf};
 use cotli_helper::formation::*;
 use support::*;
 
@@ -53,4 +53,24 @@ fn groklok_buffs_crusaders_in_front_divided_by_number_affected() {
     formation.remove_crusader(5);
     formation.place_crusader(7, &dummy_buffer);
     assert_formation_dps!("250", formation);
+}
+
+#[test]
+fn drizzle_buffs_eligible_receivers_when_in_front() {
+    let dummy_dps = Crusader::dummy(Tags::empty());
+    let drizzle = default_crusader(DrizzleTheDarkElf).at_level(0);
+    let groklok = default_crusader(GroklokTheOrc).at_level(0);
+    let mut formation = worlds_wake();
+
+    formation.place_crusader(0, &groklok);
+    formation.place_crusader(4, &dummy_dps);
+    assert_formation_dps!("250", formation);
+    formation.place_crusader(1, &drizzle);
+    assert_formation_dps!("360", formation);
+    formation.remove_crusader(1);
+    formation.place_crusader(7, &drizzle);
+    assert_formation_dps!("576", formation);
+    formation.remove_crusader(7);
+    formation.place_crusader(5, &drizzle);
+    assert_formation_dps!("360", formation);
 }

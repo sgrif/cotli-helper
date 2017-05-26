@@ -18,5 +18,8 @@ mod kyle_the_party_bro;
 // Slot 9
 mod broot;
 
+// Slot 10
+mod sisaron_the_dragon_sorceress;
+
 // Slot 13
 mod sarah_the_collector;

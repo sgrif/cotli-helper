@@ -9,6 +9,7 @@ pub enum Target {
     AdjacentTo(CrusaderName),
     AllCrusaders,
     And(Box<Target>, Box<Target>),
+    Behind(CrusaderName),
     EmptySlot,
     InColumnAhead(CrusaderName),
     InColumnBehind(CrusaderName),
@@ -50,6 +51,12 @@ impl Target {
             AllCrusaders => true,
             And(ref t1, ref t2) => t1.matches(crusader, formation) &&
                 t2.matches(crusader, formation),
+            Behind(source) => {
+                match (formation.position_of(source), formation.position_of(crusader)) {
+                    (Some(source), Some(target)) => target.x < source.x,
+                    _ => false,
+                }
+            }
             EmptySlot => false,
             InColumnAhead(source) => {
                 let source_col = formation.position_of(source).map(|c| c.x);

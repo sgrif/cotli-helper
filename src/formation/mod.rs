@@ -4,7 +4,7 @@ pub use self::coordinate::Coordinate;
 
 use std::cell::Cell;
 
-use aura::Aura;
+use aura::{Aura, AbilityBuff, AuraTag};
 use crusader::*;
 use dps::*;
 
@@ -73,6 +73,13 @@ impl<'a> Formation<'a> {
         self.positions.iter()
             .map(|p| p.coordinate.x)
             .max()
+    }
+
+    pub fn ability_buffs<'b>(&'b self, tag: AuraTag)
+        -> impl Iterator<Item=&'a AbilityBuff> + 'b
+    {
+        self.crusaders().flat_map(Crusader::ability_buffs)
+            .filter(move |b| b.applies_to(tag, self))
     }
 
     pub fn print(&self) {

@@ -14,6 +14,7 @@ pub struct Aura {
     target: Target,
     modifier: Option<Modifier>,
     condition: Option<Condition>,
+    tag: Option<AuraTag>,
 }
 
 impl Aura {
@@ -62,6 +63,10 @@ impl Aura {
         Aura { condition: Some(condition), ..self }
     }
 
+    pub fn with_tag(self, tag: AuraTag) -> Self {
+        Aura { tag: Some(tag), ..self }
+    }
+
     pub fn amount_for_crusader(
         &self,
         crusader: CrusaderName,
@@ -83,8 +88,47 @@ impl Aura {
     }
 
     fn modifier_amount(&self, formation: &Formation) -> f64 {
-        self.modifier.as_ref().map(|m| m.apply(self.amount, formation))
-            .unwrap_or(self.amount)
+        let res = self.modifier.as_ref().map(|m| m.apply(self.amount, formation))
+            .unwrap_or(self.amount);
+        self.tag.map(|t| formation.ability_buffs(t).fold(res, |r, m| m.modify(r)))
+            .unwrap_or(res)
+    }
+}
+
+pub struct AbilityBuff {
+    amount: f64,
+    target: AuraTag,
+    condition: Option<Condition>,
+}
+
+impl AbilityBuff {
+    pub fn new(amount: f64, target: AuraTag) -> Self {
+        AbilityBuff {
+            amount,
+            target,
+            condition: None,
+        }
+    }
+
+    pub fn applies_to(&self, tag: AuraTag, formation: &Formation) -> bool {
+        self.target == tag
+            && self.condition.as_ref().map(|c| c.is_met(formation)).unwrap_or(true)
+    }
+
+    pub fn when_exists(self, target: Target) -> Self {
+        self.when(Condition::Gt(target, 0))
+    }
+
+    pub fn when_none(self, target: Target) -> Self {
+        self.when(Condition::Lt(target, 1))
+    }
+
+    pub fn when(self, condition: Condition) -> Self {
+        Self { condition: Some(condition), ..self }
+    }
+
+    fn modify(&self, percent: f64) -> f64 {
+        percent * (1.0 + self.amount / 100.0)
     }
 }
 
@@ -103,6 +147,22 @@ impl AuraBuilder {
             target: target,
             modifier: None,
             condition: None,
+            tag: None,
         }
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AuraTag {
+    // Slot 1
+    Swordplay,
+
+    // Slot 4
+    EligibleReceivers,
+
+    // Slot 10
+    LooseMagic,
+
+    // Slot 22
+    TheShadowsCowl,
 }

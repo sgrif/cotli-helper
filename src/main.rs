@@ -24,6 +24,6 @@ fn main() {
     // Nate at 5125
     // let crusaders = create_user_data().unlocked_crusaders(Some(1.34e168));
     let mut search = FormationSearch::new(formation, &crusaders);
-    search.perform_search(::std::time::Duration::from_secs(5));
+    search.perform_search(::std::time::Duration::from_secs(30));
     search.formation().print();
 }
