@@ -177,6 +177,10 @@ pub enum AuraTag {
     StillSuspicious,
     Untrusting,
 
+    // Slot 6
+    AHah,
+    LittlePockets,
+
     // Slot 10
     LooseMagic,
 

@@ -1139,9 +1139,27 @@ impl CrusaderName {
             ],
 
             // Slot 6
-            DetectiveKaine => vec![],
+            DetectiveKaine => vec![
+                // Hat
+                dps_all(gear[0]),
+                // FIXME: Hat legendary (gold)
+                // FIXME: Magnifier legendary (gold + xp points)
+                legendary_effect(100.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(NateDragon)),
+            ],
             // MisterTheMonkey => vec![],
-            LarryTheLeprechaun => vec![],
+            LarryTheLeprechaun => vec![
+                // Cane
+                dps_all(gear[1]),
+                legendary_effect(50.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(LEPRECHAUN)),
+                // Pot
+                legendary_effect(25.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(MAGICAL)),
+            ],
             // BernardTheBartender => vec![],
 
             // Slot 7
@@ -1374,9 +1392,16 @@ impl CrusaderName {
             ],
 
             // Slot 6
-            DetectiveKaine => vec![],
+            DetectiveKaine => vec![
+                ability_mod(AHah, gear[2]),
+            ],
             // MisterTheMonkey => vec![],
-            LarryTheLeprechaun => vec![],
+            LarryTheLeprechaun => vec![
+                // Hat
+                legendary_ability_mod(LittlePockets, gear[0]),
+                // Pot
+                ability_mod(LittlePockets, gear[2]),
+            ],
             // BernardTheBartender => vec![],
 
             // Slot 7
