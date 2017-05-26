@@ -100,10 +100,10 @@ pub enum CrusaderName {
     // PrincessValTheMermaid,
 
     // Slot 16
-    // FirePhoenix,
-    // AlanTheArchAngel,
+    FirePhoenix,
+    AlanTheArchAngel,
     // FrightOTron4000,
-    // Spaceking,
+    Spaceking,
 
     // Slot 17
     // KingReginaldIV,
@@ -201,10 +201,10 @@ impl CrusaderName {
             // WendyTheWitch |
             RobbieRaccoon => SLOT_15,
             // PrincessValTheMermaid => SLOT_15,
-            // FirePhoenix |
-            // AlanTheArchAngel |
+            FirePhoenix |
+            AlanTheArchAngel |
             // FrightOTronSLOT_4000 |
-            // Spaceking => SLOT_16,
+            Spaceking => SLOT_16,
             // KingReginaldIV |
             // QueenSiri |
             // MrBogginsTheSubstitute |
@@ -323,10 +323,10 @@ impl CrusaderName {
             // PrincessValTheMermaid |
 
             // Slot 16
-            // FirePhoenix |
-            // AlanTheArchAngel |
+            FirePhoenix |
+            AlanTheArchAngel |
             // FrightOTron4000 |
-            // Spaceking |
+            Spaceking => 3.62e9,
 
             // Slot 17
             // KingReginaldIV |
@@ -457,10 +457,10 @@ impl CrusaderName {
             // PrincessValTheMermaid => FEMALE | ANIMAL | ROYAL | EVENT | SUPPORT | HEALER,
 
             // Slot 16
-            // FirePhoenix => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
-            // AlanTheArchAngel => MALE | SUPERNATURAL | EVENT | ANGEL | SUPPORT,
+            FirePhoenix => FEMALE | ANIMAL | SUPERNATURAL | SUPPORT,
+            AlanTheArchAngel => MALE | SUPERNATURAL | EVENT | ANGEL | SUPPORT,
             // FrightOTron4000 => FEMALE | EVENT | ROBOT | SUPPORT,
-            // Spaceking => MALE | HUMAN | ROYAL | EVENT | DPS,
+            Spaceking => MALE | HUMAN | ROYAL | EVENT | DPS,
 
             // Slot 17
             // KingReginaldIV => MALE | HUMAN | ROYAL | SUPPORT,
@@ -817,10 +817,30 @@ impl CrusaderName {
             // PrincessValTheMermaid => vec![],
 
             // Slot 16
-            // FirePhoenix => vec![],
-            // AlanTheArchAngel => vec![],
+            FirePhoenix => vec![
+                // FIXME: Vengeful Fury
+                Aura::dps_increase(100.0).for_crusader(*self), // Song of the Phoenix
+                Aura::dps_increase(100.0).for_crusader(*self), // Evil Eye
+                Aura::dps_increase(100.0).for_crusader(*self), // Power of the Fiery Nest
+                Aura::dps_increase(150.0).for_crusader(*self), // Egg Laying
+            ],
+            AlanTheArchAngel => vec![
+                Aura::dps_increase(150.0).for_crusader(*self), // Alan, Alan, Alan
+                Aura::dps_global(10.0), // Glowing Presence
+                // FIXME: Resurrection
+                Aura::dps_global(25.0), // Strength of Will
+            ],
             // FrightOTron4000 => vec![],
-            // Spaceking => vec![],
+            Spaceking => vec![
+                Aura::dps_increase(125.0).for_crusader(*self), // Have You Heard Of Me?
+                Aura::dps_increase(25.0).for_crusader(*self) // Ladies' Space-Man
+                    .times(WithTag(FEMALE)),
+                Aura::dps_increase(125.0).for_crusader(*self), // Pew Pew Pew
+                Aura::dps_increase(100.0).for_crusader(*self) // Kirkin' It Up
+                    .times(WithTag(ALIEN)),
+                Aura::dps_increase(125.0).for_crusader(*self), // Bad-ass Laser Guns
+                // FIXME: Avenger
+            ],
 
             // Slot 17
             // KingReginaldIV => vec![],
@@ -947,14 +967,14 @@ impl CrusaderName {
             // Slot 15
             PrinceSalTheMerman |
             // WendyTheWitch |
-            RobbieRaccoon => 4.50e11
+            RobbieRaccoon => 4.50e11,
             // PrincessValTheMermaid |
 
             // Slot 16
-            // FirePhoenix |
-            // AlanTheArchAngel |
+            FirePhoenix |
+            AlanTheArchAngel |
             // FrightOTron4000 |
-            // Spaceking |
+            Spaceking => 4e12,
 
             // Slot 17
             // KingReginaldIV |
