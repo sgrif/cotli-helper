@@ -684,6 +684,7 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // The Julius Caesar
                 Aura::dps_global(15.0), // Daggerfall
                 Aura::dps_increase(200.0).for_crusader(*self) // Double Dragon
+                    .with_tag(AuraTag::DoubleDragon)
                     .when_exists(SpecificCrusader(NateDragon)),
                 Aura::dps_increase(150.0).for_crusader(*self), // Trophy Hunter
             ],
@@ -693,7 +694,8 @@ impl CrusaderName {
                 Aura::dps_increase(150.0).for_crusader(*self), // Secret Service
                 Aura::dps_global(15.0), // Rousing Speech
                 // FIXME: Peace Treaty
-                Aura::dps_increase(50.0).affecting(WithTag(HUMAN)), // Us Vs. Them
+                Aura::dps_increase(50.0).affecting(WithTag(HUMAN)) // Us Vs. Them
+                    .with_tag(AuraTag::UsVsThem),
             ],
             // KarlTheKicker => vec![],
 
@@ -924,6 +926,7 @@ impl CrusaderName {
             // Slot 20
             NateDragon => vec![
                 Aura::dps_increase(200.0).for_crusader(*self) // Double Dragon
+                    .with_tag(AuraTag::DoubleDragon)
                     .when_exists(SpecificCrusader(NatalieDragon)),
                 Aura::dps_increase(100.0).for_crusader(*self), // Forest Fire
                 Aura::dps_global(10.0), // Dynamite!!!
@@ -1192,9 +1195,29 @@ impl CrusaderName {
             ],
 
             // Slot 8
-            NatalieDragon => vec![],
+            NatalieDragon => vec![
+                // Knife
+                dps_all(gear[0]),
+                legendary_effect(100.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(NateDragon)),
+                // Glove
+                dps_self(gear[1]),
+                legendary_effect(100.0, gear[1])
+                    .affecting(WithTag(FEMALE)),
+                // FIXME: Cape (gold)
+                // FIXME: Cape legendary (gold)
+            ],
             // JackOLantern => vec![],
-            PresidentBillySmithsonian => vec![],
+            PresidentBillySmithsonian => vec![
+                // FIXME: Suit (gold)
+                legendary_effect(10.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(HUMAN)),
+                // Razor
+                dps_all(gear[2]),
+                // FIXME: Razor legendary (gold + mosters on screen)
+            ],
             // KarlTheKicker => vec![],
 
             // Slot 9
@@ -1446,7 +1469,11 @@ impl CrusaderName {
             // Slot 8
             NatalieDragon => vec![],
             // JackOLantern => vec![],
-            PresidentBillySmithsonian => vec![],
+            PresidentBillySmithsonian => vec![
+                // Cufflinks
+                ability_mod(ActOfCongress, gear[0]),
+                legendary_ability_mod(UsVsThem, gear[0]),
+            ],
             // KarlTheKicker => vec![],
 
             // Slot 9

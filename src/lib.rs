@@ -102,9 +102,9 @@ pub fn create_user_data() -> UserData {
         }).add_crusader(CrusaderName::NatalieDragon, CrusaderData {
             enchantment_points: 69,
             gear: [
+                GearQuality::Legendary(Level(3)),
+                GearQuality::Legendary(Level(3)),
                 GearQuality::Legendary(Level(2)),
-                GearQuality::Legendary(Level(2)),
-                GearQuality::Legendary(Level(1)),
             ],
         }).add_crusader(CrusaderName::PresidentBillySmithsonian, CrusaderData {
             enchantment_points: 0,

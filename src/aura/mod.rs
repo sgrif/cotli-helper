@@ -187,6 +187,11 @@ pub enum AuraTag {
     AncientHatred,
     TheOldGuard,
 
+    // Slot 8
+    DoubleDragon,
+    ActOfCongress,
+    UsVsThem,
+
     // Slot 10
     LooseMagic,
 

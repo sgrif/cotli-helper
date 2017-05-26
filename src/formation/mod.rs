@@ -87,7 +87,8 @@ impl<'a> Formation<'a> {
         for pos in self.positions.iter() {
             let coord = pos.coordinate;
             let crusader = pos.crusader;
-            println!("({}, {}): {:?}", coord.x, coord.y, crusader.map(|c| c.name));
+            let dps = pos.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras));
+            println!("({}, {}): {:?} {}", coord.x, coord.y, crusader.map(|c| c.name), dps);
         }
     }
 
