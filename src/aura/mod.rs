@@ -172,6 +172,11 @@ pub enum AuraTag {
     EligibleReceivers,
     Gunslinger,
 
+    // Slot 5
+    MoshPit,
+    StillSuspicious,
+    Untrusting,
+
     // Slot 10
     LooseMagic,
 

@@ -7,6 +7,7 @@ use formation::*;
 #[derive(Clone)]
 pub enum Target {
     AdjacentTo(CrusaderName),
+    AheadOf(CrusaderName),
     AllCrusaders,
     And(Box<Target>, Box<Target>),
     Behind(CrusaderName),
@@ -45,6 +46,12 @@ impl Target {
             AdjacentTo(source) => {
                 match (formation.position_of(crusader), formation.position_of(source)) {
                     (Some(p1), Some(p2)) => p1.is_adjacent_to(p2),
+                    _ => false,
+                }
+            }
+            AheadOf(source) => {
+                match (formation.position_of(source), formation.position_of(crusader)) {
+                    (Some(source), Some(target)) => target.x > source.x,
                     _ => false,
                 }
             }

@@ -617,7 +617,8 @@ impl CrusaderName {
                 Aura::dps_increase(25.0).affecting(AdjacentTo(*self)) // Get Smashed
                     .randomly_affecting(3),
                 Aura::dps_increase(50.0).for_crusader(*self) // Mosh Pit
-                    .times(AdjacentTo(*self).min(3)),
+                    .times(AdjacentTo(*self).min(3))
+                    .with_tag(AuraTag::MoshPit),
                 Aura::dps_increase(100.0).for_crusader(*self) // Party Animal
                     .when_exists(AdjacentTo(*self).and(WithTag(ANIMAL))),
                 Aura::dps_increase(100.0).for_crusader(*self) // Lady's Man
@@ -631,10 +632,12 @@ impl CrusaderName {
             Grandmora => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Seen Better Days
                 Aura::dps_increase(300.0).affecting(InColumnAhead(*self)) // Still Suspicious
-                    .divided_by(InColumnBehind(*self)),
+                    .divided_by(InColumnBehind(*self))
+                    .with_tag(AuraTag::StillSuspicious),
                 Aura::dps_global(10.0), // Elder Tech
                 Aura::dps_increase(75.0).affecting(InColumnBehind(*self)) // Untrusting
-                    .times(InColumnAhead(*self)),
+                    .times(InColumnAhead(*self))
+                    .with_tag(AuraTag::Untrusting),
                 Aura::dps_global(10.0), // Team Player
             ],
 
@@ -1095,11 +1098,45 @@ impl CrusaderName {
             // MindyTheMime => vec![],
 
             // Slot 5
-            TheWashedUpHermit => vec![],
-            KyleThePartyBro => vec![],
+            TheWashedUpHermit => vec![
+                // Backpack
+                dps_self(gear[0]),
+                legendary_effect(100.0, gear[0]).for_crusader(*self)
+                    .times(EmptySlot),
+                // Hat
+                dps_self(gear[1]),
+                legendary_effect(100.0, gear[1]).affecting(WithTag(HUMAN)),
+                // Ring
+                dps_all(gear[2]),
+                legendary_effect(25.0, gear[2]).for_crusader(*self)
+                    .times(WithTag(SUPERNATURAL)),
+            ],
+            KyleThePartyBro => vec![
+                // Hat
+                dps_all(gear[0]),
+                // Shirt
+                dps_self(gear[1]),
+                legendary_effect(100.0, gear[1]).for_crusader(*self)
+                    .when(Condition::Gt(AdjacentTo(*self), 3)),
+                // Keg
+                dps_self(gear[2]),
+                legendary_effect(100.0, gear[2]).for_crusader(*self)
+                    .when(Condition::GtComplex(Behind(*self), AheadOf(*self))),
+            ],
             // SerpentKingDraco => vec![],
             // HenryTheScaredyGhoul => vec![],
-            Grandmora => vec![],
+            Grandmora => vec![
+                // Glasses
+                legendary_effect(100.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .when(Condition::Gt(WithTag(ALIEN), 1)),
+                // Knitting
+                legendary_effect(100.0, gear[1]).affecting(WithTag(HUMAN)),
+                // Chair
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(AdjacentTo(*self)),
+            ],
 
             // Slot 6
             DetectiveKaine => vec![],
@@ -1325,10 +1362,16 @@ impl CrusaderName {
 
             // Slot 5
             TheWashedUpHermit => vec![],
-            KyleThePartyBro => vec![],
+            KyleThePartyBro => vec![
+                // Hat
+                legendary_ability_mod(MoshPit, gear[0]),
+            ],
             // SerpentKingDraco => vec![],
             // HenryTheScaredyGhoul => vec![],
-            Grandmora => vec![],
+            Grandmora => vec![
+                ability_mod(StillSuspicious, gear[0]),
+                ability_mod(Untrusting, gear[1]),
+            ],
 
             // Slot 6
             DetectiveKaine => vec![],
