@@ -661,18 +661,20 @@ impl CrusaderName {
 
             // Slot 7
             ThePrincess => vec![
-                Aura::dps_global(10.0), // Ignite
-                Aura::dps_global(10.0), // Char
-                Aura::dps_global(10.0), // Conflagrate
-                Aura::dps_global(10.0), // Incinerate
+                Aura::dps_global(10.0).with_tag(AuraTag::Ignite), // Ignite
+                Aura::dps_global(10.0).with_tag(AuraTag::Ignite), // Char
+                Aura::dps_global(10.0).with_tag(AuraTag::Ignite), // Conflagrate
+                Aura::dps_global(10.0).with_tag(AuraTag::Ignite), // Incinerate
             ],
             // RoboTurkey => vec![],
             // RangerRayna => vec![],
             BaenarallAngelOfHope => vec![
                 Aura::dps_global(10.0), // Warmth
                 Aura::dps_global(10.0), // Embolden
-                Aura::dps_global(20.0).with_modifier(Modifier::Diversity), // Diversity
-                Aura::dps_global(5.0).times(!WithTag(EVENT)), // The Old Guard
+                Aura::dps_global(20.0).with_modifier(Modifier::Diversity) // Diversity
+                    .with_tag(AuraTag::Diversity),
+                Aura::dps_global(5.0).times(!WithTag(EVENT)) // The Old Guard
+                    .with_tag(AuraTag::TheOldGuard),
             ],
 
             // Slot 8
@@ -1163,10 +1165,31 @@ impl CrusaderName {
             // BernardTheBartender => vec![],
 
             // Slot 7
-            ThePrincess => vec![],
+            ThePrincess => vec![
+                // Gloves
+                legendary_effect(25.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ROYAL)),
+                // Cape
+                legendary_effect(100.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(KingReginaldIV)),
+                // Necklace
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(!WithTag(EVENT)),
+            ],
             // RoboTurkey => vec![],
             // RangerRayna => vec![],
-            BaenarallAngelOfHope => vec![],
+            BaenarallAngelOfHope => vec![
+                // FIXME: Mace legendary (gold)
+                // Shield
+                legendary_effect(100.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(AlanTheArchAngel)),
+                // Breastplate
+                dps_all(gear[2]),
+            ],
 
             // Slot 8
             NatalieDragon => vec![],
@@ -1405,10 +1428,20 @@ impl CrusaderName {
             // BernardTheBartender => vec![],
 
             // Slot 7
-            ThePrincess => vec![],
+            ThePrincess => vec![
+                // Gloves
+                ability_mod(Ignite, gear[0]),
+            ],
             // RoboTurkey => vec![],
             // RangerRayna => vec![],
-            BaenarallAngelOfHope => vec![],
+            BaenarallAngelOfHope => vec![
+                // Mace
+                ability_mod(AncientHatred, gear[0]),
+                // Shield
+                ability_mod(Diversity, gear[1]),
+                // Breastplate
+                legendary_ability_mod(TheOldGuard, gear[2]),
+            ],
 
             // Slot 8
             NatalieDragon => vec![],

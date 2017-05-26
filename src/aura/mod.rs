@@ -181,6 +181,12 @@ pub enum AuraTag {
     AHah,
     LittlePockets,
 
+    // Slot 7
+    Ignite,
+    Diversity,
+    AncientHatred,
+    TheOldGuard,
+
     // Slot 10
     LooseMagic,
 
