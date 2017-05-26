@@ -164,6 +164,9 @@ pub enum AuraTag {
     Fire,
     WebBlast,
 
+    // Slot 3
+    LoneWolf,
+
     // Slot 4
     EligibleReceivers,
 

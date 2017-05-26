@@ -562,7 +562,8 @@ impl CrusaderName {
             EmoWerewolf => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Sad Story
                 Aura::dps_increase(200.0).for_crusader(*self) // Lone Wolf
-                    .when_none(WithTag(HUMAN).and(AdjacentTo(*self))),
+                    .when_none(WithTag(HUMAN).and(AdjacentTo(*self)))
+                    .with_tag(AuraTag::LoneWolf),
                 Aura::dps_increase(100.0).for_crusader(*self), // Fashion Sense
                 Aura::dps_increase(100.0).for_crusader(*self), // Teenage Agnst
                 Aura::dps_increase(150.0).for_crusader(*self), // Parental Shame
@@ -1043,8 +1044,32 @@ impl CrusaderName {
             ],
 
             // Slot 3
-            EmoWerewolf => vec![],
-            SallyTheSuccubus => vec![],
+            EmoWerewolf => vec![
+                // Crystal
+                dps_self(gear[0]),
+                // Cape
+                dps_self(gear[1]),
+                legendary_effect(25.0, gear[1]).for_crusader(*self)
+                    .times(AdjacentTo(*self)),
+                // Ham
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(ANIMAL)),
+            ],
+            SallyTheSuccubus => vec![
+                // Whip
+                dps_self(gear[0]),
+                legendary_effect(20.0, gear[0]).for_crusader(*self)
+                    .times(WithTag(MALE)),
+                // Corset
+                dps_self(gear[1]),
+                legendary_effect(20.0, gear[1]).for_crusader(*self)
+                    .times(!WithTag(SUPERNATURAL)),
+                // Perfume
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2]).for_crusader(*self)
+                    .when(Condition::Gt(AdjacentTo(*self), 3)),
+            ],
             // KarenTheCatTeenager => vec![],
 
             // Slot 4
@@ -1258,7 +1283,9 @@ impl CrusaderName {
             ],
 
             // Slot 3
-            EmoWerewolf => vec![],
+            EmoWerewolf => vec![
+                legendary_ability_mod(LoneWolf, gear[0]),
+            ],
             SallyTheSuccubus => vec![],
             // KarenTheCatTeenager => vec![],
 
