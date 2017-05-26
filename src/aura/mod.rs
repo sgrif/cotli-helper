@@ -78,6 +78,14 @@ impl Aura {
         self.modifier_amount(formation)
     }
 
+    pub fn is_noop(&self) -> bool {
+        match (self.amount, self.modifier.as_ref(), self.tag) {
+            (_, Some(&Modifier::Plus(..)), _) => false,
+            (0.0, _, None) => true,
+            _ => false
+        }
+    }
+
     fn applies_to(
         &self,
         crusader: CrusaderName,
@@ -113,6 +121,10 @@ impl AbilityBuff {
     pub fn applies_to(&self, tag: AuraTag, formation: &Formation) -> bool {
         self.target == tag
             && self.condition.as_ref().map(|c| c.is_met(formation)).unwrap_or(true)
+    }
+
+    pub fn is_noop(&self) -> bool {
+        self.amount == 0.0
     }
 
     pub fn when_exists(self, target: Target) -> Self {
@@ -199,6 +211,11 @@ pub enum AuraTag {
     // Slot 10
     Roar,
     LooseMagic,
+
+    // Slot 11
+    KoffeePotion,
+    FrogSoup,
+    PlayingFavorites,
 
     // Slot 22
     TheShadowsCowl,

@@ -748,7 +748,8 @@ impl CrusaderName {
             // Slot 11
             KhouriTheWitchDoctor => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Zombie Kittens
-                Aura::dps_increase(30.0).affecting(AdjacentTo(*self)), // Koffee Potion
+                Aura::dps_increase(30.0).affecting(AdjacentTo(*self)) // Koffee Potion
+                    .with_tag(AuraTag::KoffeePotion),
                 Aura::dps_increase(100.0).for_crusader(*self), // Shrunken Heads
                 Aura::dps_increase(100.0).for_crusader(*self), // Playing with Dolls
                 Aura::dps_increase(100.0).for_crusader(*self), // MLG
@@ -1291,11 +1292,31 @@ impl CrusaderName {
             ],
 
             // Slot 11
-            KhouriTheWitchDoctor => vec![],
+            KhouriTheWitchDoctor => vec![
+                // Hat
+                legendary_effect(100.0, gear[0])
+                    .affecting(WithTag(MAGICAL)),
+                // Necklace
+                legendary_effect(100.0, gear[1])
+                    .affecting(WithTag(HUMAN)),
+                // Staff
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(InColumnAhead(*self)),
+            ],
             // MommaKaine => vec![],
             // BrogonPrinceOfDragons => vec![],
             // TheHalfBloodElf => vec![],
-            Foresight => vec![],
+            Foresight => vec![
+                // FIXME: CPU legendary
+                // Cape
+                dps_all(gear[1]),
+                // FIXME: Cape legendary (gold)
+                // FIXME: Eye (crit click)
+                legendary_effect(100.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .when(Condition::Gt(WithTag(SUPERNATURAL), 3)),
+            ],
 
             // Slot 12
             DarkGryphon => vec![],
@@ -1359,7 +1380,7 @@ impl CrusaderName {
 
             // Slot 23
             GreyskullThePirate => vec![],
-        }
+        }.into_iter().filter(|c| !c.is_noop()).collect()
     }
 
     fn ability_buffs(&self) -> Vec<AbilityBuff> {
@@ -1559,11 +1580,19 @@ impl CrusaderName {
             ],
 
             // Slot 11
-            KhouriTheWitchDoctor => vec![],
+            KhouriTheWitchDoctor => vec![
+                // Hat
+                ability_mod(KoffeePotion, gear[0]),
+                // Necklace
+                ability_mod(FrogSoup, gear[1]),
+            ],
             // MommaKaine => vec![],
             // BrogonPrinceOfDragons => vec![],
             // TheHalfBloodElf => vec![],
-            Foresight => vec![],
+            Foresight => vec![
+                // CPU
+                ability_mod(PlayingFavorites, gear[0]),
+            ],
 
             // Slot 12
             DarkGryphon => vec![],
@@ -1627,8 +1656,7 @@ impl CrusaderName {
 
             // Slot 23
             GreyskullThePirate => vec![],
-        }
-
+        }.into_iter().filter(|c| !c.is_noop()).collect()
     }
 
     fn level_at_cost(&self, cost: f64) -> Level {
