@@ -725,12 +725,14 @@ impl CrusaderName {
             // Slot 10
             ArtaxesTheLion => vec![
                 Aura::dps_increase(125.0).for_crusader(*self), // Claw Your Way Up
-                Aura::dps_increase(50.0).affecting(InColumnAhead(*self)), // Roar!
+                Aura::dps_increase(50.0).affecting(InColumnAhead(*self)) // Roar!
+                    .with_tag(AuraTag::Roar),
                 Aura::dps_increase(125.0).for_crusader(*self), // Lion's Mane
             ],
             DrizzleTheDarkElf => vec![
                 Aura::dps_global(20.0), // All Star
-                Aura::dps_increase(20.0).affecting(AdjacentTo(*self)), // Inspiring Presence
+                Aura::dps_increase(20.0).affecting(AdjacentTo(*self)) // Inspiring Presence
+                    .with_tag(AuraTag::InspiringPresence),
                 Aura::dps_increase(400.0) // Lateral
                     .affecting(SpecificCrusader(GroklokTheOrc).and(InSameColumn(*self))),
             ],
@@ -1221,16 +1223,72 @@ impl CrusaderName {
             // KarlTheKicker => vec![],
 
             // Slot 9
-            JasonMasterOfShadows => vec![],
+            JasonMasterOfShadows => vec![
+                // Goggles
+                dps_self(gear[0]),
+                legendary_effect(100.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(EmoWerewolf)),
+                // FIXME: Sword (gold)
+                // FIXME: Sword legendary (gold + under attack)
+                // Cape
+                dps_all(gear[2]),
+            ],
             // PeteTheCarney => vec![],
-            Broot => vec![],
+            Broot => vec![
+                // FIXME: Amber (gold)
+                // FIXME: Amber legendary (under attack)
+                // Bark
+                dps_all(gear[1]),
+                legendary_effect(100.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(RobbieRaccoon)),
+                // FIXME: Berries (are gear buffs affected? If not we don't care)
+                legendary_effect(25.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ANIMAL)),
+            ],
             // PaulThePilgrim => vec![],
 
             // Slot 10
-            ArtaxesTheLion => vec![],
-            DrizzleTheDarkElf => vec![],
+            ArtaxesTheLion => vec![
+                // Hat
+                dps_all(gear[1]),
+                legendary_effect(100.0, gear[1])
+                    .affecting(WithTag(ANIMAL)),
+                // Amulet
+                legendary_effect(33.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(InColumnAhead(*self)),
+            ],
+            DrizzleTheDarkElf => vec![
+                // Necklace
+                dps_all(gear[0]),
+                legendary_effect(50.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ORC)),
+                // Sword
+                legendary_effect(25.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ELF)),
+                // Pauldron
+                legendary_effect(100.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(GroklokTheOrc)),
+            ],
             // BubbaTheSwimmingOrc => vec![],
-            SisaronTheDragonSorceress => vec![],
+            SisaronTheDragonSorceress => vec![
+                // Necklace
+                dps_all(gear[0]),
+                // Magic Source
+                legendary_effect(50.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(DRAGON)),
+                // FIXME: Jewelery (crit click)
+                legendary_effect(25.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(MAGICAL)),
+            ],
 
             // Slot 11
             KhouriTheWitchDoctor => vec![],
@@ -1477,16 +1535,28 @@ impl CrusaderName {
             // KarlTheKicker => vec![],
 
             // Slot 9
-            JasonMasterOfShadows => vec![],
+            JasonMasterOfShadows => vec![
+                legendary_ability_mod(Ambush, gear[2]),
+            ],
             // PeteTheCarney => vec![],
             Broot => vec![],
             // PaulThePilgrim => vec![],
 
             // Slot 10
-            ArtaxesTheLion => vec![],
-            DrizzleTheDarkElf => vec![],
+            ArtaxesTheLion => vec![
+                // Goggles
+                legendary_ability_mod(Roar, gear[0]),
+                // Amulet
+                ability_mod(Roar, gear[2]),
+            ],
+            DrizzleTheDarkElf => vec![
+                ability_mod(InspiringPresence, gear[1]),
+            ],
             // BubbaTheSwimmingOrc => vec![],
-            SisaronTheDragonSorceress => vec![],
+            SisaronTheDragonSorceress => vec![
+                legendary_ability_mod(LooseMagic, gear[0]),
+                ability_mod(LooseMagic, gear[1]),
+            ],
 
             // Slot 11
             KhouriTheWitchDoctor => vec![],

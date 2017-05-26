@@ -192,7 +192,12 @@ pub enum AuraTag {
     ActOfCongress,
     UsVsThem,
 
+    // Slot 9
+    Ambush,
+    InspiringPresence,
+
     // Slot 10
+    Roar,
     LooseMagic,
 
     // Slot 22
