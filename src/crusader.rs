@@ -921,8 +921,10 @@ impl CrusaderName {
             ],
             TheBatBillionaire => vec![
                 Aura::dps_global(20.0), // The Bat Signal
-                Aura::dps_global(20.0), // Bat-o-Level
-                Aura::dps_increase(50.0).affecting(AdjacentTo(*self)), // Sidekicks
+                Aura::dps_global(20.0) // Bat-o-Level
+                    .with_tag(AuraTag::BatOLevel),
+                Aura::dps_increase(50.0).affecting(AdjacentTo(*self)) // Sidekicks
+                    .with_tag(AuraTag::Sidekicks),
                 // FIXME: Smart Investing
             ],
             // PetraThePilgrim => vec![],
@@ -931,7 +933,8 @@ impl CrusaderName {
                 // FIXME: Got a Cracker! (maybe don't care)
                 // FIXME: Instant Regret
                 Aura::dps_global(20.0), // Flit and Flutter
-                Aura::dps_global(50.0).times(WithTag(TANK)), // Tough Nut to Crack
+                Aura::dps_global(50.0).times(WithTag(TANK)) // Tough Nut to Crack
+                    .with_tag(AuraTag::ToughNutToCrack),
             ],
 
             // Slot 20
@@ -1500,16 +1503,39 @@ impl CrusaderName {
             ],
 
             // Slot 18
-            ThaliaTheThunderKing => vec![],
+            ThaliaTheThunderKing => vec![
+                // Orb
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(ROYAL)),
+            ],
             // FrostyTheSnowman => vec![],
             // Littlefoot => vec![],
             // CindyTheCheerOrc => vec![],
 
             // Slot 19
-            MerciTheMadWizard => vec![],
-            TheBatBillionaire => vec![],
+            MerciTheMadWizard => vec![
+                // Robe
+                dps_all(gear[1]),
+                // Wand
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(MAGICAL)),
+            ],
+            TheBatBillionaire => vec![
+                // FIXME: Cape legendary (do we care?)
+            ],
             // PetraThePilgrim => vec![],
-            PollyTheParrot => vec![],
+            PollyTheParrot => vec![
+                // Toy
+                legendary_effect(100.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .when(Condition::GtEq(WithTag(ANIMAL), 3)),
+                // Coconut
+                legendary_effect(100.0, gear[1])
+                    .affecting(InSameColumn(*self)),
+                // Mirror
+                dps_all(gear[2]),
+            ],
 
             // Slot 20
             NateDragon => vec![],
@@ -1815,16 +1841,43 @@ impl CrusaderName {
             ],
 
             // Slot 18
-            ThaliaTheThunderKing => vec![],
+            ThaliaTheThunderKing => vec![
+                // Ring
+                legendary_ability_mod(StormRider, gear[0]),
+                // Amulet
+                ability_mod(StormRider, gear[1]),
+                // FIXME: Amulet legendary (gold)
+            ],
             // FrostyTheSnowman => vec![],
             // Littlefoot => vec![],
             // CindyTheCheerOrc => vec![],
 
             // Slot 19
-            MerciTheMadWizard => vec![],
-            TheBatBillionaire => vec![],
+            MerciTheMadWizard => vec![
+                // Orb
+                ability_mod(Alchemy, gear[0]),
+                // FIXME: Orb legendary (secondary damage effect)
+                // Robe
+                legendary_ability_mod(DeflectEvil, gear[1]),
+                // Wand
+                ability_mod(DeflectEvil, gear[2]),
+            ],
+            TheBatBillionaire => vec![
+                // Tie
+                ability_mod(SmartInvesting, gear[0]),
+                legendary_ability_mod(BatOLevel, gear[0]),
+                // Belt
+                ability_mod(Sidekicks, gear[1]),
+            ],
             // PetraThePilgrim => vec![],
-            PollyTheParrot => vec![],
+            PollyTheParrot => vec![
+                // Toy
+                ability_mod(InstantRegret, gear[0]),
+                // Coconut
+                ability_mod(ToughNutToCrack, gear[1]),
+                // Mirror
+                legendary_ability_mod(InstantRegret, gear[2]),
+            ],
 
             // Slot 20
             NateDragon => vec![],

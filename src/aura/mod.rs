@@ -238,6 +238,18 @@ pub enum AuraTag {
     RoyalGrail,
     RoyalPast,
 
+    // Slot 18
+    StormRider,
+
+    // Slot 19
+    DeflectEvil,
+    Alchemy,
+    SmartInvesting,
+    BatOLevel,
+    Sidekicks,
+    ToughNutToCrack,
+    InstantRegret,
+
     // Slot 22
     TheShadowsCowl,
 }
