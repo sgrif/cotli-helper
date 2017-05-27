@@ -123,6 +123,12 @@ impl<'a> Formation<'a> {
     pub fn crusaders<'b>(&'b self) -> impl Iterator<Item=&'a Crusader> + 'b {
         self.positions.iter().filter_map(|p| p.crusader)
     }
+
+    pub fn placements<'b>(&'b self) -> impl Iterator<Item=(usize, &'a Crusader)> + 'b {
+        self.positions.iter()
+            .enumerate()
+            .filter_map(|(i, p)| p.crusader.map(|c| (i, c)))
+    }
 }
 
 #[derive(Debug, Clone)]

@@ -23,7 +23,7 @@ pub struct FormationSearch<'a> {
 impl<'a> FormationSearch<'a> {
     pub fn new(formation: Formation<'a>, crusaders: &'a [Crusader]) -> Self {
         FormationSearch {
-            state: State { formation, crusaders },
+            state: State { formation, crusaders, placements: Vec::new(), },
             search_root: Node::new(),
         }
     }
@@ -33,7 +33,9 @@ impl<'a> FormationSearch<'a> {
         for _ in 0..empty_positions {
             let loop_start = Instant::now();
             while loop_start.elapsed() < max_time && !self.search_root.is_complete() {
-                self.search_root.expand(&mut self.state.clone());
+                let mut state = self.state.clone();
+                self.search_root.expand(&mut state);
+                self.search_root.track_dps_changes(&state);
             }
             {
                 let mut children = self.search_root.children
@@ -117,7 +119,6 @@ impl<'a> Node<'a> {
                     state.place(placement);
                     let mut child = Node::new();
                     child.check_single_formation(state);
-                    self.track_dps_changes(state);
                     self.children.insert(placement, child);
                 } else {
                     self.progress = Progress::FullyExpanded;
@@ -127,7 +128,6 @@ impl<'a> Node<'a> {
             Progress::FullyExpanded => self.to_best_child(state, Self::expand),
             Progress::Complete => panic!("expand called on complete node"),
         }
-        self.times_checked += 1;
     }
 
     fn best_child(&mut self) -> Option<(Placement<'a>, &mut Self)> {
@@ -158,21 +158,34 @@ impl<'a> Node<'a> {
                 } else {
                     self.progress = Progress::Complete;
                 }
-                self.track_dps_changes(state);
             }
             Progress::FullyExpanded => self.to_best_child(state, Self::check_single_formation),
             Progress::Complete => {}
         }
-        self.times_checked += 1;
     }
 
-    fn track_dps_changes(&mut self, state: &State) {
+    fn track_dps_changes(&mut self, state: &State<'a>) {
         let dps = state.formation.total_dps();
         self.total_dps_seen += dps;
+        self.times_checked += 1;
         if dps > self.highest_dps_seen {
             self.highest_dps_seen = dps;
         }
+        if state.placements.is_empty() { // Never randomly filled
+            for placement in state.formation.placements() {
+                if let Some(child) = self.children.get_mut(&placement) {
+                    child.track_dps_changes(state)
+                }
+            }
+        } else {
+            for placement in &state.placements {
+                if let Some(child) = self.children.get_mut(&placement) {
+                    child.track_dps_changes(state)
+                }
+            }
+        }
     }
+
 
     fn is_complete(&self) -> bool {
         self.progress == Progress::Complete
@@ -189,9 +202,7 @@ impl<'a> Node<'a> {
             action(child, state);
             found_child = true;
         }
-        if found_child {
-            self.track_dps_changes(state);
-        } else {
+        if !found_child {
             self.progress = Progress::Complete;
         }
     }
@@ -201,10 +212,12 @@ impl<'a> Node<'a> {
 struct State<'a> {
     formation: Formation<'a>,
     crusaders: &'a [Crusader],
+    placements: Vec<Placement<'a>>,
 }
 
 impl<'a> State<'a> {
     fn fill_formation_randomly(&mut self) {
+        self.placements = self.formation.placements().collect();
         while let Some(placement) = self.random_placement(&EmptySet) {
             self.place(placement)
         }
@@ -310,6 +323,7 @@ fn search_state(crusaders: &[Crusader]) -> State {
     State {
         formation: test_formation(),
         crusaders,
+        placements: Vec::new(),
     }
 }
 
@@ -337,7 +351,7 @@ mod benchmarks {
         let formation = Formation::empty(positions);
         let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
-        let state = State { formation, crusaders: &crusaders };
+        let state = State { formation, crusaders: &crusaders, placements: Vec::new(), };
 
         b.iter(|| {
             search.expand(&mut state.clone())
@@ -361,7 +375,7 @@ mod benchmarks {
         let formation = Formation::empty(positions);
         let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
-        let state = State { formation, crusaders: &crusaders };
+        let state = State { formation, crusaders: &crusaders, placements: Vec::new(), };
         for _ in 0..1_000 {
             search.expand(&mut state.clone());
         }
