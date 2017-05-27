@@ -224,6 +224,10 @@ pub enum AuraTag {
     JustInTime,
     TurnTheTides,
 
+    // Slot 13
+    FavoritePrey,
+    FocusedSupport,
+
     // Slot 22
     TheShadowsCowl,
 }

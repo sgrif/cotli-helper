@@ -798,22 +798,24 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Collect Them All!
                 Aura::dps_increase(100.0).for_crusader(*self), // My Precioussss
                 Aura::dps_increase(150.0).for_crusader(*self), // Mine! Mine! Mine!
-                // FIXME: Lucky Set
+                // FIXME: Lucky Set (crit click)
             ],
             TheMetalSoldierette => vec![
                 Aura::dps_increase(200.0).for_crusader(*self), // New Paint Job
                 Aura::dps_increase(400.0) // Cocky Leader
                     .affecting(SpecificCrusader(*self).and(InFrontColumn)),
                 Aura::dps_increase(200.0).for_crusader(*self), // Arms Race
-                // FIXME: Cool Under Pressure
+                // FIXME: Cool Under Pressure (under attack)
             ],
             SnicketteTheSneaky => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Quick Fingers
                 Aura::dps_increase(50.0).affecting(AdjacentTo(*self)) // Focused Support
-                    .when(Condition::LtEq(AdjacentTo(*self), 4)),
+                    .when(Condition::LtEq(AdjacentTo(*self), 4))
+                    .with_tag(AuraTag::FocusedSupport),
                 Aura::dps_increase(50.0).affecting(WithTag(HUMAN)) // Favorite Prey
-                    .plus(Aura::dps_global(10.0).times(WithTag(HUMAN))),
-                // FIXME: Critical Thinking
+                    .plus(Aura::dps_global(10.0).times(WithTag(HUMAN))) // Lost in the Crowd
+                    .with_tag(AuraTag::FavoritePrey),
+                // FIXME: Critical Thinking (crit click)
                 Aura::dps_global(50.0) // The Blame Game
                     .when(Condition::GtEq(WithTag(LEPRECHAUN), 2)),
             ],
@@ -1359,9 +1361,41 @@ impl CrusaderName {
             // TheDarkHelper => vec![],
 
             // Slot 13
-            SarahTheCollector => vec![],
-            TheMetalSoldierette => vec![],
-            SnicketteTheSneaky => vec![],
+            SarahTheCollector => vec![
+                // Helmet
+                dps_self(gear[0]),
+                legendary_effect(100.0, gear[0])
+                    .affecting(WithTag(FEMALE)),
+                // Chainmail
+                dps_self(gear[1]),
+                // FIXME: Chainmail legendary (unique effect)
+                // Bag
+                dps_all(gear[2]),
+                // FIXME: Bag legendary (unique effect)
+            ],
+            TheMetalSoldierette => vec![
+                // Power Source
+                dps_self(gear[0]),
+                // FIXME: Power Source legendary (under attack)
+                // Jet Pack
+                dps_self(gear[1]),
+                // FIXME: Jet Pack legendary (under attack)
+                // Glove
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2]).for_crusader(*self)
+                    .times(WithTag(HEALER)),
+            ],
+            SnicketteTheSneaky => vec![
+                // Cloak
+                legendary_effect(100.0, gear[0])
+                    .affecting(InSameColumn(*self)),
+                // FIXME: Corset legendary (gold)
+                // Glove
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(LarryTheLeprechaun)),
+            ],
 
             // Slot 14
             GoldPanda => vec![],
@@ -1517,7 +1551,7 @@ impl CrusaderName {
             EmoWerewolf => vec![
                 legendary_ability_mod(LoneWolf, gear[0]),
             ],
-            SallyTheSuccubus => vec![],
+            SallyTheSuccubus => vec![], // No ability buffs from gear
             // KarenTheCatTeenager => vec![],
 
             // Slot 4
@@ -1538,7 +1572,7 @@ impl CrusaderName {
             // MindyTheMime => vec![],
 
             // Slot 5
-            TheWashedUpHermit => vec![],
+            TheWashedUpHermit => vec![], // No ability buffs from gear
             KyleThePartyBro => vec![
                 // Hat
                 legendary_ability_mod(MoshPit, gear[0]),
@@ -1580,7 +1614,7 @@ impl CrusaderName {
             ],
 
             // Slot 8
-            NatalieDragon => vec![],
+            NatalieDragon => vec![], // No ability buffs from gear
             // JackOLantern => vec![],
             PresidentBillySmithsonian => vec![
                 // Cufflinks
@@ -1649,9 +1683,14 @@ impl CrusaderName {
             // TheDarkHelper => vec![],
 
             // Slot 13
-            SarahTheCollector => vec![],
-            TheMetalSoldierette => vec![],
-            SnicketteTheSneaky => vec![],
+            SarahTheCollector => vec![], // No ability buffs from gear
+            TheMetalSoldierette => vec![], // No ability buffs from gear
+            SnicketteTheSneaky => vec![
+                // Cloak
+                ability_mod(FavoritePrey, gear[0]),
+                // Corset
+                ability_mod(FocusedSupport, gear[1]),
+            ],
 
             // Slot 14
             GoldPanda => vec![],
