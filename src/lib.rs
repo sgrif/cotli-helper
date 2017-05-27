@@ -95,7 +95,7 @@ pub fn create_user_data() -> UserData {
             gear: [GearQuality::Rare, GearQuality::Legendary(Level(2)), GearQuality::Rare],
         }).add_crusader(CrusaderName::BaenarallAngelOfHope, CrusaderData {
             enchantment_points: 0,
-            gear: [GearQuality::Legendary(Level(1)), GearQuality::Uncommon, GearQuality::Rare],
+            gear: [GearQuality::Legendary(Level(1)), GearQuality::Rare, GearQuality::Rare],
         }).add_crusader(CrusaderName::ThePrincess, CrusaderData {
             enchantment_points: 85,
             gear: [GearQuality::Rare, GearQuality::Rare, GearQuality::Rare],

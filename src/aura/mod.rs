@@ -217,6 +217,13 @@ pub enum AuraTag {
     FrogSoup,
     PlayingFavorites,
 
+    // Slot 12
+    UnderMyWing,
+    Groupies,
+    HesGotAGunToo,
+    JustInTime,
+    TurnTheTides,
+
     // Slot 22
     TheShadowsCowl,
 }

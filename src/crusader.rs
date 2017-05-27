@@ -454,7 +454,7 @@ impl CrusaderName {
             // Slot 13
             SarahTheCollector => FEMALE | HUMAN | DPS,
             TheMetalSoldierette => FEMALE | HUMAN | EVENT | ROBOT | TANK | DPS,
-            SnicketteTheSneaky => FEMALE | SUPERNATURAL | EVENT | LEPRECHAUN | SUPPORT,
+            SnicketteTheSneaky => FEMALE | MAGICAL | EVENT | LEPRECHAUN | SUPPORT,
 
             // Slot 14
             GoldPanda => FEMALE | ANIMAL | SUPERNATURAL | GOLD_FINDER,
@@ -774,15 +774,17 @@ impl CrusaderName {
             RockyTheRockstar => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Rock 'n Roll
                 Aura::dps_increase(50.0).for_crusader(*self) // Groupies + Pick and Choose
-                    .times(WithTag(FEMALE)),
+                    .times(WithTag(FEMALE))
+                    .with_tag(AuraTag::Groupies),
                 Aura::dps_increase(100.0).for_crusader(*self), // Amp up
                 Aura::dps_increase(100.0).for_crusader(*self), // Sold Out Show
             ],
             MontanaJames => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // CRACK
-                Aura::dps_increase(50.0).affecting(WithTag(ANIMAL)), // Just In Time
-                // FIXME: Turn the tides
-                // FIXME: He's Got a Gun, Too
+                Aura::dps_increase(50.0).affecting(WithTag(ANIMAL)) // Just In Time
+                    .with_tag(AuraTag::JustInTime),
+                // FIXME: Turn the tides (dead crusader)
+                // FIXME: He's Got a Gun, Too (secondary damage)
                 Aura::dps_global(40.0) // Damsel In Distress
                     .when_exists(SpecificCrusader(ThePrincess)),
             ],
@@ -1319,9 +1321,41 @@ impl CrusaderName {
             ],
 
             // Slot 12
-            DarkGryphon => vec![],
-            RockyTheRockstar => vec![],
-            MontanaJames => vec![],
+            DarkGryphon => vec![
+                // Glasses
+                legendary_effect(100.0, gear[0])
+                    .affecting(InColumnAhead(*self)),
+                // FIXME: Charm legendary (monsters on screen)
+                // Amulet
+                dps_all(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(SUPERNATURAL)),
+            ],
+            RockyTheRockstar => vec![
+                // Guitar
+                legendary_effect(20.0, gear[0]).for_crusader(*self)
+                    .times(WithTag(FEMALE)),
+                // Hair
+                dps_all(gear[1]),
+                legendary_effect(100.0, gear[1])
+                    .affecting(AllCrusaders)
+                    .when(Condition::Gt(WithTag(FEMALE).and(AdjacentTo(*self)), 2)),
+                // Pick
+                dps_self(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(MALE)),
+            ],
+            MontanaJames => vec![
+                // Chalice
+                dps_all(gear[0]),
+                // Whip
+                legendary_effect(100.0, gear[1])
+                    .affecting(WithTag(ANIMAL)),
+                // Llama
+                legendary_effect(25.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(FEMALE)),
+            ],
             // TheDarkHelper => vec![],
 
             // Slot 13
@@ -1595,9 +1629,23 @@ impl CrusaderName {
             ],
 
             // Slot 12
-            DarkGryphon => vec![],
-            RockyTheRockstar => vec![],
-            MontanaJames => vec![],
+            DarkGryphon => vec![
+                // Glasses
+                ability_mod(UnderMyWing, gear[0]),
+            ],
+            RockyTheRockstar => vec![
+                // Guitar
+                ability_mod(Groupies, gear[0]),
+            ],
+            MontanaJames => vec![
+                // Chalice
+                legendary_ability_mod(HesGotAGunToo, gear[0]),
+                // Whip
+                ability_mod(JustInTime, gear[1]),
+                ability_mod(TurnTheTides, gear[1]), // Whip affects multiple abilities
+                // Llama
+                ability_mod(HesGotAGunToo, gear[2]),
+            ],
             // TheDarkHelper => vec![],
 
             // Slot 13
