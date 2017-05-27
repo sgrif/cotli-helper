@@ -1408,9 +1408,33 @@ impl CrusaderName {
             // KatieTheCupid => vec![],
 
             // Slot 15
-            PrinceSalTheMerman => vec![],
+            PrinceSalTheMerman => vec![
+                // Trident
+                dps_all(gear[0]),
+                legendary_effect(25.0, gear[0]).for_crusader(*self)
+                    .times(WithTag(ROYAL)),
+                // Shark
+                dps_self(gear[1]),
+                legendary_effect(25.0, gear[1]).for_crusader(*self)
+                    .times(WithTag(FEMALE)),
+                // Cape
+                dps_self(gear[2]),
+                legendary_effect(100.0, gear[2]).for_crusader(*self)
+                    .when(Condition::GtEq(AdjacentTo(*self), 5)),
+            ],
             // WendyTheWitch => vec![],
-            RobbieRaccoon => vec![],
+            RobbieRaccoon => vec![
+                // Molotov
+                dps_all(gear[0]),
+                legendary_effect(100.0, gear[0]).for_crusader(*self)
+                    .when_exists(SpecificCrusader(Broot)),
+                // Gun
+                dps_self(gear[1]),
+                legendary_effect(50.0, gear[1]).for_crusader(*self)
+                    .times(WithTag(TANK)),
+                // FIXME: Missile (broot buffs)
+                // FIXME: Missile legendary (enemies on screen)
+            ],
             // PrincessValTheMermaid => vec![],
 
             // Slot 16
@@ -1697,15 +1721,15 @@ impl CrusaderName {
             ],
 
             // Slot 14
-            GoldPanda => vec![],
+            GoldPanda => vec![], // No ability buffs from gear
             // RoboSanta => vec![],
             // LeerionTheRoyalDwarf => vec![],
             // KatieTheCupid => vec![],
 
             // Slot 15
-            PrinceSalTheMerman => vec![],
+            PrinceSalTheMerman => vec![], // No ability buffs from gear
             // WendyTheWitch => vec![],
-            RobbieRaccoon => vec![],
+            RobbieRaccoon => vec![], // No ability buffs from gear
             // PrincessValTheMermaid => vec![],
 
             // Slot 16
