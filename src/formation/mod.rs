@@ -83,12 +83,40 @@ impl<'a> Formation<'a> {
     }
 
     pub fn print(&self) {
+        let longest_crusader_name = self.crusaders()
+            .map(|c| format!("{:?}", c.name).len())
+            .max();
+        let longest_crusader_name = match longest_crusader_name {
+            Some(x) => x,
+            None => return,
+        };
+        let front_column = self.front_column().unwrap();
+        let num_rows = self.positions.iter()
+            .map(|p| p.coordinate.y)
+            .max().unwrap();
         println!("Total DPS: {}", self.total_dps());
-        for pos in self.positions.iter() {
-            let coord = pos.coordinate;
-            let crusader = pos.crusader;
-            let dps = pos.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras));
-            println!("({}, {}): {:?} {}", coord.x, coord.y, crusader.map(|c| c.name), dps);
+        for y in 0..(num_rows * 2 + 2) {
+            for x in 0..(front_column + 1) {
+                let crusader_name = self.positions.iter()
+                    .find(|p| {
+                        let c = p.coordinate;
+                        c.x == x && c.y * 2 + x % 2 == y
+                    }).map(|p| {
+                        p.crusader.map(|c| format!("{:?}", c))
+                            .unwrap_or_else(|| String::from("o"))
+                    });
+                let dps = self.positions.iter()
+                    .filter(|p| p.crusader.is_some())
+                    .find(|p| {
+                        let c = p.coordinate;
+                        c.x == x && c.y * 2 + x % 2 == y - 1
+                    }).map(|p| {
+                        p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras))
+                            .to_string()
+                    });
+                print!("{1:^0$}", longest_crusader_name, crusader_name.or(dps).unwrap_or(String::new()));
+            }
+            print!("\n");
         }
     }
 
