@@ -28,11 +28,10 @@ impl<'a> FormationSearch<'a> {
         }
     }
 
-    pub fn perform_search(&mut self, mut max_time: Duration) {
+    pub fn perform_search(&mut self, max_time: Duration) {
         let empty_positions = self.state.formation.empty_positions().count();
         for _ in 0..empty_positions {
             let loop_start = Instant::now();
-            max_time /= 2;
             while loop_start.elapsed() < max_time && !self.search_root.is_complete() {
                 self.search_root.expand(&mut self.state.clone());
             }
