@@ -39,7 +39,7 @@ impl<'a> FormationSearch<'a> {
                 let mut children = self.search_root.children
                     .iter()
                     .collect::<Vec<_>>();
-                children.sort_by_key(|&(_, ref c)| c.times_checked);
+                children.sort_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen));
                 let num_skip = children.len() - 5;
                 for (placement, child) in children.into_iter().skip(num_skip) {
                     println!("{:?} checked {} times (max {})", placement, child.times_checked, child.highest_dps_seen);
