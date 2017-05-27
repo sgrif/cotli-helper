@@ -864,10 +864,12 @@ impl CrusaderName {
             Spaceking => vec![
                 Aura::dps_increase(125.0).for_crusader(*self), // Have You Heard Of Me?
                 Aura::dps_increase(25.0).for_crusader(*self) // Ladies' Space-Man
-                    .times(WithTag(FEMALE)),
+                    .times(WithTag(FEMALE))
+                    .with_tag(AuraTag::LadiesSpaceMan),
                 Aura::dps_increase(125.0).for_crusader(*self), // Pew Pew Pew
                 Aura::dps_increase(100.0).for_crusader(*self) // Kirkin' It Up
-                    .times(WithTag(ALIEN)),
+                    .times(WithTag(ALIEN))
+                    .with_tag(AuraTag::KirkinItUp),
                 Aura::dps_increase(125.0).for_crusader(*self), // Bad-ass Laser Guns
                 // FIXME: Avenger
             ],
@@ -1438,10 +1440,34 @@ impl CrusaderName {
             // PrincessValTheMermaid => vec![],
 
             // Slot 16
-            FirePhoenix => vec![],
-            AlanTheArchAngel => vec![],
+            FirePhoenix => vec![
+                // Ring
+                legendary_effect(25.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(SUPERNATURAL)),
+                // Gem
+                dps_all(gear[1]),
+                // Feather
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(SUPERNATURAL)),
+            ],
+            AlanTheArchAngel => vec![
+                // FIXME: Helmet legendary (dead crusaders)
+                // Wings
+                dps_all(gear[1]),
+                // FIXME: Wings legendary (formation under attack)
+                // Staves
+                legendary_effect(50.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ANGEL)),
+            ],
             // FrightOTron4000 => vec![],
-            Spaceking => vec![],
+            Spaceking => vec![
+                // Laser Gun
+                dps_all(gear[0]),
+                legendary_effect(100.0, gear[0]).for_crusader(*self)
+                    .when_none(WithTag(HUMAN).and(!SpecificCrusader(*self))),
+            ],
 
             // Slot 17
             KingReginaldIV => vec![],
@@ -1733,10 +1759,22 @@ impl CrusaderName {
             // PrincessValTheMermaid => vec![],
 
             // Slot 16
-            FirePhoenix => vec![],
+            FirePhoenix => vec![
+                // Ring
+                ability_mod(StormOfFlame, gear[0]),
+                // Feather
+                ability_mod(HeartOfThePhoenix, gear[2]),
+            ],
             AlanTheArchAngel => vec![],
             // FrightOTron4000 => vec![],
-            Spaceking => vec![],
+            Spaceking => vec![
+                // Toothbrush
+                ability_mod(LadiesSpaceMan, gear[1]),
+                legendary_ability_mod(LadiesSpaceMan, gear[1]),
+                // Visor
+                ability_mod(KirkinItUp, gear[2]),
+                legendary_ability_mod(KirkinItUp, gear[2]),
+            ],
 
             // Slot 17
             KingReginaldIV => vec![],

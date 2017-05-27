@@ -228,6 +228,12 @@ pub enum AuraTag {
     FavoritePrey,
     FocusedSupport,
 
+    // Slot 16
+    StormOfFlame,
+    HeartOfThePhoenix,
+    LadiesSpaceMan,
+    KirkinItUp,
+
     // Slot 22
     TheShadowsCowl,
 }
