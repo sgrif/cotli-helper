@@ -879,7 +879,8 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Unicorn Academy
                 Aura::dps_increase(100.0).for_crusader(*self), // Hunting Trophies
                 Aura::dps_global(10.0), // The Royal Army
-                Aura::dps_increase(200.0).affecting(WithTag(ROYAL)), // Royal Grail
+                Aura::dps_increase(200.0).affecting(WithTag(ROYAL)) // Royal Grail
+                    .with_tag(AuraTag::RoyalGrail),
             ],
             // QueenSiri => vec![],
             // MrBogginsTheSubstitute => vec![],
@@ -887,7 +888,8 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Hilarious
                 Aura::dps_increase(100.0).for_crusader(*self), // Face Pain
                 Aura::dps_increase(150.0).for_crusader(*self) // Royal Past
-                    .minus(Aura::dps_global(25.0).times(WithTag(ROYAL))),
+                    .minus(Aura::dps_global(25.0).times(WithTag(ROYAL)))
+                    .with_tag(AuraTag::RoyalPast),
                 Aura::dps_increase(150.0).for_crusader(*self), // Tummy Heart
                 Aura::dps_increase(10.0).for_crusader(*self) // Warming Up
                     .times(!WithTag(ROYAL)),
@@ -1470,10 +1472,32 @@ impl CrusaderName {
             ],
 
             // Slot 17
-            KingReginaldIV => vec![],
+            KingReginaldIV => vec![
+                // Crown
+                legendary_effect(25.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(ROYAL)),
+                // Cape
+                dps_all(gear[1]),
+            ],
             // QueenSiri => vec![],
             // MrBogginsTheSubstitute => vec![],
-            SquigglesTheClown => vec![],
+            SquigglesTheClown => vec![
+                // Hat
+                legendary_effect(25.0, gear[0]).for_crusader(*self)
+                    .times(!WithTag(HUMAN)),
+                // Make-Up
+                dps_self(gear[1]),
+                legendary_effect(100.0, gear[1]).for_crusader(*self)
+                    .when(Condition::GtEq(
+                        AdjacentTo(*self).and(WithTag(HUMAN)),
+                        4,
+                    )),
+                // Shoe
+                dps_all(gear[2]),
+                // legendary_effect(100.0, gear[2]).for_crusader(*self)
+                //     .when_exists(SpecificCrusader(PeteTheCarney)),
+            ],
 
             // Slot 18
             ThaliaTheThunderKing => vec![],
@@ -1765,7 +1789,7 @@ impl CrusaderName {
                 // Feather
                 ability_mod(HeartOfThePhoenix, gear[2]),
             ],
-            AlanTheArchAngel => vec![],
+            AlanTheArchAngel => vec![], // No ability buffs from gear
             // FrightOTron4000 => vec![],
             Spaceking => vec![
                 // Toothbrush
@@ -1777,10 +1801,18 @@ impl CrusaderName {
             ],
 
             // Slot 17
-            KingReginaldIV => vec![],
+            KingReginaldIV => vec![
+                // Cape
+                legendary_ability_mod(RoyalGrail, gear[1]),
+                // Writings
+                ability_mod(RoyalGrail, gear[2]),
+            ],
             // QueenSiri => vec![],
             // MrBogginsTheSubstitute => vec![],
-            SquigglesTheClown => vec![],
+            SquigglesTheClown => vec![
+                // Hat
+                ability_mod(RoyalPast, gear[0]),
+            ],
 
             // Slot 18
             ThaliaTheThunderKing => vec![],

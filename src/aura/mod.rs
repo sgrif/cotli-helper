@@ -234,6 +234,10 @@ pub enum AuraTag {
     LadiesSpaceMan,
     KirkinItUp,
 
+    // Slot 17
+    RoyalGrail,
+    RoyalPast,
+
     // Slot 22
     TheShadowsCowl,
 }

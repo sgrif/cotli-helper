@@ -37,7 +37,7 @@ impl<'a> FormationSearch<'a> {
                 self.search_root.expand(&mut state);
                 self.search_root.track_dps_changes(&state);
             }
-            {
+            if cfg!(feature = "debug_output") && !self.search_root.is_complete() {
                 let mut children = self.search_root.children
                     .iter()
                     .collect::<Vec<_>>();
@@ -62,7 +62,9 @@ impl<'a> FormationSearch<'a> {
             };
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
-                self.state.formation.print();
+                if !self.search_root.is_complete() {
+                    self.state.formation.print();
+                }
                 self.search_root = child;
             } else {
                 break;
