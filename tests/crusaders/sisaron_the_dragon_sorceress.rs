@@ -3,7 +3,7 @@ use cotli_helper::crusader::CrusaderName::SisaronTheDragonSorceress;
 use support::*;
 
 #[test]
-fn loose_magic_is_buffed_when_at_least_4_crusaders() {
+fn loose_magic_is_buffed_exactly_4_adjacent() {
     let dummy_dps = Crusader::dummy(Tags::empty());
     let dummy_crusader1 = Crusader::dummy(HUMAN).at_level(0);
     let dummy_crusader2 = Crusader::dummy(ANIMAL).at_level(0);
@@ -22,5 +22,5 @@ fn loose_magic_is_buffed_when_at_least_4_crusaders() {
     formation.place_crusader(6, &dummy_crusader3);
     assert_formation_dps!("220", formation);
     formation.place_crusader(7, &dummy_crusader4);
-    assert_formation_dps!("198", formation);
+    assert_formation_dps!("132", formation);
 }

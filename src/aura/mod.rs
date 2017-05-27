@@ -52,11 +52,11 @@ impl Aura {
     }
 
     pub fn when_exists(self, target: Target) -> Self {
-        self.when(Condition::Gt(target, 0))
+        self.when(Condition::GtEq(target, 1))
     }
 
     pub fn when_none(self, target: Target) -> Self {
-        self.when(Condition::Lt(target, 1))
+        self.when(Condition::Eq(target, 0))
     }
 
     pub fn when(self, condition: Condition) -> Self {
@@ -128,11 +128,11 @@ impl AbilityBuff {
     }
 
     pub fn when_exists(self, target: Target) -> Self {
-        self.when(Condition::Gt(target, 0))
+        self.when(Condition::GtEq(target, 1))
     }
 
     pub fn when_none(self, target: Target) -> Self {
-        self.when(Condition::Lt(target, 1))
+        self.when(Condition::Eq(target, 0))
     }
 
     pub fn when(self, condition: Condition) -> Self {

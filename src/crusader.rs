@@ -655,7 +655,7 @@ impl CrusaderName {
                 // FIXME: Little Pockets
                 // FIXME: Hiding Spot
                 Aura::dps_global(100.0) // Subtle Magics
-                    .when(Condition::Lt(AdjacentTo(*self), 4)),
+                    .when(Condition::LtEq(AdjacentTo(*self), 3)),
             ],
             // BernardTheBartender => vec![],
 
@@ -810,12 +810,12 @@ impl CrusaderName {
             SnicketteTheSneaky => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Quick Fingers
                 Aura::dps_increase(50.0).affecting(AdjacentTo(*self)) // Focused Support
-                    .when(Condition::Lt(AdjacentTo(*self), 4)),
+                    .when(Condition::LtEq(AdjacentTo(*self), 4)),
                 Aura::dps_increase(50.0).affecting(WithTag(HUMAN)) // Favorite Prey
                     .plus(Aura::dps_global(10.0).times(WithTag(HUMAN))),
                 // FIXME: Critical Thinking
                 Aura::dps_global(50.0) // The Blame Game
-                    .when(Condition::Gt(WithTag(LEPRECHAUN), 1)),
+                    .when(Condition::GtEq(WithTag(LEPRECHAUN), 2)),
             ],
 
             // Slot 14
@@ -888,9 +888,9 @@ impl CrusaderName {
                 Aura::dps_increase(10.0).for_crusader(*self) // Warming Up
                     .times(!WithTag(ROYAL)),
                 Aura::dps_increase(200.0).for_crusader(*self) // Receptive Audience
-                    .when(Condition::Gt(
+                    .when(Condition::GtEq(
                         WithTag(HUMAN).and(AdjacentTo(*self)),
-                        1,
+                        2,
                     )),
             ],
 
@@ -1083,7 +1083,7 @@ impl CrusaderName {
                 // Perfume
                 dps_all(gear[2]),
                 legendary_effect(100.0, gear[2]).for_crusader(*self)
-                    .when(Condition::Gt(AdjacentTo(*self), 3)),
+                    .when(Condition::GtEq(AdjacentTo(*self), 4)),
             ],
             // KarenTheCatTeenager => vec![],
 
@@ -1127,7 +1127,7 @@ impl CrusaderName {
                 // Shirt
                 dps_self(gear[1]),
                 legendary_effect(100.0, gear[1]).for_crusader(*self)
-                    .when(Condition::Gt(AdjacentTo(*self), 3)),
+                    .when(Condition::GtEq(AdjacentTo(*self), 4)),
                 // Keg
                 dps_self(gear[2]),
                 legendary_effect(100.0, gear[2]).for_crusader(*self)
@@ -1139,7 +1139,7 @@ impl CrusaderName {
                 // Glasses
                 legendary_effect(100.0, gear[0])
                     .affecting(AllCrusaders)
-                    .when(Condition::Gt(WithTag(ALIEN), 1)),
+                    .when(Condition::GtEq(WithTag(ALIEN), 2)),
                 // Knitting
                 legendary_effect(100.0, gear[1]).affecting(WithTag(HUMAN)),
                 // Chair
@@ -1317,7 +1317,7 @@ impl CrusaderName {
                 // FIXME: Eye (crit click)
                 legendary_effect(100.0, gear[2])
                     .affecting(AllCrusaders)
-                    .when(Condition::Gt(WithTag(SUPERNATURAL), 3)),
+                    .when(Condition::GtEq(WithTag(SUPERNATURAL), 4)),
             ],
 
             // Slot 12
@@ -1339,7 +1339,7 @@ impl CrusaderName {
                 dps_all(gear[1]),
                 legendary_effect(100.0, gear[1])
                     .affecting(AllCrusaders)
-                    .when(Condition::Gt(WithTag(FEMALE).and(AdjacentTo(*self)), 2)),
+                    .when(Condition::GtEq(WithTag(FEMALE).and(AdjacentTo(*self)), 3)),
                 // Pick
                 dps_self(gear[2]),
                 legendary_effect(100.0, gear[2])
@@ -1441,7 +1441,7 @@ impl CrusaderName {
             ],
             SisaronTheDragonSorceress => vec![
                 AbilityBuff::new(300.0, AuraTag::LooseMagic) // Focused Magic
-                    .when(Condition::Gt(AdjacentTo(*self), 3)),
+                    .when(Condition::Eq(AdjacentTo(*self), 4)),
             ],
             DarkGryphon => vec![
                 AbilityBuff::new(20.0, AuraTag::Swordplay), // Lion Swipe
