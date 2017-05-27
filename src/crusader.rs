@@ -954,9 +954,11 @@ impl CrusaderName {
             TheExterminator => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Give Me Your Jacket
                 Aura::dps_increase(50.0).for_crusader(*self) // Spare Parts
-                    .times(WithTag(ROBOT).and(!SpecificCrusader(*self))),
+                    .times(WithTag(ROBOT).and(!SpecificCrusader(*self)))
+                    .with_tag(AuraTag::SpareParts),
                 Aura::dps_increase(100.0).for_crusader(*self) // Slaved Systems
-                    .times(WithTag(ROBOT).and(AdjacentTo(*self))),
+                    .times(WithTag(ROBOT).and(AdjacentTo(*self)))
+                    .with_tag(AuraTag::SlavedSystems),
                 // FIXME: Triangulation
                 Aura::dps_increase(200.0).for_crusader(*self), // Time Travelled
                 // FIXME: Thumb's Up
@@ -1538,20 +1540,56 @@ impl CrusaderName {
             ],
 
             // Slot 20
-            NateDragon => vec![],
+            NateDragon => vec![
+                // Dynamite
+                dps_self(gear[0]),
+                legendary_effect(100.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .when_exists(SpecificCrusader(NatalieDragon)),
+                // Fire Extinguisher
+                dps_all(gear[1]),
+                legendary_effect(25.0, gear[1])
+                    .affecting(WithTag(MALE)),
+                // FIXME: Sword legendary (xp)
+            ],
             // KizlblypTheAlienTraitor => vec![],
             // RoboRudolph => vec![],
 
             // Slot 21
-            TheExterminator => vec![],
+            TheExterminator => vec![
+                // FIXME: Computer Chip legendary (gold)
+                // Sunglasses
+                dps_self(gear[2]),
+                legendary_effect(100.0, gear[2]).for_crusader(*self)
+                    .when(Condition::GtComplex(WithTag(ROBOT), WithTag(HUMAN))),
+            ],
             // GloriaTheGoodWitch => vec![],
 
             // Slot 22
-            TheShadowQueen => vec![],
+            TheShadowQueen => vec![
+                // Soul Gem
+                dps_all(gear[1]),
+                legendary_effect(100.0, gear[1])
+                    .affecting(WithTag(SUPERNATURAL)),
+                // FIXME: Shadow (crit click)
+                legendary_effect(50.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(SUPERNATURAL)),
+            ],
             // IlsaTheInsaneWizard => vec![],
 
             // Slot 23
-            GreyskullThePirate => vec![],
+            GreyskullThePirate => vec![
+                // Parrot
+                legendary_effect(50.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(TANK)),
+                // FIXME: Map (gold)
+                // FIXME: Map legendary (gold)
+                // Cannon
+                legendary_effect(100.0, gear[2])
+                    .affecting(WithTag(HUMAN)),
+            ],
         }.into_iter().filter(|c| !c.is_noop()).collect()
     }
 
@@ -1880,20 +1918,37 @@ impl CrusaderName {
             ],
 
             // Slot 20
-            NateDragon => vec![],
+            NateDragon => vec![
+                // Sword
+                ability_mod(DoubleDragon, gear[2]),
+            ],
             // KizlblypTheAlienTraitor => vec![],
             // RoboRudolph => vec![],
 
             // Slot 21
-            TheExterminator => vec![],
+            TheExterminator => vec![
+                // Arm Cannon
+                ability_mod(SpareParts, gear[0]),
+                legendary_ability_mod(SpareParts, gear[0]),
+                // Computer Chips
+                ability_mod(SlavedSystems, gear[1]),
+            ],
             // GloriaTheGoodWitch => vec![],
 
             // Slot 22
-            TheShadowQueen => vec![],
+            TheShadowQueen => vec![
+                // Cloak
+                ability_mod(TheShadowsCowl, gear[0]),
+                legendary_ability_mod(TheShadowsCowl, gear[0]),
+            ],
             // IlsaTheInsaneWizard => vec![],
 
             // Slot 23
-            GreyskullThePirate => vec![],
+            GreyskullThePirate => vec![
+                // Parrot
+                ability_mod(Plunder, gear[0]),
+                // FIXME: Cannon legendary (secondary damage source)
+            ],
         }.into_iter().filter(|c| !c.is_noop()).collect()
     }
 

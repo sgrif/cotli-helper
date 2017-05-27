@@ -250,6 +250,13 @@ pub enum AuraTag {
     ToughNutToCrack,
     InstantRegret,
 
+    // Slot 21
+    SpareParts,
+    SlavedSystems,
+
     // Slot 22
     TheShadowsCowl,
+
+    // Slot 23
+    Plunder,
 }
