@@ -1398,7 +1398,11 @@ impl CrusaderName {
             ],
 
             // Slot 14
-            GoldPanda => vec![],
+            GoldPanda => vec![
+                // Watch
+                dps_all(gear[0]),
+                // FIXME: Clover (gold)
+            ],
             // RoboSanta => vec![],
             // LeerionTheRoyalDwarf => vec![],
             // KatieTheCupid => vec![],
