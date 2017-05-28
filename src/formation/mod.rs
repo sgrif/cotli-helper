@@ -105,12 +105,13 @@ impl<'a> Formation<'a> {
         for y in 0..(num_rows * 2 + 2) {
             for x in 0..(front_column + 1) {
                 let crusader_name = self.positions.iter()
-                    .find(|p| {
+                    .enumerate()
+                    .find(|&(_, p)| {
                         let c = p.coordinate;
                         c.x == x && c.y * 2 + x % 2 == y
-                    }).map(|p| {
+                    }).map(|(i, p)| {
                         p.crusader.map(|c| format!("{:?}", c))
-                            .unwrap_or_else(|| String::from("o"))
+                            .unwrap_or_else(|| i.to_string())
                     });
                 let dps = self.positions.iter()
                     .filter(|p| p.crusader.is_some())

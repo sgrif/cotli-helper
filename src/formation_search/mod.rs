@@ -66,9 +66,7 @@ impl<'a> FormationSearch<'a> {
             };
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
-                if !self.search_root.is_complete() {
-                    self.state.formation.print(&self.parameters.policy);
-                }
+                self.state.formation.print(&self.parameters.policy);
                 self.search_root = child;
             } else {
                 break;

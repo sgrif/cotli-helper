@@ -43,6 +43,10 @@ impl Aura {
         self.with_modifier(Modifier::DividedBy(target))
     }
 
+    pub fn to_power_of(self, target: Target) -> Self {
+        self.with_modifier(Modifier::ToPowerOf(target))
+    }
+
     pub fn randomly_affecting(self, count: usize) -> Self {
         let target = self.target.clone();
         self.with_modifier(Modifier::RandomlyAffecting(count, target))

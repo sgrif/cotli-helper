@@ -8,6 +8,7 @@ pub enum Modifier {
     Plus(Box<Aura>),
     RandomlyAffecting(usize, Target),
     Times(Target),
+    ToPowerOf(Target),
 }
 
 impl Modifier {
@@ -22,6 +23,9 @@ impl Modifier {
             RandomlyAffecting(count, ref target) =>
                 base / 1f64.max(target.count_in_formation(formation) as f64 / count as f64),
             Times(ref target) => base * target.count_in_formation(formation) as f64,
+            ToPowerOf(ref target) => (1.0 + base / 100.0)
+                .powi(target.count_in_formation(formation) as i32)
+                * 100.0 - 100.0,
         }
     }
 }

@@ -368,7 +368,7 @@ impl CrusaderName {
             // IlsaTheInsaneWizard |
 
             // Slot 23
-            GreyskullThePirate => 1.63e17, // FIXME: This is probably wrong
+            GreyskullThePirate => 1.63e17,
         }
     }
 
@@ -1230,7 +1230,7 @@ impl CrusaderName {
             // JackOLantern => vec![],
             PresidentBillySmithsonian => vec![
                 // FIXME: Suit (gold)
-                legendary_effect(10.0, gear[1])
+                legendary_effect(25.0, gear[1])
                     .affecting(AllCrusaders)
                     .times(WithTag(HUMAN)),
                 // Razor
@@ -1276,7 +1276,10 @@ impl CrusaderName {
                 // Amulet
                 legendary_effect(33.0, gear[2])
                     .affecting(AllCrusaders)
-                    .times(InColumnAhead(*self)),
+                    // It's probably a bug in COTLI, but this is currently
+                    // multiplicative not additive. Sasha's legendary has
+                    // identical wording, but is additive
+                    .to_power_of(InColumnAhead(*self)),
             ],
             DrizzleTheDarkElf => vec![
                 // Necklace
@@ -2091,7 +2094,7 @@ impl CrusaderName {
             // Slot 23
             GreyskullThePirate => 1.53e21,
         };
-        let lvl = ((cost * -0.07 / base_cost - 1.0) / -1.0).ln() / 1.07f64.ln();
+        let lvl = (cost / base_cost).ln() / 1.07f64.ln();
         Level(lvl as u16)
     }
 }

@@ -7,7 +7,7 @@ dps_from_rings = 509
 # The total cooldown reduction percent shown next to your horns and cornucopias
 cooldown_percent = 212.5
 # The sum of all DPS increases from achievements
-dps_from_achievements = 393.0
+dps_from_achievements = 394.0
 # Your unspent idol count shown in the talents window
 unspent_idols = 3264
 
@@ -376,5 +376,5 @@ gear = ["Rare", "Uncommon", "Rare"]
 
 [[crusaders]]
 name = "Greyskull the Pirate"
-enchantment_points = 97
+enchantment_points = 19
 gear = ["Rare", "Uncommon", "Rare"]
