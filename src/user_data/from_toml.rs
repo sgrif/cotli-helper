@@ -138,6 +138,7 @@ impl CrusaderFromToml {
             "Sasha the Fierce Warrior" => Some(SashaTheFierceWarrior),
             "Groklok the Orc" => Some(GroklokTheOrc),
             // Some(MindyTheMime),
+            "Danni the Daring Damsel" => Some(DanniTheDaringDamsel),
 
             // Slot 5
             "The Washed Up Hermit" => Some(TheWashedUpHermit),

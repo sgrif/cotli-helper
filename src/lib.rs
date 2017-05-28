@@ -20,14 +20,16 @@ pub mod gear;
 pub mod talent;
 pub mod user_data;
 
+use std::env::current_exe;
 use std::fs::File;
+use std::io;
 use std::io::prelude::*;
 
 use user_data::*;
 
 pub fn create_user_data() -> UserData {
     let mut user_data_toml = String::new();
-    File::open("user_data.toml").unwrap().read_to_string(&mut user_data_toml).unwrap();
+    user_data_file().unwrap().read_to_string(&mut user_data_toml).unwrap();
     match user_data::from_toml(&user_data_toml) {
         Ok(d) => d,
         Err(e) => match e.line_col() {
@@ -35,4 +37,11 @@ pub fn create_user_data() -> UserData {
             None => panic!("Error parsing user data: {}", e),
         },
     }
+}
+
+fn user_data_file() -> io::Result<File> {
+    File::open("user_data.toml")
+        .or_else(|_| {
+            File::open(current_exe()?.parent().unwrap().join("user_data.toml"))
+        })
 }

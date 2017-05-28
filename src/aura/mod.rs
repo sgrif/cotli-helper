@@ -193,6 +193,8 @@ pub enum AuraTag {
     Bulwark,
     EligibleReceivers,
     Gunslinger,
+    EyeCandy,
+    PennyInYourPocket,
 
     // Slot 5
     MoshPit,

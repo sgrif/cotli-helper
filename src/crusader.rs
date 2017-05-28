@@ -33,6 +33,7 @@ pub enum CrusaderName {
     SashaTheFierceWarrior,
     GroklokTheOrc,
     // MindyTheMime,
+    DanniTheDaringDamsel,
 
     // Slot 5
     TheWashedUpHermit,
@@ -160,8 +161,9 @@ impl CrusaderName {
             SallyTheSuccubus => SLOT_3,
             // KarenTheCatTeenager => SLOT_3,
             SashaTheFierceWarrior |
-            GroklokTheOrc => SLOT_4,
-            // MindyTheMime => SLOT_4,
+            GroklokTheOrc |
+            // MindyTheMime |
+            DanniTheDaringDamsel => SLOT_4,
             TheWashedUpHermit |
             KyleThePartyBro |
             // SerpentKingDraco |
@@ -260,8 +262,9 @@ impl CrusaderName {
 
             // Slot 4
             SashaTheFierceWarrior |
-            GroklokTheOrc => 88.8,
+            GroklokTheOrc |
             // MindyTheMime |
+            DanniTheDaringDamsel => 88.8,
 
             // Slot 5
             TheWashedUpHermit |
@@ -400,6 +403,7 @@ impl CrusaderName {
             SashaTheFierceWarrior => FEMALE | HUMAN | SUPPORT,
             GroklokTheOrc => MALE | EVENT | ORC | TANK | DPS | SUPPORT,
             // MindyTheMime => FEMALE | HUMAN | SUPERNATURAL | EVENT | DPS | SUPPORT,
+            DanniTheDaringDamsel => FEMALE | HUMAN | EVENT | SUPPORT | GOLD_FINDER,
 
             // Slot 5
             TheWashedUpHermit => MALE | HUMAN | DPS,
@@ -604,6 +608,14 @@ impl CrusaderName {
                 Aura::dps_increase(150.0).for_crusader(*self), // Fumblerooski
             ],
             // MindyTheMime => vec![],
+            DanniTheDaringDamsel => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Self Sufficient
+                Aura::dps_global(15.0), // Flirty
+                Aura::dps_increase(50.0).affecting(WithTag(MALE)) // Eye Candy
+                    .with_tag(AuraTag::EyeCandy),
+                // FIXME: Penny In Your Pocket (gold)
+                // FIXME: Critical Eye (crit click)
+            ],
 
             // Slot 5
             TheWashedUpHermit => vec![
@@ -1120,6 +1132,18 @@ impl CrusaderName {
                 dps_self(gear[2]),
             ],
             // MindyTheMime => vec![],
+            DanniTheDaringDamsel => vec![
+                // Dress
+                legendary_effect(100.0, gear[0])
+                    .affecting(AllCrusaders)
+                    .when(Condition::GtComplex(WithTag(MALE), WithTag(FEMALE))),
+                // Brush
+                legendary_effect(100.0, gear[1])
+                    .affecting(AdjacentTo(*self))
+                    .when(Condition::GtComplex(WithTag(MALE), WithTag(FEMALE))),
+                // Dagger
+                dps_all(gear[2]),
+            ],
 
             // Slot 5
             TheWashedUpHermit => vec![
@@ -1608,6 +1632,10 @@ impl CrusaderName {
             EmoWerewolf => vec![
                 AbilityBuff::new(20.0, AuraTag::Swordplay), // Whimper at the Moon
             ],
+            DanniTheDaringDamsel => vec![
+                AbilityBuff::new(200.0, AuraTag::EyeCandy) // Daring Savior
+                    .when_exists(SpecificCrusader(MontanaJames)),
+            ],
             TheWashedUpHermit => vec![
                 AbilityBuff::new(20.0, AuraTag::Swordplay), // Arrow Attack
             ],
@@ -1718,6 +1746,14 @@ impl CrusaderName {
                 legendary_ability_mod(EligibleReceivers, gear[2]),
             ],
             // MindyTheMime => vec![],
+            DanniTheDaringDamsel => vec![
+                // Dress
+                ability_mod(EyeCandy, gear[0]),
+                // Hair Brush
+                ability_mod(PennyInYourPocket, gear[1]),
+                // Dagger
+                legendary_ability_mod(EyeCandy, gear[2]),
+            ],
 
             // Slot 5
             TheWashedUpHermit => vec![], // No ability buffs from gear
@@ -1984,8 +2020,9 @@ impl CrusaderName {
 
             // Slot 4
             SashaTheFierceWarrior |
-            GroklokTheOrc => 1000.0,
+            GroklokTheOrc |
             // MindyTheMime |
+            DanniTheDaringDamsel => 1000.0,
 
             // Slot 5
             TheWashedUpHermit |
