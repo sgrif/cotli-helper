@@ -523,7 +523,8 @@ impl CrusaderName {
             ],
             RoboRabbit => vec![
                 // FIXME: Click damage abilities
-                Aura::dps_global(25.0), // Wind-up-Bunny
+                Aura::dps_global(25.0) // Wind-up-Bunny
+                    .requires_active_play(),
             ],
             // GrahamTheDriver => vec![],
             // WarwickTheWarlock => vec![],
@@ -922,10 +923,12 @@ impl CrusaderName {
             TheBatBillionaire => vec![
                 Aura::dps_global(20.0), // The Bat Signal
                 Aura::dps_global(20.0) // Bat-o-Level
-                    .with_tag(AuraTag::BatOLevel),
+                    .with_tag(AuraTag::BatOLevel)
+                    .requires_active_play(),
                 Aura::dps_increase(50.0).affecting(AdjacentTo(*self)) // Sidekicks
-                    .with_tag(AuraTag::Sidekicks),
-                // FIXME: Smart Investing
+                    .with_tag(AuraTag::Sidekicks)
+                    .requires_active_play(),
+                // FIXME: Smart Investing (gold, requires active)
             ],
             // PetraThePilgrim => vec![],
             PollyTheParrot => vec![

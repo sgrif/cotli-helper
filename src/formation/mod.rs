@@ -7,6 +7,7 @@ use std::cell::Cell;
 use aura::{Aura, AbilityBuff, AuraTag};
 use crusader::*;
 use dps::*;
+use formation_search::SearchPolicy;
 
 #[derive(Debug, Clone)]
 pub struct Formation<'a> {
@@ -42,10 +43,10 @@ impl<'a> Formation<'a> {
         self
     }
 
-    pub fn total_dps(&self) -> Dps {
+    pub fn total_dps(&self, policy: &SearchPolicy) -> Dps {
         self.dps.get().unwrap_or_else(|| {
             let dps = self.positions.iter()
-                .map(|p| p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras)))
+                .map(|p| p.total_dps(&self, self.auras(policy)))
                 .sum();
             self.dps.set(Some(dps));
             dps
@@ -75,6 +76,12 @@ impl<'a> Formation<'a> {
             .max()
     }
 
+    pub fn auras<'b>(&'b self, policy: &'b SearchPolicy) -> impl Iterator<Item=&'a Aura> + 'b {
+        self.crusaders()
+            .flat_map(Crusader::dps_auras)
+            .filter(move |aura| policy.allows_ability(aura))
+    }
+
     pub fn ability_buffs<'b>(&'b self, tag: AuraTag)
         -> impl Iterator<Item=&'a AbilityBuff> + 'b
     {
@@ -82,7 +89,7 @@ impl<'a> Formation<'a> {
             .filter(move |b| b.applies_to(tag, self))
     }
 
-    pub fn print(&self) {
+    pub fn print(&self, policy: &SearchPolicy) {
         let longest_crusader_name = self.crusaders()
             .map(|c| format!("{:?}", c.name).len())
             .max();
@@ -94,7 +101,7 @@ impl<'a> Formation<'a> {
         let num_rows = self.positions.iter()
             .map(|p| p.coordinate.y)
             .max().unwrap();
-        println!("Total DPS: {}", self.total_dps());
+        println!("Total DPS: {}", self.total_dps(policy));
         for y in 0..(num_rows * 2 + 2) {
             for x in 0..(front_column + 1) {
                 let crusader_name = self.positions.iter()

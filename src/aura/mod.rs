@@ -12,6 +12,7 @@ use formation::*;
 pub struct Aura {
     amount: f64,
     target: Target,
+    pub requires_active_play: bool,
     modifier: Option<Modifier>,
     condition: Option<Condition>,
     tag: Option<AuraTag>,
@@ -65,6 +66,10 @@ impl Aura {
 
     pub fn with_tag(self, tag: AuraTag) -> Self {
         Aura { tag: Some(tag), ..self }
+    }
+
+    pub fn requires_active_play(self) -> Self {
+        Aura { requires_active_play: true, ..self }
     }
 
     pub fn amount_for_crusader(
@@ -157,6 +162,7 @@ impl AuraBuilder {
         Aura {
             amount: self.amount,
             target: target,
+            requires_active_play: false,
             modifier: None,
             condition: None,
             tag: None,

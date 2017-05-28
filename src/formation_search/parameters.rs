@@ -1,5 +1,7 @@
 use std::time::Duration;
 
+use super::SearchPolicy;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Verbosity {
     None,
@@ -13,8 +15,9 @@ impl Verbosity {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct Parameters {
     pub verbosity: Verbosity,
     pub max_time_per_step: Duration,
+    pub policy: SearchPolicy,
 }

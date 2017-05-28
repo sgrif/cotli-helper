@@ -24,5 +24,5 @@ fn main() {
     let formation = Formation::empty(positions);
     let mut search = FormationSearch::new(formation, &crusaders, options.search_parameters());
     search.perform_search();
-    search.formation().print();
+    search.formation().print(&options.search_policy());
 }

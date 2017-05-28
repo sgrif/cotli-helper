@@ -1,8 +1,10 @@
 mod parameters;
+mod search_policy;
 mod set_like;
 mod unused_slots;
 
 pub use self::parameters::*;
+pub use self::search_policy::*;
 
 use itertools::*;
 use ordermap::OrderMap;
@@ -45,38 +47,27 @@ impl<'a> FormationSearch<'a> {
             while loop_start.elapsed() < max_time && !self.search_root.is_complete() {
                 let mut state = self.state.clone();
                 self.search_root.expand(&mut state);
-                self.search_root.track_dps_changes(&state);
+                self.search_root.track_score_changes(&state, &self.parameters.policy);
             }
-            if self.parameters.verbosity.is_some() && !self.search_root.is_complete() {
-                let mut children = self.search_root.children
-                    .iter()
-                    .collect::<Vec<_>>();
-                children.sort_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen));
-                let num_skip = match self.parameters.verbosity {
-                    Verbosity::Debug => 0,
-                    _ => children.len() - 5,
-                };
-                for (placement, child) in children.into_iter().skip(num_skip) {
-                    println!("{:?} checked {} times (max {})", placement, child.times_checked, child.highest_dps_seen);
-                }
-                println!("checked {} total", self.search_root.times_checked);
-            }
-            let current_dps = self.state.formation.total_dps();
+
+            self.print_debug_output();
+
+            let current_score = self.parameters.policy.score(&self.state.formation);
             let options = self.search_root.children
                 .drain(..)
-                .filter(|&(_, ref c)| c.highest_dps_seen >= current_dps)
+                .filter(|&(_, ref c)| c.highest_score_seen >= current_score)
                 .collect::<Vec<_>>();
             let best_option = if options.iter().any(|&(_, ref c)| c.is_complete()) {
                 options.into_iter()
-                    .max_by_key(|&(_, ref c)| (c.highest_dps_seen, c.times_checked))
+                    .max_by_key(|&(_, ref c)| (c.highest_score_seen, c.times_checked))
             } else {
                 options.into_iter()
-                    .max_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen))
+                    .max_by_key(|&(_, ref c)| (c.times_checked, c.highest_score_seen))
             };
             if let Some((placement, child)) = best_option {
                 self.state.place(placement);
                 if !self.search_root.is_complete() {
-                    self.state.formation.print();
+                    self.state.formation.print(&self.parameters.policy);
                 }
                 self.search_root = child;
             } else {
@@ -87,6 +78,23 @@ impl<'a> FormationSearch<'a> {
 
     pub fn formation(self) -> Formation<'a> {
         self.state.formation
+    }
+
+    fn print_debug_output(&self) {
+        if self.parameters.verbosity.is_some() && !self.search_root.is_complete() {
+            let mut children = self.search_root.children
+                .iter()
+                .collect::<Vec<_>>();
+            children.sort_by_key(|&(_, ref c)| (c.times_checked, c.highest_score_seen));
+            let num_skip = match self.parameters.verbosity {
+                Verbosity::Debug => 0,
+                _ => children.len() - 5,
+            };
+            for (placement, child) in children.into_iter().skip(num_skip) {
+                println!("{:?} checked {} times (max {})", placement, child.times_checked, child.highest_score_seen);
+            }
+            println!("checked {} total", self.search_root.times_checked);
+        }
     }
 }
 
@@ -109,8 +117,8 @@ enum Progress {
 // However, if we track the placements using some sort of persistent data
 // structure, we may be able to see a decent boost from flattening the tree
 struct Node<'a> {
-    highest_dps_seen: Dps,
-    total_dps_seen: Dps,
+    highest_score_seen: FormationScore,
+    total_score_seen: FormationScore,
     progress: Progress,
     children: OrderMap<Placement<'a>, Node<'a>>,
     times_checked: u32,
@@ -120,8 +128,8 @@ impl<'a> Node<'a> {
     fn new() -> Self {
         Node {
             progress: Progress::Expandable,
-            highest_dps_seen: Default::default(),
-            total_dps_seen: Default::default(),
+            highest_score_seen: Default::default(),
+            total_score_seen: Default::default(),
             children: Default::default(),
             times_checked: 0,
         }
@@ -147,12 +155,12 @@ impl<'a> Node<'a> {
 
     fn best_child(&mut self) -> Option<(Placement<'a>, &mut Self)> {
         let log_total = (self.times_checked as f64).ln();
-        let highest_dps = self.highest_dps_seen.0;
+        let highest_score = self.highest_score_seen;
         let score = |c: &Self| {
-            let normalized_dps_seen = c.total_dps_seen.0 / (c.times_checked as f64) / highest_dps;
+            let normalized_score_seen = c.total_score_seen / highest_score / (c.times_checked as f64);
             let exploration_adjustment = EXPLORATION_COEF
                 * (log_total / c.times_checked as f64).sqrt();
-            Dps(normalized_dps_seen + exploration_adjustment)
+            Dps(normalized_score_seen + exploration_adjustment)
         };
         self.children.iter_mut()
             .filter(|&(_, ref v)| !v.is_complete())
@@ -179,23 +187,23 @@ impl<'a> Node<'a> {
         }
     }
 
-    fn track_dps_changes(&mut self, state: &State<'a>) {
-        let dps = state.formation.total_dps();
-        self.total_dps_seen += dps;
+    fn track_score_changes(&mut self, state: &State<'a>, policy: &SearchPolicy) {
+        let score = policy.score(&state.formation);
+        self.total_score_seen += score;
         self.times_checked += 1;
-        if dps > self.highest_dps_seen {
-            self.highest_dps_seen = dps;
+        if score > self.highest_score_seen {
+            self.highest_score_seen = score;
         }
         if state.placements.is_empty() { // Never randomly filled
             for placement in state.formation.placements() {
                 if let Some(child) = self.children.get_mut(&placement) {
-                    child.track_dps_changes(state)
+                    child.track_score_changes(state, policy)
                 }
             }
         } else {
             for placement in &state.placements {
                 if let Some(child) = self.children.get_mut(&placement) {
-                    child.track_dps_changes(state)
+                    child.track_score_changes(state, policy)
                 }
             }
         }

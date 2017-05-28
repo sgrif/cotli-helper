@@ -1,7 +1,7 @@
 use clap::*;
 use std::time::Duration;
 
-use formation_search::{Parameters, Verbosity};
+use formation_search::*;
 
 pub struct CliOptions<'a> {
     matches: ArgMatches<'a>,
@@ -21,10 +21,17 @@ impl<'a> CliOptions<'a> {
                 scientific notation)"))
     }
 
+    pub fn search_policy(&self) -> SearchPolicy {
+        SearchPolicy {
+            active_play: self.matches.is_present("active-play"),
+        }
+    }
+
     pub fn search_parameters(&self) -> Parameters {
         Parameters {
             verbosity: self.verbosity(),
             max_time_per_step: Duration::from_secs(self.search_time()),
+            policy: self.search_policy(),
         }
     }
 
@@ -75,4 +82,12 @@ fn app<'a, 'b>() -> App<'a, 'b> {
                     likely placements were searched, and other debug output. \
                     Passing this argument mutliple times will increase the \
                     level of debug output"))
+        .arg(Arg::with_name("active-play")
+             .long("active-play")
+             .help("Consider abilities which require active play. By default \
+                    the search will ignore abilities such as Robo Rabbit's \
+                    Wind-up-Bunny or Bat Billionaire's Sidekicks, as these \
+                    require you to be actively playing the game. Even without \
+                    this option, these crusaders may still be placed if their \
+                    passive buffs warrant it"))
 }
