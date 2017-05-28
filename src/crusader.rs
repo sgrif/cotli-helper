@@ -38,7 +38,7 @@ pub enum CrusaderName {
     // Slot 5
     TheWashedUpHermit,
     KyleThePartyBro,
-    // SerpentKingDraco,
+    SerpentKingDraco,
     // HenryTheScaredyGhoul,
     Grandmora,
 
@@ -166,7 +166,7 @@ impl CrusaderName {
             DanniTheDaringDamsel => SLOT_4,
             TheWashedUpHermit |
             KyleThePartyBro |
-            // SerpentKingDraco |
+            SerpentKingDraco |
             // HenryTheScaredyGhoul |
             Grandmora => SLOT_5,
             DetectiveKaine |
@@ -269,7 +269,7 @@ impl CrusaderName {
             // Slot 5
             TheWashedUpHermit |
             KyleThePartyBro |
-            // SerpentKingDraco |
+            SerpentKingDraco |
             // HenryTheScaredyGhoul |
             Grandmora => 733.0,
 
@@ -408,7 +408,7 @@ impl CrusaderName {
             // Slot 5
             TheWashedUpHermit => MALE | HUMAN | DPS,
             KyleThePartyBro => MALE | HUMAN | EVENT | DPS,
-            // SerpentKingDraco => MALE | ANIMAL | ROYAL | EVENT | DPS,
+            SerpentKingDraco => MALE | ANIMAL | ROYAL | EVENT | DPS,
             // HenryTheScaredyGhoul => MALE | SUPERNATURAL | EVENT | DPS,
             Grandmora => FEMALE | EVENT | SUPPORT | ALIEN,
 
@@ -640,7 +640,20 @@ impl CrusaderName {
                     .when_exists(AdjacentTo(*self).and(WithTag(LEPRECHAUN))),
                 Aura::dps_global(20.0), // Hangover Cure
             ],
-            // SerpentKingDraco => vec![],
+            SerpentKingDraco => vec![
+                Aura::dps_increase(100.0).for_crusader(*self), // Ssslithersss
+                Aura::dps_global(15.0), // SSSSSS!
+                Aura::dps_increase(100.0).for_crusader(*self) // Kingdom'sss Call
+                    .times(WithTag(ROYAL))
+                    .minus(Aura::dps_global(50.0).times(
+                        WithTag(HUMAN).and(!WithTag(ROYAL)),
+                    )),
+                Aura::dps_increase(150.0).for_crusader(*self), // Tighter Grasssp
+                Aura::dps_increase(100.0).for_crusader(*self) // Sssurvival of the Fittessst
+                    .times(WithTag(ANIMAL))
+                    .minus(Aura::dps_global(50.0).times(WithTag(ROBOT))),
+                Aura::dps_increase(150.0).for_crusader(*self), // HISSS!
+            ],
             // HenryTheScaredyGhoul => vec![],
             Grandmora => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Seen Better Days
@@ -1171,7 +1184,21 @@ impl CrusaderName {
                 legendary_effect(100.0, gear[2]).for_crusader(*self)
                     .when(Condition::GtComplex(Behind(*self), AheadOf(*self))),
             ],
-            // SerpentKingDraco => vec![],
+            SerpentKingDraco => vec![
+                // Crown
+                dps_self(gear[0]),
+                legendary_effect(100.0, gear[0])
+                    .affecting(WithTag(ROYAL)),
+                // Idol
+                dps_all(gear[1]),
+                legendary_effect(100.0, gear[1])
+                    .affecting(WithTag(ANIMAL)),
+                // Sceptre
+                dps_self(gear[2]),
+                legendary_effect(20.0, gear[2])
+                    .affecting(AllCrusaders)
+                    .times(WithTag(HUMAN)),
+            ],
             // HenryTheScaredyGhoul => vec![],
             Grandmora => vec![
                 // Glasses
@@ -1761,7 +1788,7 @@ impl CrusaderName {
                 // Hat
                 legendary_ability_mod(MoshPit, gear[0]),
             ],
-            // SerpentKingDraco => vec![],
+            SerpentKingDraco => vec![], // No ability buffs from gear
             // HenryTheScaredyGhoul => vec![],
             Grandmora => vec![
                 ability_mod(StillSuspicious, gear[0]),
@@ -2027,7 +2054,7 @@ impl CrusaderName {
             // Slot 5
             TheWashedUpHermit |
             KyleThePartyBro |
-            // SerpentKingDraco |
+            SerpentKingDraco |
             // HenryTheScaredyGhoul |
             Grandmora => 10_000.0,
 

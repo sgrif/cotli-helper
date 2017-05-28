@@ -2,6 +2,7 @@ use std::cmp::max;
 use super::*;
 
 pub enum Modifier {
+    Composite(Box<Modifier>, Box<Modifier>),
     DividedBy(Target),
     Diversity,
     Minus(Box<Aura>),
@@ -15,10 +16,11 @@ impl Modifier {
     pub fn apply(&self, base: f64, formation: &Formation) -> f64 {
         use self::Modifier::*;
         match *self {
+            Composite(ref m1, ref m2) => m2.apply(m1.apply(base, formation), formation),
             DividedBy(ref target) => base /
                 max(1, target.count_in_formation(formation)) as f64,
             Diversity => base * diversity_multiplier(formation),
-            Minus(ref aura) => base - aura.modifier_amount(formation),
+            Minus(ref aura) => 0.0f64.max(base - aura.modifier_amount(formation)),
             Plus(ref aura) => base + aura.modifier_amount(formation),
             RandomlyAffecting(count, ref target) =>
                 base / 1f64.max(target.count_in_formation(formation) as f64 / count as f64),

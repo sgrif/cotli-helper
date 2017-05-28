@@ -143,7 +143,7 @@ impl CrusaderFromToml {
             // Slot 5
             "The Washed Up Hermit" => Some(TheWashedUpHermit),
             "Kyle the Party Bro" => Some(KyleThePartyBro),
-            // "Serpent King Draco" => Some(SerpentKingDraco),
+            "Serpent King Draco" => Some(SerpentKingDraco),
             // Some(HenryTheScaredyGhoul),
             "Grandmora" => Some(Grandmora),
 

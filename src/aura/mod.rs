@@ -53,6 +53,10 @@ impl Aura {
     }
 
     pub fn with_modifier(self, modifier: Modifier) -> Self {
+        let modifier = match self.modifier {
+            Some(old) => Modifier::Composite(Box::new(old), Box::new(modifier)),
+            None => modifier,
+        };
         Aura { modifier: Some(modifier), ..self }
     }
 
