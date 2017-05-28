@@ -1,5 +1,8 @@
+mod parameters;
 mod set_like;
 mod unused_slots;
+
+pub use self::parameters::*;
 
 use itertools::*;
 use ordermap::OrderMap;
@@ -18,18 +21,25 @@ const EXPLORATION_COEF: f64 = 1.4;
 pub struct FormationSearch<'a> {
     state: State<'a>,
     search_root: Node<'a>,
+    parameters: Parameters,
 }
 
 impl<'a> FormationSearch<'a> {
-    pub fn new(formation: Formation<'a>, crusaders: &'a [Crusader]) -> Self {
+    pub fn new(
+        formation: Formation<'a>,
+        crusaders: &'a [Crusader],
+        parameters: Parameters,
+    ) -> Self {
         FormationSearch {
             state: State { formation, crusaders, placements: Vec::new(), },
             search_root: Node::new(),
+            parameters,
         }
     }
 
-    pub fn perform_search(&mut self, max_time: Duration) {
+    pub fn perform_search(&mut self) {
         let empty_positions = self.state.formation.empty_positions().count();
+        let max_time = self.parameters.max_time_per_step;
         for _ in 0..empty_positions {
             let loop_start = Instant::now();
             while loop_start.elapsed() < max_time && !self.search_root.is_complete() {
@@ -37,12 +47,15 @@ impl<'a> FormationSearch<'a> {
                 self.search_root.expand(&mut state);
                 self.search_root.track_dps_changes(&state);
             }
-            if cfg!(feature = "debug_output") && !self.search_root.is_complete() {
+            if self.parameters.verbosity.is_some() && !self.search_root.is_complete() {
                 let mut children = self.search_root.children
                     .iter()
                     .collect::<Vec<_>>();
                 children.sort_by_key(|&(_, ref c)| (c.times_checked, c.highest_dps_seen));
-                let num_skip = children.len() - 5;
+                let num_skip = match self.parameters.verbosity {
+                    Verbosity::Debug => 0,
+                    _ => children.len() - 5,
+                };
                 for (placement, child) in children.into_iter().skip(num_skip) {
                     println!("{:?} checked {} times (max {})", placement, child.times_checked, child.highest_dps_seen);
                 }

@@ -109,7 +109,7 @@ impl<'a> Formation<'a> {
                     .filter(|p| p.crusader.is_some())
                     .find(|p| {
                         let c = p.coordinate;
-                        c.x == x && c.y * 2 + x % 2 == y - 1
+                        y != 0 && c.x == x && c.y * 2 + x % 2 == y - 1
                     }).map(|p| {
                         p.total_dps(&self, self.crusaders().flat_map(Crusader::dps_auras))
                             .to_string()

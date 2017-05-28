@@ -8,9 +8,7 @@ bitflags = "0.8.2"
 itertools = "0.6.0"
 ordermap = "0.2.10"
 rand = "0.3.15"
-
-[features]
-debug_output = []
+clap = "2.24.2"
 
 [[test]]
 name = "integration_tests"

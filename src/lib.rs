@@ -2,11 +2,13 @@
 #![feature(conservative_impl_trait)]
 
 #[macro_use] extern crate bitflags;
+extern crate clap;
 extern crate itertools;
 extern crate ordermap;
 extern crate rand;
 
 pub mod aura;
+pub mod cli;
 pub mod crusader;
 pub mod dps;
 pub mod formation;
