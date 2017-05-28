@@ -47,6 +47,7 @@ impl<'a> CliOptions<'a> {
             "ready_player_two" => ready_player_two(),
             "idols_through_time" => idols_through_time(),
             "amusement_park_of_doom" => amusement_park_of_doom(),
+            "the_hidden_temple" => the_hidden_temple(),
             _ => unreachable!(),
         };
         Formation::empty(coords)
@@ -86,6 +87,7 @@ fn app<'a, 'b>() -> App<'a, 'b> {
              .possible_value("ready_player_two")
              .possible_value("idols_through_time")
              .possible_value("amusement_park_of_doom")
+             .possible_value("the_hidden_temple")
              .help("The name of the campaign to check formations for"))
         .arg(Arg::with_name("search-time")
              .long("search-time")

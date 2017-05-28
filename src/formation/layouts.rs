@@ -133,3 +133,22 @@ pub fn amusement_park_of_doom() -> Vec<Coordinate> {
         Coordinate::new(4, 2),
     ]
 }
+
+pub fn the_hidden_temple() -> Vec<Coordinate> {
+    vec![
+        Coordinate::new(0, 0),
+        Coordinate::new(0, 1),
+        Coordinate::new(0, 2),
+        Coordinate::new(0, 3),
+        Coordinate::new(1, 0),
+        Coordinate::new(1, 1),
+        Coordinate::new(1, 2),
+        Coordinate::new(2, 1),
+        Coordinate::new(2, 2),
+        Coordinate::new(3, 0),
+        Coordinate::new(3, 1),
+        Coordinate::new(3, 2),
+        Coordinate::new(4, 1),
+        Coordinate::new(4, 2),
+    ]
+}
