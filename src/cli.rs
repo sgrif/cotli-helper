@@ -1,6 +1,7 @@
 use clap::*;
 use std::time::Duration;
 
+use formation::Formation;
 use formation_search::*;
 
 pub struct CliOptions<'a> {
@@ -35,6 +36,22 @@ impl<'a> CliOptions<'a> {
         }
     }
 
+    pub fn selected_formation(&self) -> Formation {
+        use formation::layouts::*;
+        let coords = match &*self.matches.value_of("formation").unwrap() {
+            "worlds_wake" => worlds_wake(),
+            "descent_into_darkness" => descent_into_darkness(),
+            "ghostbeards_greed" => ghostbeards_greed(),
+            "grimms_idle_tails" => grimms_idle_tails(),
+            "mischief_at_mugwarts" => mischief_at_mugwarts(),
+            "ready_player_two" => ready_player_two(),
+            "idols_through_time" => idols_through_time(),
+            "amusement_park_of_doom" => amusement_park_of_doom(),
+            _ => unreachable!(),
+        };
+        Formation::empty(coords)
+    }
+
     fn search_time(&self) -> u64 {
         self.matches.value_of("search-time")
             .expect("No search-time provided")
@@ -56,6 +73,20 @@ fn app<'a, 'b>() -> App<'a, 'b> {
         .version("0.1.0")
         .author("Sean Griffin <sean@seantheprogrammer.com>")
         .about("Determines the best formation for Crusaders of the Lost Idols")
+        .arg(Arg::with_name("formation")
+             .long("formation")
+             .takes_value(true)
+             .value_name("FORMATION")
+             .default_value("worlds_wake")
+             .possible_value("worlds_wake")
+             .possible_value("descent_into_darkness")
+             .possible_value("ghostbeards_greed")
+             .possible_value("grimms_idle_tails")
+             .possible_value("mischief_at_mugwarts")
+             .possible_value("ready_player_two")
+             .possible_value("idols_through_time")
+             .possible_value("amusement_park_of_doom")
+             .help("The name of the campaign to check formations for"))
         .arg(Arg::with_name("search-time")
              .long("search-time")
              .takes_value(true)

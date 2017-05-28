@@ -15,7 +15,7 @@ Limitations
   about is the total formation DPS.
 - Passive Criticals is not considered
 - Many crusaders are not yet implemented
-- Only World's Wake is available
+- No event formations
 - Things like weekend buffs, item buffs, experience points, and storm rider are
   not supported
 

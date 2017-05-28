@@ -1,3 +1,5 @@
+pub mod layouts;
+
 mod coordinate;
 
 pub use self::coordinate::Coordinate;
@@ -102,7 +104,7 @@ impl<'a> Formation<'a> {
             .map(|p| p.coordinate.y)
             .max().unwrap();
         println!("Total DPS: {}", self.total_dps(policy));
-        for y in 0..(num_rows * 2 + 2) {
+        for y in 0..(num_rows * 2 + 3) {
             for x in 0..(front_column + 1) {
                 let crusader_name = self.positions.iter()
                     .enumerate()
