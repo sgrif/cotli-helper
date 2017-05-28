@@ -1,6 +1,7 @@
 use clap::*;
 use std::time::Duration;
 
+use crusader::{CrusaderName, Crusader};
 use formation::Formation;
 use formation_search::*;
 
@@ -36,7 +37,7 @@ impl<'a> CliOptions<'a> {
         }
     }
 
-    pub fn selected_formation(&self) -> Formation {
+    pub fn selected_formation<'b>(&self, crusaders: &'b [Crusader]) -> Formation<'b> {
         use formation::layouts::*;
         let coords = match &*self.matches.value_of("formation").unwrap() {
             "worlds_wake" => worlds_wake(),
@@ -50,7 +51,35 @@ impl<'a> CliOptions<'a> {
             "the_hidden_temple" => the_hidden_temple(),
             _ => unreachable!(),
         };
-        Formation::empty(coords)
+        let mut formation = Formation::empty(coords);
+        for (pos, name) in self.forced_placements() {
+            let crusader = crusaders.iter()
+                .find(|c| c.name == name)
+                .unwrap_or_else(|| panic!("Cannot place {:?}, you haven't unlocked them!", name));
+            formation.place_crusader(pos, crusader);
+        }
+        formation
+    }
+
+    fn forced_placements<'b>(&'b self) -> impl Iterator<Item=(usize, CrusaderName)> + 'b {
+        self.matches.values_of("force-placement")
+            .into_iter()
+            .flat_map(|v| v.map(|arg| {
+                let usage_err = || {
+                    panic!("Invalid placement {}. Placements must be in the \
+                        form 'SLOT CRUSADER_NAME'. For example, `--force-placement \
+                        '4 Artaxes the Lion'`")
+                };
+                let idx_of_space = match arg.find(' ') {
+                    Some(idx) => idx,
+                    None => usage_err(),
+                };
+                let slot = arg[..idx_of_space].parse::<usize>()
+                    .unwrap_or_else(|_| usage_err());
+                let crusader = CrusaderName::from_str(&arg[(idx_of_space + 1)..])
+                    .unwrap_or_else(|| panic!("Unrecognized crusader {}", arg));
+                (slot, crusader)
+            }))
     }
 
     fn search_time(&self) -> u64 {
@@ -123,4 +152,14 @@ fn app<'a, 'b>() -> App<'a, 'b> {
                     require you to be actively playing the game. Even without \
                     this option, these crusaders may still be placed if their \
                     passive buffs warrant it"))
+        .arg(Arg::with_name("force-placement")
+             .long("force-placement")
+             .takes_value(true)
+             .multiple(true)
+             .value_name("SLOT_AND_CRUSADER")
+             .help("Forces a crusader to be placed at a given slot. This should \
+                    be passed as `--force-placement \"1 Artaxes The Lion\"`. \
+                    The number should match the number shown when a slot is \
+                    empty during a search. The crusader name should be exactly \
+                    as it appears in game"))
 }

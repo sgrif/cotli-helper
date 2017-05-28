@@ -2161,6 +2161,143 @@ impl CrusaderName {
         let lvl = (cost / base_cost).ln() / 1.07f64.ln();
         Level(lvl as u16)
     }
+
+    pub fn from_str(s: &str) -> Option<Self> {
+        use self::CrusaderName::*;
+        match s {
+            // Slot 1
+            "The Bush Whacker" => Some(TheBushWhacker),
+            "RoboRabbit" => Some(RoboRabbit),
+            // Some(GrahamTheDriver),
+            // Some(WarwickTheWarlock),
+
+            // Slot 2
+            "Jim the Lumberjack" => Some(JimTheLumberjack),
+            // Some(PilotPam),
+            "Veronica, the Android Archer" => Some(VeronicaTheAndroidArcher),
+            "Arachnobuddy" => Some(Arachnobuddy),
+
+            // Slot 3
+            "Emo Werewolf" => Some(EmoWerewolf),
+            "Sally the Succubus" => Some(SallyTheSuccubus),
+            // Some(KarenTheCatTeenager),
+
+            // Slot 4
+            "Sasha the Fierce Warrior" => Some(SashaTheFierceWarrior),
+            "Groklok the Orc" => Some(GroklokTheOrc),
+            // Some(MindyTheMime),
+            "Danni the Daring Damsel" => Some(DanniTheDaringDamsel),
+
+            // Slot 5
+            "The Washed Up Hermit" => Some(TheWashedUpHermit),
+            "Kyle the Party Bro" => Some(KyleThePartyBro),
+            "Serpent King Draco" => Some(SerpentKingDraco),
+            // Some(HenryTheScaredyGhoul),
+            "Grandmora" => Some(Grandmora),
+
+            // Slot 6
+            "Detective Kaine" => Some(DetectiveKaine),
+            // Some(MisterTheMonkey),
+            "Larry the Leprechaun" => Some(LarryTheLeprechaun),
+            // Some(BernardTheBartender),
+
+            // Slot 7
+            "The Princess" => Some(ThePrincess),
+            // Some(RoboTurkey),
+            // Some(RangerRayna),
+            "Baenarall, Angel of Hope" => Some(BaenarallAngelOfHope),
+
+            // Slot 8
+            "Natalie Dragon" => Some(NatalieDragon),
+            // Some(JackOLantern),
+            "President Billy Smithsonian" => Some(PresidentBillySmithsonian),
+            // Some(KarlTheKicker),
+
+            // Slot 9
+            "Jason, Master of Shadows" => Some(JasonMasterOfShadows),
+            // Some(PeteTheCarney),
+            "Broot" => Some(Broot),
+            // Some(PaulThePilgrim),
+
+            // Slot 10
+            "Artaxes, the Lion" => Some(ArtaxesTheLion),
+            "Drizzle the Dark Elf" => Some(DrizzleTheDarkElf),
+            // Some(BubbaTheSwimmingOrc),
+            "Sisaron the Dragon Sorceress" => Some(SisaronTheDragonSorceress),
+
+            // Slot 11
+            "Khouri, the Witch Doctor" => Some(KhouriTheWitchDoctor),
+            // Some(MommaKaine),
+            // Some(BrogonPrinceOfDragons),
+            // Some(TheHalfBloodElf),
+            "Foresight" => Some(Foresight),
+
+            // Slot 12
+            "Dark Gryphon" => Some(DarkGryphon),
+            "Rocky the Rockstar" => Some(RockyTheRockstar),
+            "Montana James" => Some(MontanaJames),
+            // Some(TheDarkHelper),
+
+            // Slot 13
+            "Sarah, the Collector" => Some(SarahTheCollector),
+            "The Metal Soldierette" => Some(TheMetalSoldierette),
+            "Snickette the Sneaky" => Some(SnicketteTheSneaky),
+
+            // Slot 14
+            "Gold Panda" => Some(GoldPanda),
+            // Some(RoboSanta),
+            // Some(LeerionTheRoyalDwarf),
+            // Some(KatieTheCupid),
+
+            // Slot 15
+            "Prince Sal, the Merman" => Some(PrinceSalTheMerman),
+            // Some(WendyTheWitch),
+            "Robbie Raccoon" => Some(RobbieRaccoon),
+            // Some(PrincessValTheMermaid),
+
+            // Slot 16
+            "Fire Phoenix" => Some(FirePhoenix),
+            "Alan the ArchAngel" => Some(AlanTheArchAngel),
+            // Some(FrightOTron4000),
+            "Spaceking" => Some(Spaceking),
+
+            // Slot 17
+            "King Reginald IV" => Some(KingReginaldIV),
+            // Some(QueenSiri),
+            // Some(MrBogginsTheSubstitute),
+            "Squiggles the Clown" => Some(SquigglesTheClown),
+
+            // Slot 18
+            "Thalia, the Thunder King" => Some(ThaliaTheThunderKing),
+            // Some(FrostyTheSnowman),
+            // Some(Littlefoot),
+            // Some(CindyTheCheerOrc),
+
+            // Slot 19
+            "Merci, the Mad Wizard" => Some(MerciTheMadWizard),
+            "The Bat Billionaire" => Some(TheBatBillionaire),
+            // Some(PetraThePilgrim),
+            "Polly the Parrot" => Some(PollyTheParrot),
+
+            // Slot 20
+            "Nate Dragon" => Some(NateDragon),
+            // Some(KizlblypTheAlienTraitor),
+            // Some(RoboRudolph),
+
+            // Slot 21
+            "The Exterminator" => Some(TheExterminator),
+            // Some(GloriaTheGoodWitch),
+
+            // Slot 22
+            "The Shadow Queen" => Some(TheShadowQueen),
+            // Some(IlsaTheInsaneWizard),
+
+            // Slot 23
+            "Greyskull the Pirate" => Some(GreyskullThePirate),
+
+            _ => None,
+        }
+    }
 }
 
 pub struct Crusader {
