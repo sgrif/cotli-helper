@@ -6,6 +6,7 @@ use std::ops::{Mul, Add, AddAssign};
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Default)]
 pub struct Dps(pub f64);
 #[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Deserialize)]
 pub struct Level(pub u16);
 
 impl Dps {

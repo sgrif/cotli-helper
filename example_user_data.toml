@@ -1,0 +1,380 @@
+# Global DPS buffs
+# These won't affect the search outcome, but it will make sure you
+# see an accurate DPS number
+
+# The total DPS percent increase shown next to all your rings
+dps_from_rings = 509
+# The total cooldown reduction percent shown next to your horns and cornucopias
+cooldown_percent = 212.5
+# The sum of all DPS increases from achievements
+dps_from_achievements = 393.0
+# Your unspent idol count shown in the talents window
+unspent_idols = 3264
+
+# Talents that don't directly affect DPS won't affect the search outcome,
+# but they are used to calculate total idols if you want to see an accurate
+# DPS number
+
+[[talents]]
+name = "Speed Runner"
+level = 10
+
+[[talents]]
+name = "Endurance Training"
+level = 1
+
+[[talents]]
+name = "Ride the Storm"
+level = 6
+
+[[talents]]
+name = "Storm's Building"
+level = 8
+
+[[talents]]
+name = "Passive Criticals"
+level = 23
+
+[[talents]]
+name = "Surplus Cooldown"
+level = 23
+
+[[talents]]
+name = "Overenchanted"
+level = 12
+
+[[talents]]
+name = "Set Bonus"
+level = 12
+
+[[talents]]
+name = "Fast Learners"
+level = 2
+
+[[talents]]
+name = "Well Equipped"
+level = 5
+
+[[talents]]
+name = "Swap Day"
+level = 5
+
+[[talents]]
+name = "Spend It All"
+level = 1
+
+[[talents]]
+name = "Upgrade Them All"
+level = 1
+
+[[talents]]
+name = "Scavenger"
+level = 1
+
+[[talents]]
+name = "Speed Looter"
+level = 1
+
+[[talents]]
+name = "Efficient Crusading"
+level = 25
+
+[[talents]]
+name = "Doing It Again"
+level = 1
+
+[[talents]]
+name = "Deep Idol Scavenger"
+level = 16
+
+[[talents]]
+name = "Extra Training"
+level = 5
+
+[[talents]]
+name = "Triple Tier Trouble"
+level = 1
+
+# Not all crusaders are fully implemented. You will see a warning for
+# unrecognized names (check that you don't have a typo though)
+
+# Gear should either be left off, or all 3 pieces of gear need to be provided.
+# The order should match how it appears on your crusader in game (when they are
+# in the formation, not when you click the arrow button. They sometimes differ).
+# Legendaries should be specified as { kind = "Legendary", level = 1 }. If any
+# gear is Legendary or Golden Legendary, all pieces will need to be specified as
+# { kind = "Rare" } for that crusader, even though there's no legendary level.
+
+[[crusaders]]
+name = "The Bush Whacker"
+# This should be the number on the crusader, not including % from the bench
+enchantment_points = 114
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "RoboRabbit"
+enchantment_points = 97
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Jim the Lumberjack"
+enchantment_points = 88
+gear = ["Rare", "Epic", "Epic"]
+
+[[crusaders]]
+name = "Veronica, the Android Archer"
+enchantment_points = 4
+gear = [{ kind = "Legendary", level = 3 }, { kind = "Rare" }, { kind = "Rare" }]
+
+[[crusaders]]
+name = "Arachnobuddy"
+enchantment_points = 88
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Emo Werewolf"
+enchantment_points = 195
+gear = ["Epic", "Epic", "Rare"]
+
+[[crusaders]]
+name = "Sally the Succubus"
+enchantment_points = 178
+gear = [
+  { kind = "Golden Legendary", level = 3 },
+  { kind = "Legendary", level = 3 },
+  { kind = "Legendary", level = 2 },
+]
+
+[[crusaders]]
+name = "Sasha the Fierce Warrior"
+enchantment_points = 109
+gear = [{ kind = "Rare" }, { kind = "Epic" }, { kind = "Legendary", level = 2 }]
+
+[[crusaders]]
+name = "Groklok the Orc"
+enchantment_points = 59
+gear = ["Golden Epic", "Epic", "Epic"]
+
+[[crusaders]]
+name = "Danni the Daring Damsel"
+enchantment_points = 36
+gear = ["Rare", "None", "Uncommon"]
+
+[[crusaders]]
+name = "The Washed Up Hermit"
+enchantment_points = 145
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Kyle the Party Bro"
+enchantment_points = 111
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Serpent King Draco"
+enchantment_points = 47
+gear = ["Uncommon", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Grandmora"
+enchantment_points = 2
+gear = ["Legendary", "None", "Rare"]
+
+[[crusaders]]
+name = "Detective Kaine"
+enchantment_points = 88
+gear = ["Epic", "Epic", "Epic"]
+
+[[crusaders]]
+name = "Larry the Leprechaun"
+enchantment_points = 13
+gear = [{ kind = "Rare" }, { kind = "Legendary", level = 2 }, { kind = "Rare" },]
+
+[[crusaders]]
+name = "The Princess"
+enchantment_points = 123
+gear = ["Epic", "Rare", "Rare"]
+
+[[crusaders]]
+name = "RoboTurkey"
+enchantment_points = 54
+gear = ["Rare", "Uncommon", "Rare"]
+
+[[crusaders]]
+name = "Baenarall, Angel of Hope"
+gear = ["Legendary", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Natalie Dragon"
+enchantment_points = 75
+gear = [
+  { kind = "Legendary", level = 3 },
+  { kind = "Legendary", level = 3 },
+  { kind = "Legendary", level = 2 },
+]
+
+[[crusaders]]
+name = "President Billy Smithsonian"
+enchantment_points = 0
+gear = [
+  { kind = "Legendary", level = 1 },
+  { kind = "Legendary", level = 2 },
+  { kind = "Legendary", level = 1 },
+]
+
+[[crusaders]]
+name = "Jason, Master of Shadows"
+enchantment_points = 85
+gear = ["Epic", "Rare", "Epic"]
+
+[[crusaders]]
+name = "Broot"
+enchantment_points = 102
+gear = ["Rare", "Rare", "Uncommon"]
+
+[[crusaders]]
+name = "Artaxes, the Lion"
+enchantment_points = 22
+gear = [
+  { kind = "Legendary", level = 3 },
+  { kind = "Legendary", level = 1 },
+  { kind = "Legendary", level = 3 },
+]
+
+[[crusaders]]
+name = "Drizzle the Dark Elf"
+enchantment_points = 166
+gear = ["Rare", "Uncommon", "Rare"]
+
+[[crusaders]]
+name = "Sisaron the Dragon Sorceress"
+enchantment_points = 169
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Khouri, the Witch Doctor"
+enchantment_points = 152
+gear = ["Epic", "Rare", "Epic"]
+
+[[crusaders]]
+name = "Foresight"
+enchantment_points = 92
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Dark Gryphon"
+enchantment_points = 157
+gear = ["Epic", "Epic", "Rare"]
+
+[[crusaders]]
+name = "Rocky the Rockstar"
+enchantment_points = 101
+gear = ["Epic", "Rare", "Epic"]
+
+[[crusaders]]
+name = "Montana James"
+enchantment_points = 83
+gear = ["Epic", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Sarah, the Collector"
+enchantment_points = 122
+gear = ["Rare", "Epic", "Epic"]
+
+[[crusaders]]
+name = "The Metal Soldierette"
+enchantment_points = 106
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Snickette the Sneaky"
+enchantment_points = 47
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Gold Panda"
+enchantment_points = 22
+gear = [
+  { kind = "Golden Legendary",  level = 1 },
+  { kind = "Rare" },
+  { kind = "Legendary",  level = 3 },
+]
+
+[[crusaders]]
+name = "Prince Sal, the Merman"
+enchantment_points = 141
+gear = ["Rare", "Rare", "Epic"]
+
+[[crusaders]]
+name = "Robbie Raccoon"
+enchantment_points = 75
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Fire Phoenix"
+enchantment_points = 198
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Alan the ArchAngel"
+enchantment_points = 88
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Spaceking"
+enchantment_points = 83
+gear = ["Rare", "Rare", "Rare"]
+
+[[crusaders]]
+name = "King Reginald IV"
+enchantment_points = 94
+gear = ["Rare", "Epic", "Rare"]
+
+[[crusaders]]
+name = "Squiggles the Clown"
+enchantment_points = 84
+gear = ["Rare", "Rare", "Epic"]
+
+[[crusaders]]
+name = "Thalia, the Thunder King"
+enchantment_points = 108
+gear = [{ kind = "Rare" }, { kind = "Golden Legendary", level = 4 }, { kind = "Rare" }]
+
+[[crusaders]]
+name = "Merci, the Mad Wizard"
+enchantment_points = 36
+gear = [{ kind = "Rare" }, { kind = "Legendary", level = 2 }, { kind = "Rare" }]
+
+[[crusaders]]
+name = "The Bat Billionaire"
+enchantment_points = 85
+gear = ["Epic", "Rare", "Rare"]
+
+[[crusaders]]
+name = "Polly the Parrot"
+enchantment_points = 39
+gear = ["Rare", "Epic", "Rare"]
+
+[[crusaders]]
+name = "Nate Dragon"
+enchantment_points = 53
+gear = [
+  { kind = "Legendary", level = 1 },
+  { kind = "Rare" },
+  { kind = "Legendary", level = 3 },
+]
+
+[[crusaders]]
+name = "The Exterminator"
+enchantment_points = 85
+gear = ["Rare", "Rare", "Epic"]
+
+[[crusaders]]
+name = "The Shadow Queen"
+enchantment_points = 68
+gear = ["Rare", "Uncommon", "Rare"]
+
+[[crusaders]]
+name = "Greyskull the Pirate"
+enchantment_points = 97
+gear = ["Rare", "Uncommon", "Rare"]

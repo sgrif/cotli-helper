@@ -5,10 +5,13 @@ authors = ["Sean Griffin <sean@seantheprogrammer.com>"]
 
 [dependencies]
 bitflags = "0.8.2"
+clap = "2.24.2"
 itertools = "0.6.0"
 ordermap = "0.2.10"
 rand = "0.3.15"
-clap = "2.24.2"
+serde = "1.0.0"
+serde_derive = "1.0.0"
+toml = "0.4.1"
 
 [[test]]
 name = "integration_tests"

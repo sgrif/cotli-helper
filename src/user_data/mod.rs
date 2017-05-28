@@ -1,9 +1,11 @@
 #![allow(dead_code)]
 
 mod crusader_data;
+mod from_toml;
 mod talent_data;
 
 pub use self::crusader_data::CrusaderData;
+pub use self::from_toml::from_toml;
 
 use crusader::*;
 use dps::*;
