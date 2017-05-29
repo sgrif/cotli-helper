@@ -16,6 +16,7 @@ pub struct Formation<'a> {
     positions: Box<[FormationPosition<'a>]>,
     used_slots: Slot,
     dps: Cell<Option<Dps>>,
+    gold_find: Cell<Option<Dps>>,
 }
 
 impl<'a> Formation<'a> {
@@ -27,6 +28,7 @@ impl<'a> Formation<'a> {
             positions,
             used_slots: Slot::empty(),
             dps: Cell::new(None),
+            gold_find: Cell::new(None),
         }
     }
 
@@ -34,6 +36,7 @@ impl<'a> Formation<'a> {
         self.positions[position].crusader = Some(crusader);
         self.used_slots |= crusader.slot();
         self.dps.set(None);
+        self.gold_find.set(None);
         self
     }
 
@@ -42,6 +45,7 @@ impl<'a> Formation<'a> {
         let used_slots = self.crusaders().fold(Slot::empty(), |s, c| s | c.slot());
         self.used_slots = used_slots;
         self.dps.set(None);
+        self.gold_find.set(None);
         self
     }
 
@@ -53,6 +57,20 @@ impl<'a> Formation<'a> {
             self.dps.set(Some(dps));
             dps
         })
+    }
+
+    pub fn total_gold_find(&self, policy: &SearchPolicy) -> f64 {
+        let gold_find = self.gold_find.get().unwrap_or_else(|| {
+            let gold_find = self.auras(policy)
+                .fold(Dps(100.0), |total, aura| {
+                    total.percent_increase(aura.gold_find(self))
+                });
+            self.gold_find.set(Some(gold_find));
+            gold_find
+        });
+        // We treat 100 as the base for calculation, but we actually want
+        // it to be 0 both for display and scoring
+        gold_find.0 - 100.0
     }
 
     pub fn empty_positions<'b>(&'b self) -> impl Iterator<Item=usize> + 'b {
@@ -104,6 +122,9 @@ impl<'a> Formation<'a> {
             .map(|p| p.coordinate.y)
             .max().unwrap();
         println!("Total DPS: {}", self.total_dps(policy));
+        if policy.considers_gold() {
+            println!("Gold Find: {}%", Dps(self.total_gold_find(policy)));
+        }
         for y in 0..(num_rows * 2 + 3) {
             for x in 0..(front_column + 1) {
                 let crusader_name = self.positions.iter()

@@ -613,7 +613,9 @@ impl CrusaderName {
                 Aura::dps_global(15.0), // Flirty
                 Aura::dps_increase(50.0).affecting(WithTag(MALE)) // Eye Candy
                     .with_tag(AuraTag::EyeCandy),
-                // FIXME: Penny In Your Pocket (gold)
+                Aura::gold_find_bonus(10.0) // Penny In Your Pocket
+                    .times(WithTag(MALE))
+                    .with_tag(AuraTag::PennyInYourPocket),
                 // FIXME: Critical Eye (crit click)
             ],
 
@@ -671,15 +673,20 @@ impl CrusaderName {
             DetectiveKaine => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Detective School
                 Aura::dps_increase(100.0).for_crusader(*self), // Abductive Reasoning
-                // FIXME: A-Hah!
+                Aura::gold_find_bonus(20.0) // A-Hah!
+                    .times(InSameColumn(*self))
+                    .with_tag(AuraTag::AHah),
                 Aura::dps_increase(100.0).for_crusader(*self), // Detective Kaine: A P.I.
                 Aura::dps_increase(150.0).for_crusader(*self), // Monster Magazine
             ],
             // MisterTheMonkey => vec![],
             LarryTheLeprechaun => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Luck of the Irish
-                // FIXME: Little Pockets
-                // FIXME: Hiding Spot
+                Aura::gold_find_bonus(12.5) // Little Pockets + Slightly Bigger Pockets
+                    .to_power_of(AdjacentTo(*self))
+                    .with_tag(AuraTag::LittlePockets),
+                Aura::gold_find_bonus(25.0) // Hiding Spot
+                    .when(Condition::GtEq(AdjacentTo(*self), 6)),
                 Aura::dps_global(100.0) // Subtle Magics
                     .when(Condition::LtEq(AdjacentTo(*self), 3)),
             ],
@@ -719,7 +726,7 @@ impl CrusaderName {
                 Aura::dps_global(10.0), // Election Year
                 Aura::dps_increase(150.0).for_crusader(*self), // Secret Service
                 Aura::dps_global(15.0), // Rousing Speech
-                // FIXME: Peace Treaty
+                // FIXME: Peace Treaty (Kizlblyp)
                 Aura::dps_increase(50.0).affecting(WithTag(HUMAN)) // Us Vs. Them
                     .with_tag(AuraTag::UsVsThem),
             ],
@@ -731,7 +738,7 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self), // Crouching Jason, Hidden Jason
                 Aura::dps_increase(100.0).for_crusader(*self), // X-Ray Vision
                 Aura::dps_increase(150.0).for_crusader(*self), // Use the Force
-                // FIXME: Ambush
+                // FIXME: Ambush (formation under attack)
             ],
             // PeteTheCarney => vec![],
             Broot => vec![
@@ -848,8 +855,11 @@ impl CrusaderName {
 
             // Slot 14
             GoldPanda => vec![
-                // FIXME: Gold buffs
-                // FIXME: Lucky Panda
+                Aura::gold_find_bonus(25.0), // Better than the Slots
+                Aura::gold_find_bonus(25.0), // Gold! Mine!
+                Aura::gold_find_bonus(25.0), // More Gold! Mine!
+                Aura::gold_find_bonus(50.0), // Order of the Holy Coin
+                // FIXME: Lucky Panda (crit click)
             ],
             // RoboSanta => vec![],
             // LeerionTheRoyalDwarf => vec![],
@@ -874,7 +884,7 @@ impl CrusaderName {
 
             // Slot 16
             FirePhoenix => vec![
-                // FIXME: Vengeful Fury
+                // FIXME: Vengeful Fury (dead crusaders)
                 Aura::dps_increase(100.0).for_crusader(*self), // Song of the Phoenix
                 Aura::dps_increase(100.0).for_crusader(*self), // Evil Eye
                 Aura::dps_increase(100.0).for_crusader(*self), // Power of the Fiery Nest
@@ -883,7 +893,7 @@ impl CrusaderName {
             AlanTheArchAngel => vec![
                 Aura::dps_increase(150.0).for_crusader(*self), // Alan, Alan, Alan
                 Aura::dps_global(10.0), // Glowing Presence
-                // FIXME: Resurrection
+                // FIXME: Resurrection (dead crusaders)
                 Aura::dps_global(25.0), // Strength of Will
             ],
             // FrightOTron4000 => vec![],
@@ -897,7 +907,7 @@ impl CrusaderName {
                     .times(WithTag(ALIEN))
                     .with_tag(AuraTag::KirkinItUp),
                 Aura::dps_increase(125.0).for_crusader(*self), // Bad-ass Laser Guns
-                // FIXME: Avenger
+                // FIXME: Avenger (dead crusaders)
             ],
 
             // Slot 17
@@ -931,7 +941,7 @@ impl CrusaderName {
                 Aura::dps_increase(125.0).for_crusader(*self), // Lightning Bolted
                 Aura::dps_increase(125.0).for_crusader(*self), // Forked Lightning
                 Aura::dps_global(15.0), // Lightning Ore
-                // FIXME: Storm Rider
+                // FIXME: Storm Rider (timing buff)
             ],
             // FrostyTheSnowman => vec![],
             // Littlefoot => vec![],
@@ -941,7 +951,7 @@ impl CrusaderName {
             MerciTheMadWizard => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Sorry!
                 Aura::dps_global(15.0), // Zombie Friends?
-                // FIXME: Deflect Evil
+                // FIXME: Deflect Evil (secondary damage)
                 Aura::dps_increase(100.0).for_crusader(*self), // Lotus Land
                 Aura::dps_increase(150.0).for_crusader(*self), // All Apologies
             ],
@@ -953,13 +963,15 @@ impl CrusaderName {
                 Aura::dps_increase(50.0).affecting(AdjacentTo(*self)) // Sidekicks
                     .with_tag(AuraTag::Sidekicks)
                     .requires_active_play(),
-                // FIXME: Smart Investing (gold, requires active)
+                Aura::gold_find_bonus(25.0) // Smart Investing
+                    .with_tag(AuraTag::SmartInvesting)
+                    .requires_active_play(),
             ],
             // PetraThePilgrim => vec![],
             PollyTheParrot => vec![
                 Aura::dps_increase(100.0).for_crusader(*self), // Peck
                 // FIXME: Got a Cracker! (maybe don't care)
-                // FIXME: Instant Regret
+                // FIXME: Instant Regret (under attack)
                 Aura::dps_global(20.0), // Flit and Flutter
                 Aura::dps_global(50.0).times(WithTag(TANK)) // Tough Nut to Crack
                     .with_tag(AuraTag::ToughNutToCrack),
@@ -987,9 +999,10 @@ impl CrusaderName {
                 Aura::dps_increase(100.0).for_crusader(*self) // Slaved Systems
                     .times(WithTag(ROBOT).and(AdjacentTo(*self)))
                     .with_tag(AuraTag::SlavedSystems),
-                // FIXME: Triangulation
+                Aura::gold_find_bonus(10.0) // Triangulation
+                    .times(WithTag(ROBOT).and(AdjacentTo(*self))),
                 Aura::dps_increase(200.0).for_crusader(*self), // Time Travelled
-                // FIXME: Thumb's Up
+                // FIXME: Thumb's Up (crit click)
             ],
             // GloriaTheGoodWitch => vec![],
 
@@ -1007,9 +1020,9 @@ impl CrusaderName {
             // Slot 23
             GreyskullThePirate => vec![
                 Aura::dps_increase(200.0).for_crusader(*self), // Pirate's Cunning
-                // FIXME: Plunder
-                Aura::dps_global(10.0), // Pay Me Crew
-                // FIXME: Greyskull's Handcannon
+                // FIXME: Plunder (formation under attack)
+                Aura::dps_global(20.0), // Pay Me Crew
+                // FIXME: Greyskull's Handcannon (secondary damage)
             ],
         }
     }
@@ -1042,6 +1055,19 @@ impl CrusaderName {
                 GearQuality::GoldenLegendary(_) => 120.0,
             };
             Aura::dps_global(multiplier)
+        };
+        let gold_find = |gear| {
+            let multiplier = match gear {
+                GearQuality::None => 0.0,
+                GearQuality::Common => 10.0,
+                GearQuality::Uncommon => 25.0,
+                GearQuality::Rare => 50.0,
+                GearQuality::Epic => 100.0,
+                GearQuality::GoldenEpic => 150.0,
+                GearQuality::Legendary(_) => 200.0,
+                GearQuality::GoldenLegendary(_) => 300.0,
+            };
+            Aura::gold_find_bonus(multiplier)
         };
         let legendary_effect = |base: f64, gear: GearQuality| {
             let multiplier = gear.legendary_level()
@@ -1217,7 +1243,9 @@ impl CrusaderName {
             DetectiveKaine => vec![
                 // Hat
                 dps_all(gear[0]),
-                // FIXME: Hat legendary (gold)
+                legendary_effect(25.0, gear[0])
+                    .affecting(GoldFind)
+                    .times(WithTag(GOLD_FINDER)),
                 // FIXME: Magnifier legendary (gold + xp points)
                 legendary_effect(100.0, gear[2])
                     .affecting(AllCrusaders)
@@ -1255,7 +1283,10 @@ impl CrusaderName {
             // RoboTurkey => vec![],
             // RangerRayna => vec![],
             BaenarallAngelOfHope => vec![
-                // FIXME: Mace legendary (gold)
+                // Mace
+                legendary_effect(100.0, gear[0])
+                    .affecting(GoldFind)
+                    .when(Condition::LtEq(WithTag(SUPERNATURAL), 2)),
                 // Shield
                 legendary_effect(100.0, gear[1])
                     .affecting(AllCrusaders)
@@ -1275,12 +1306,16 @@ impl CrusaderName {
                 dps_self(gear[1]),
                 legendary_effect(100.0, gear[1])
                     .affecting(WithTag(FEMALE)),
-                // FIXME: Cape (gold)
-                // FIXME: Cape legendary (gold)
+                // Cape
+                gold_find(gear[2]),
+                legendary_effect(25.0, gear[2])
+                    .affecting(GoldFind)
+                    .times(WithTag(HUMAN)),
             ],
             // JackOLantern => vec![],
             PresidentBillySmithsonian => vec![
-                // FIXME: Suit (gold)
+                // Suit
+                gold_find(gear[1]),
                 legendary_effect(25.0, gear[1])
                     .affecting(AllCrusaders)
                     .times(WithTag(HUMAN)),
@@ -1297,14 +1332,16 @@ impl CrusaderName {
                 legendary_effect(100.0, gear[0])
                     .affecting(AllCrusaders)
                     .when_exists(SpecificCrusader(EmoWerewolf)),
-                // FIXME: Sword (gold)
+                // Sword
+                gold_find(gear[1]),
                 // FIXME: Sword legendary (gold + under attack)
                 // Cape
                 dps_all(gear[2]),
             ],
             // PeteTheCarney => vec![],
             Broot => vec![
-                // FIXME: Amber (gold)
+                // Amber
+                gold_find(gear[0]),
                 // FIXME: Amber legendary (under attack)
                 // Bark
                 dps_all(gear[1]),
@@ -1378,10 +1415,10 @@ impl CrusaderName {
             // BrogonPrinceOfDragons => vec![],
             // TheHalfBloodElf => vec![],
             Foresight => vec![
-                // FIXME: CPU legendary
+                // FIXME: CPU legendary (note: might be multiplicative)
                 // Cape
                 dps_all(gear[1]),
-                // FIXME: Cape legendary (gold)
+                // FIXME: Cape legendary (note: might be multiplicative)
                 // FIXME: Eye (crit click)
                 legendary_effect(100.0, gear[2])
                     .affecting(AllCrusaders)
@@ -1455,7 +1492,9 @@ impl CrusaderName {
                 // Cloak
                 legendary_effect(100.0, gear[0])
                     .affecting(InSameColumn(*self)),
-                // FIXME: Corset legendary (gold)
+                legendary_effect(10.0, gear[1])
+                    .affecting(GoldFind)
+                    .times(WithTag(HUMAN)),
                 // Glove
                 dps_all(gear[2]),
                 legendary_effect(100.0, gear[2])
@@ -1467,7 +1506,11 @@ impl CrusaderName {
             GoldPanda => vec![
                 // Watch
                 dps_all(gear[0]),
-                // FIXME: Clover (gold)
+                // Clover
+                gold_find(gear[2]),
+                legendary_effect(100.0, gear[2])
+                    .affecting(GoldFind),
+                    // FIXME: Only when formation isn't under attack
             ],
             // RoboSanta => vec![],
             // LeerionTheRoyalDwarf => vec![],
@@ -1614,7 +1657,10 @@ impl CrusaderName {
 
             // Slot 21
             TheExterminator => vec![
-                // FIXME: Computer Chip legendary (gold)
+                // Computer Chip
+                legendary_effect(25.0, gear[1])
+                    .affecting(GoldFind)
+                    .times(WithTag(ROBOT)),
                 // Sunglasses
                 dps_self(gear[2]),
                 legendary_effect(100.0, gear[2]).for_crusader(*self)
@@ -1641,8 +1687,11 @@ impl CrusaderName {
                 legendary_effect(50.0, gear[0])
                     .affecting(AllCrusaders)
                     .times(WithTag(TANK)),
-                // FIXME: Map (gold)
-                // FIXME: Map legendary (gold)
+                // Map
+                gold_find(gear[1]),
+                legendary_effect(20.0, gear[1])
+                    .affecting(GoldFind)
+                    .times(WithTag(TANK)),
                 // Cannon
                 legendary_effect(100.0, gear[2])
                     .affecting(WithTag(HUMAN)),
@@ -1904,7 +1953,12 @@ impl CrusaderName {
             ],
 
             // Slot 14
-            GoldPanda => vec![], // No ability buffs from gear
+            GoldPanda => vec![
+                // Watch
+                legendary_ability_mod(GoldORama, gear[0]),
+                // Cape
+                ability_mod(GoldORama, gear[1]),
+            ],
             // RoboSanta => vec![],
             // LeerionTheRoyalDwarf => vec![],
             // KatieTheCupid => vec![],

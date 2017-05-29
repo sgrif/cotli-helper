@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Debug)]
 pub enum Condition {
     Eq(Target, usize),
     GtComplex(Target, Target),

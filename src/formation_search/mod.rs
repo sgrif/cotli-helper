@@ -374,7 +374,7 @@ mod benchmarks {
         let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
         let state = State { formation, crusaders: &crusaders, placements: Vec::new(), };
-        let policy = SearchPolicy { active_play: false };
+        let policy = SearchPolicy { active_play: false, considers_gold: true };
 
         b.iter(|| {
             let mut new_state = state.clone();
@@ -401,7 +401,7 @@ mod benchmarks {
         let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
         let state = State { formation, crusaders: &crusaders, placements: Vec::new(), };
-        let policy = SearchPolicy { active_play: false };
+        let policy = SearchPolicy { active_play: false, considers_gold: true };
         for _ in 0..1_000 {
             let mut new_state = state.clone();
             search.expand(&mut new_state);

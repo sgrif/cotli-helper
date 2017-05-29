@@ -10,9 +10,9 @@ may find the tool useful.
 Limitations
 --
 
-- Only primary DPS is considered. This means the tool ignores gold buffs, click
-  damage, and abilities like Merci's deflect evil. The only number it cares
-  about is the total formation DPS.
+- Only primary DPS and gold find is considered. This means the tool ignores,
+  click damage, and abilities like Merci's deflect evil. The only numbers it
+  cares about is the total formation DPS and gold find%.
 - Passive Criticals is not considered
 - Many crusaders are not yet implemented
 - No event formations

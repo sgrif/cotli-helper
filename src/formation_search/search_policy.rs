@@ -31,14 +31,24 @@ impl fmt::Display for FormationScore {
 #[derive(Debug, Clone, Copy, Default)]
 pub struct SearchPolicy {
     pub active_play: bool,
+    pub considers_gold: bool,
 }
 
 impl SearchPolicy {
     pub fn score(&self, formation: &Formation) -> FormationScore {
-        FormationScore(formation.total_dps(self))
+        let mut score = formation.total_dps(self);
+        if self.considers_gold() {
+            let gold_find = formation.total_gold_find(self);
+            score = score.percent_increase(gold_find);
+        }
+        FormationScore(score)
     }
 
     pub fn allows_ability(&self, aura: &Aura) -> bool {
         !aura.requires_active_play || self.active_play
+    }
+
+    pub fn considers_gold(&self) -> bool {
+        self.considers_gold
     }
 }

@@ -1,6 +1,7 @@
 use std::cmp::max;
 use super::*;
 
+#[derive(Debug)]
 pub enum Modifier {
     Composite(Box<Modifier>, Box<Modifier>),
     DividedBy(Target),
@@ -28,6 +29,18 @@ impl Modifier {
             ToPowerOf(ref target) => (1.0 + base / 100.0)
                 .powi(target.count_in_formation(formation) as i32)
                 * 100.0 - 100.0,
+        }
+    }
+
+    pub fn with_tag(self, tag: AuraTag) -> Self {
+        match self {
+            Modifier::Composite(t1, t2) => Modifier::Composite(
+                Box::new(t1.with_tag(tag)),
+                Box::new(t2.with_tag(tag)),
+            ),
+            Modifier::Minus(aura) => Modifier::Minus(Box::new(aura.with_tag(tag))),
+            Modifier::Plus(aura) => Modifier::Plus(Box::new(aura.with_tag(tag))),
+            _ => self,
         }
     }
 }

@@ -26,6 +26,7 @@ impl<'a> CliOptions<'a> {
     pub fn search_policy(&self) -> SearchPolicy {
         SearchPolicy {
             active_play: self.matches.is_present("active-play"),
+            considers_gold: !self.matches.is_present("ignore-gold-find"),
         }
     }
 
@@ -152,7 +153,13 @@ fn app<'a, 'b>() -> App<'a, 'b> {
                     require you to be actively playing the game. Even without \
                     this option, these crusaders may still be placed if their \
                     passive buffs warrant it"))
+        .arg(Arg::with_name("ignore-gold-find")
+             .long("ignore-gold-find")
+             .help("By default formations are ranked by DPS * Gold Find. This \
+                    flag will remove gold find from consideration, and rank \
+                    on DPS alone."))
         .arg(Arg::with_name("force-placement")
+             .short("p")
              .long("force-placement")
              .takes_value(true)
              .multiple(true)

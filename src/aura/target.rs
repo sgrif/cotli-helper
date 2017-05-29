@@ -4,7 +4,7 @@ use std::ops;
 use crusader::*;
 use formation::*;
 
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Target {
     AdjacentTo(CrusaderName),
     AheadOf(CrusaderName),
@@ -12,6 +12,7 @@ pub enum Target {
     And(Box<Target>, Box<Target>),
     Behind(CrusaderName),
     EmptySlot,
+    GoldFind,
     InColumnAhead(CrusaderName),
     InColumnBehind(CrusaderName),
     InFrontColumn,
@@ -65,6 +66,7 @@ impl Target {
                 }
             }
             EmptySlot => false,
+            GoldFind => false,
             InColumnAhead(source) => {
                 let source_col = formation.position_of(source).map(|c| c.x);
                 let target_col = formation.position_of(crusader).map(|c| c.x);
@@ -109,6 +111,8 @@ impl ops::Not for Target {
     fn not(self) -> Self::Output {
         match self {
             Target::Not(t) => *t,
+            Target::GoldFind |
+            Target::AllCrusaders => panic!("Not {:?} doesn't make sense", self),
             _ => Target::Not(Box::new(self)),
         }
     }

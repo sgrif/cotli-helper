@@ -9,6 +9,7 @@ pub use self::target::*;
 use crusader::*;
 use formation::*;
 
+#[derive(Debug)]
 pub struct Aura {
     amount: f64,
     target: Target,
@@ -27,11 +28,21 @@ impl Aura {
         Aura::dps_increase(amount).affecting(Target::AllCrusaders)
     }
 
-    pub fn plus(self, aura: Aura) -> Self {
+    pub fn gold_find_bonus(amount: f64) -> Self {
+        Aura::dps_increase(amount).affecting(Target::GoldFind)
+    }
+
+    pub fn plus(self, mut aura: Aura) -> Self {
+        if let Some(tag) = self.tag {
+            aura = aura.with_tag(tag);
+        }
         self.with_modifier(Modifier::Plus(Box::new(aura)))
     }
 
-    pub fn minus(self, aura: Aura) -> Self {
+    pub fn minus(self, mut aura: Aura) -> Self {
+        if let Some(tag) = self.tag {
+            aura = aura.with_tag(tag);
+        }
         self.with_modifier(Modifier::Minus(Box::new(aura)))
     }
 
@@ -73,7 +84,11 @@ impl Aura {
     }
 
     pub fn with_tag(self, tag: AuraTag) -> Self {
-        Aura { tag: Some(tag), ..self }
+        Aura {
+            tag: Some(tag),
+            modifier: self.modifier.map(|m| m.with_tag(tag)),
+            ..self
+        }
     }
 
     pub fn requires_active_play(self) -> Self {
@@ -86,6 +101,13 @@ impl Aura {
         formation: &Formation,
     ) -> f64 {
         if !self.applies_to(crusader, formation) {
+            return 0.0;
+        }
+        self.modifier_amount(formation)
+    }
+
+    pub fn gold_find(&self, formation: &Formation) -> f64 {
+        if !self.is_active_gold_buff(formation) {
             return 0.0;
         }
         self.modifier_amount(formation)
@@ -104,15 +126,23 @@ impl Aura {
         crusader: CrusaderName,
         formation: &Formation,
     ) -> bool {
-        self.target.matches(crusader, formation)
-            && self.condition.as_ref().map(|c| c.is_met(formation)).unwrap_or(true)
+        self.target.matches(crusader, formation) && self.condition_is_met(formation)
+    }
+
+    fn is_active_gold_buff(&self, formation: &Formation) -> bool {
+        self.target == Target::GoldFind && self.condition_is_met(formation)
     }
 
     fn modifier_amount(&self, formation: &Formation) -> f64 {
-        let res = self.modifier.as_ref().map(|m| m.apply(self.amount, formation))
+        let amount = self.tag
+            .map(|t| formation.ability_buffs(t).fold(self.amount, |r, m| m.modify(r)))
             .unwrap_or(self.amount);
-        self.tag.map(|t| formation.ability_buffs(t).fold(res, |r, m| m.modify(r)))
-            .unwrap_or(res)
+        self.modifier.as_ref().map(|m| m.apply(amount, formation))
+            .unwrap_or(amount)
+    }
+
+    fn condition_is_met(&self, formation: &Formation) -> bool {
+        self.condition.as_ref().map(|c| c.is_met(formation)).unwrap_or(true)
     }
 }
 
@@ -243,6 +273,9 @@ pub enum AuraTag {
     // Slot 13
     FavoritePrey,
     FocusedSupport,
+
+    // Slot 14
+    GoldORama,
 
     // Slot 16
     StormOfFlame,
