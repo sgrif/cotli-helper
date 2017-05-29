@@ -32,7 +32,7 @@ impl Cache {
         crusaders: &'a [Crusader],
     ) -> Option<Node<'a>> {
         let file_path = self.path_to_cache_file(formation);
-        if !file_path.join("search_data.toml").exists() {
+        if !file_path.join("search_data.dat").exists() {
             return None;
         }
         match self.try_load_from_cache(&file_path, crusaders) {
@@ -54,7 +54,7 @@ impl Cache {
 
     fn try_write_to_cache(&self, path: &Path, node: &Node) -> io::Result<()> {
         create_dir_all(path)?;
-        let mut file = BufWriter::new(File::create(path.join("search_data.toml"))?);
+        let mut file = BufWriter::new(File::create(path.join("search_data.dat"))?);
         file.write_u8(1)?;
         write_node(node, &mut file)?;
         Ok(())
@@ -65,7 +65,7 @@ impl Cache {
         path: &Path,
         crusaders: &'a [Crusader],
     ) -> io::Result<Node<'a>> {
-        let mut file = BufReader::new(File::open(path.join("search_data.toml"))?);
+        let mut file = BufReader::new(File::open(path.join("search_data.dat"))?);
         let v = file.read_u8()?;
         if v == 1 {
             read_node(crusaders, &mut file)
