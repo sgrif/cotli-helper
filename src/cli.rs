@@ -1,9 +1,12 @@
 use clap::*;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::*;
 use std::time::Duration;
 
 use crusader::{CrusaderName, Crusader};
 use formation::Formation;
 use formation_search::*;
+use user_data::UserData;
 
 pub struct CliOptions<'a> {
     matches: ArgMatches<'a>,
@@ -30,11 +33,12 @@ impl<'a> CliOptions<'a> {
         }
     }
 
-    pub fn search_parameters(&self) -> Parameters {
+    pub fn search_parameters(&self, data: &UserData) -> Parameters {
         Parameters {
             verbosity: self.verbosity(),
             max_time_per_step: Duration::from_secs(self.search_time()),
             policy: self.search_policy(),
+            cache_key: self.cache_key(data),
         }
     }
 
@@ -96,6 +100,16 @@ impl<'a> CliOptions<'a> {
             1 => Verbosity::Verbose,
             _ => Verbosity::Debug,
         }
+    }
+
+    fn cache_key(&self, data: &UserData) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        env!("CARGO_PKG_VERSION").hash(&mut hasher);
+        self.matches.value_of("formation").unwrap().hash(&mut hasher);
+        self.matches.value_of("max-gold").hash(&mut hasher);
+        self.search_policy().hash(&mut hasher);
+        data.hash(&mut hasher);
+        hasher.finish()
     }
 }
 

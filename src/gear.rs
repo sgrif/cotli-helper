@@ -3,7 +3,7 @@ use std::fmt;
 use serde::de::*;
 use dps::Level;
 
-#[derive(PartialOrd, Ord, PartialEq, Eq, Clone, Copy, Debug)]
+#[derive(PartialOrd, Ord, PartialEq, Eq, Clone, Copy, Debug, Hash)]
 pub enum GearQuality {
     None,
     Common,

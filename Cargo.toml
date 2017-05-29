@@ -12,6 +12,7 @@ rand = "0.3.15"
 serde = "1.0.0"
 serde_derive = "1.0.0"
 toml = "0.4.1"
+byteorder = "1.0.0"
 
 [[test]]
 name = "integration_tests"

@@ -8,6 +8,18 @@ use formation::Formation;
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Default, Clone, Copy)]
 pub struct FormationScore(Dps);
 
+impl From<f64> for FormationScore {
+    fn from(f: f64) -> Self {
+        FormationScore(Dps(f))
+    }
+}
+
+impl From<FormationScore> for f64 {
+    fn from(s: FormationScore) -> Self {
+        (s.0).0
+    }
+}
+
 impl AddAssign for FormationScore {
     fn add_assign(&mut self, rhs: Self) {
         self.0 += rhs.0;
@@ -28,7 +40,7 @@ impl fmt::Display for FormationScore {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, Hash)]
 pub struct SearchPolicy {
     pub active_play: bool,
     pub considers_gold: bool,

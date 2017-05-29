@@ -3,6 +3,7 @@
 
 #[macro_use] extern crate bitflags;
 #[macro_use] extern crate serde_derive;
+extern crate byteorder;
 extern crate clap;
 extern crate itertools;
 extern crate ordermap;

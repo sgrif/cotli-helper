@@ -7,6 +7,8 @@ mod talent_data;
 pub use self::crusader_data::CrusaderData;
 pub use self::from_toml::from_toml;
 
+use std::hash::*;
+
 use crusader::*;
 use dps::*;
 use gear::GearQuality;
@@ -22,6 +24,29 @@ pub struct UserData {
     unspent_idols: u64,
     talents: TalentData,
     crusader_data: AllCrusaderData,
+}
+
+impl Hash for UserData {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        /// We're assuming that the floats on this struct come from a deterministic
+        /// source, such as parsing a text file, not constructed dynamically.
+        /// While we'll still have rounding errors, we should deterministically always
+        /// have the same rounding errors.
+        fn hash_float<H: Hasher>(f: f64, hasher: &mut H) {
+            use std::slice;
+
+            let float_ptr = &f as *const f64 as *const u8;
+            let bytes = unsafe { slice::from_raw_parts(float_ptr, 8) };
+            hasher.write(bytes);
+        }
+
+        hash_float(self.dps_from_rings, hasher);
+        hash_float(self.cooldown_percent, hasher);
+        hash_float(self.dps_from_achievements, hasher);
+        self.unspent_idols.hash(hasher);
+        self.talents.hash(hasher);
+        self.crusader_data.hash(hasher);
+    }
 }
 
 const DPS_PERCENT_PER_IDOL: u64 = 3;

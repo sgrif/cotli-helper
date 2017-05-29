@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::hash::*;
 
 use crusader::CrusaderName;
 use gear::GearQuality;
@@ -6,6 +7,14 @@ use gear::GearQuality;
 #[derive(Default)]
 pub struct AllCrusaderData {
     data: HashMap<CrusaderName, CrusaderData>
+}
+
+impl Hash for AllCrusaderData {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        let mut data = self.data.iter().collect::<Vec<_>>();
+        data.sort_by_key(|&(k, _)| k);
+        data.hash(hasher);
+    }
 }
 
 impl AllCrusaderData {
@@ -47,7 +56,7 @@ impl AllCrusaderData {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Hash)]
 pub struct CrusaderData {
     pub enchantment_points: u32,
     pub gear: [GearQuality; 3],

@@ -7,8 +7,10 @@ use formation_search::*;
 
 fn main() {
     let options = CliOptions::load();
-    let crusaders = create_user_data().unlocked_crusaders(options.max_gold());
+    let user_data = create_user_data();
+    let crusaders = user_data.unlocked_crusaders(options.max_gold());
     let formation = options.selected_formation(&crusaders);
-    let mut search = FormationSearch::new(formation, &crusaders, options.search_parameters());
+    let params = options.search_parameters(&user_data);
+    let mut search = FormationSearch::new(formation, &crusaders, params);
     search.perform_search();
 }

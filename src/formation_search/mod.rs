@@ -1,3 +1,5 @@
+#[cfg_attr(any(test, debug_assertions), path="dummy_cache.rs")]
+mod cache;
 mod parameters;
 mod search_policy;
 mod set_like;
@@ -15,8 +17,9 @@ use std::time::*;
 use crusader::*;
 use dps::*;
 use formation::*;
-use self::unused_slots::unused_slots;
+use self::cache::Cache;
 use self::set_like::*;
+use self::unused_slots::unused_slots;
 
 const EXPLORATION_COEF: f64 = 1.4;
 
@@ -24,6 +27,7 @@ pub struct FormationSearch<'a> {
     state: State<'a>,
     search_root: Node<'a>,
     parameters: Parameters,
+    cache: Cache,
 }
 
 impl<'a> FormationSearch<'a> {
@@ -35,6 +39,7 @@ impl<'a> FormationSearch<'a> {
         FormationSearch {
             state: State { formation, crusaders, placements: Vec::new(), },
             search_root: Node::new(),
+            cache: Cache::new(parameters.cache_key),
             parameters,
         }
     }
@@ -43,6 +48,7 @@ impl<'a> FormationSearch<'a> {
         let empty_positions = self.state.formation.empty_positions().count();
         let max_time = self.parameters.max_time_per_step;
         for _ in 0..empty_positions {
+            self.try_to_load_node_from_cache();
             let loop_start = Instant::now();
             while loop_start.elapsed() < max_time && !self.search_root.is_complete() {
                 let mut state = self.state.clone();
@@ -51,6 +57,7 @@ impl<'a> FormationSearch<'a> {
             }
 
             self.print_debug_output();
+            self.cache.write_to_cache(&self.state.formation, &self.search_root);
 
             let current_score = self.parameters.policy.score(&self.state.formation);
             let options = self.search_root.children
@@ -94,6 +101,16 @@ impl<'a> FormationSearch<'a> {
             println!("checked {} total", self.search_root.times_checked);
         }
     }
+
+    fn try_to_load_node_from_cache(&mut self) {
+        let cached_node = self.cache.load_from_cache(
+            &self.state.formation,
+            &self.state.crusaders,
+        );
+        if let Some(node) = cached_node {
+            self.search_root = node;
+        }
+    }
 }
 
 type Placement<'a> = (usize, &'a Crusader);
@@ -103,6 +120,12 @@ enum Progress {
     Expandable,
     FullyExpanded,
     Complete,
+}
+
+impl Default for Progress {
+    fn default() -> Self {
+        Progress::Expandable
+    }
 }
 
 // NOTE: We're storing/checking redundant information here due to how the

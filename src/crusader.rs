@@ -7,7 +7,8 @@ use dps::*;
 use gear::GearQuality;
 use user_data::UserData;
 
-#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
+#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Deserialize, Serialize)]
+#[cfg_attr(not(any(test, debug_assertions)), repr(u8))]
 pub enum CrusaderName {
     // Testing only
     #[cfg(any(test, debug_assertions))]
@@ -70,7 +71,7 @@ pub enum CrusaderName {
     ThePrincess,
     // RoboTurkey,
     // RangerRayna,
-    #[serde(rename = "Baenarall, Angel Of Hope")]
+    #[serde(rename = "Baenarall, Angel of Hope")]
     BaenarallAngelOfHope,
 
     // Slot 8
@@ -82,7 +83,7 @@ pub enum CrusaderName {
     // KarlTheKicker,
 
     // Slot 9
-    #[serde(rename = "Jason, Master Of Shadows")]
+    #[serde(rename = "Jason, Master of Shadows")]
     JasonMasterOfShadows,
     // PeteTheCarney,
     #[serde(rename = "Broot")]

@@ -20,4 +20,5 @@ pub struct Parameters {
     pub verbosity: Verbosity,
     pub max_time_per_step: Duration,
     pub policy: SearchPolicy,
+    pub cache_key: u64,
 }

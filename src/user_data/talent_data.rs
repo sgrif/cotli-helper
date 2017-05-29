@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::hash::*;
 
 use dps::Level;
 use talent::*;
@@ -7,6 +8,14 @@ use talent::Talent::*;
 #[derive(Default)]
 pub struct TalentData {
     data: HashMap<Talent, Level>,
+}
+
+impl Hash for TalentData {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        let mut data = self.data.iter().collect::<Vec<_>>();
+        data.sort_by_key(|&(k, _)| k);
+        data.hash(hasher);
+    }
 }
 
 const BASE_EP_FRACTION_FROM_BENCH: f64 = 0.3;
