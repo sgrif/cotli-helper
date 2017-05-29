@@ -1,4 +1,5 @@
 use std::cmp::{Ordering, min};
+use toml;
 
 use aura::*;
 use aura::Target::*;
@@ -6,140 +7,189 @@ use dps::*;
 use gear::GearQuality;
 use user_data::UserData;
 
-#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Deserialize)]
 pub enum CrusaderName {
     // Testing only
     #[cfg(any(test, debug_assertions))]
+    #[serde(skip_serializing, skip_deserializing)]
     Dummy(Tags),
 
     // Slot 1
+    #[serde(rename = "The Bush Whacker")]
     TheBushWhacker,
     RoboRabbit,
     // GrahamTheDriver,
     // WarwickTheWarlock,
 
     // Slot 2
+    #[serde(rename = "Jim the Lumberjack")]
     JimTheLumberjack,
     // PilotPam,
+    #[serde(rename = "Veronica, the Android Archer")]
     VeronicaTheAndroidArcher,
+    #[serde(rename = "Arachnobuddy")]
     Arachnobuddy,
 
     // Slot 3
+    #[serde(rename = "Emo Werewolf")]
     EmoWerewolf,
+    #[serde(rename = "Sally the Succubus")]
     SallyTheSuccubus,
     // KarenTheCatTeenager,
 
     // Slot 4
+    #[serde(rename = "Sasha the Fierce Warrior")]
     SashaTheFierceWarrior,
+    #[serde(rename = "Groklok the Orc")]
     GroklokTheOrc,
     // MindyTheMime,
+    #[serde(rename = "Danni the Daring Damsel")]
     DanniTheDaringDamsel,
 
     // Slot 5
+    #[serde(rename = "The Washed Up Hermit")]
     TheWashedUpHermit,
+    #[serde(rename = "Kyle the Party Bro")]
     KyleThePartyBro,
+    #[serde(rename = "Serpent King Draco")]
     SerpentKingDraco,
     // HenryTheScaredyGhoul,
+    #[serde(rename = "Grandmora")]
     Grandmora,
 
     // Slot 6
+    #[serde(rename = "Detective Kaine")]
     DetectiveKaine,
     // MisterTheMonkey,
+    #[serde(rename = "Larry the Leprechaun")]
     LarryTheLeprechaun,
     // BernardTheBartender,
 
     // Slot 7
+    #[serde(rename = "The Princess")]
     ThePrincess,
     // RoboTurkey,
     // RangerRayna,
+    #[serde(rename = "Baenarall, Angel Of Hope")]
     BaenarallAngelOfHope,
 
     // Slot 8
+    #[serde(rename = "Natalie Dragon")]
     NatalieDragon,
     // JackOLantern,
+    #[serde(rename = "President Billy Smithsonian")]
     PresidentBillySmithsonian,
     // KarlTheKicker,
 
     // Slot 9
+    #[serde(rename = "Jason, Master Of Shadows")]
     JasonMasterOfShadows,
     // PeteTheCarney,
+    #[serde(rename = "Broot")]
     Broot,
     // PaulThePilgrim,
 
     // Slot 10
+    #[serde(rename = "Artaxes, the Lion")]
     ArtaxesTheLion,
+    #[serde(rename = "Drizzle the Dark Elf")]
     DrizzleTheDarkElf,
     // BubbaTheSwimmingOrc,
+    #[serde(rename = "Sisaron the Dragon Sorceress")]
     SisaronTheDragonSorceress,
 
     // Slot 11
+    #[serde(rename = "Khouri, the Witch Doctor")]
     KhouriTheWitchDoctor,
     // MommaKaine,
     // BrogonPrinceOfDragons,
     // TheHalfBloodElf,
+    #[serde(rename = "Foresight")]
     Foresight,
 
     // Slot 12
+    #[serde(rename = "Dark Gryphon")]
     DarkGryphon,
+    #[serde(rename = "Rocky the Rockstar")]
     RockyTheRockstar,
+    #[serde(rename = "Montana James")]
     MontanaJames,
     // TheDarkHelper,
 
     // Slot 13
+    #[serde(rename = "Sarah, the Collector")]
     SarahTheCollector,
+    #[serde(rename = "The Metal Soldierette")]
     TheMetalSoldierette,
+    #[serde(rename = "Snickette the Sneaky")]
     SnicketteTheSneaky,
 
     // Slot 14
+    #[serde(rename = "Gold Panda")]
     GoldPanda,
     // RoboSanta,
     // LeerionTheRoyalDwarf,
     // KatieTheCupid,
 
     // Slot 15
+    #[serde(rename = "Prince Sal, the Merman")]
     PrinceSalTheMerman,
     // WendyTheWitch,
+    #[serde(rename = "Robbie Raccoon")]
     RobbieRaccoon,
     // PrincessValTheMermaid,
 
     // Slot 16
+    #[serde(rename = "Fire Phoenix")]
     FirePhoenix,
+    #[serde(rename = "Alan the ArchAngel")]
     AlanTheArchAngel,
     // FrightOTron4000,
+    #[serde(rename = "Spaceking")]
     Spaceking,
 
     // Slot 17
+    #[serde(rename = "King Reginald IV")]
     KingReginaldIV,
     // QueenSiri,
     // MrBogginsTheSubstitute,
+    #[serde(rename = "Squiggles the Clown")]
     SquigglesTheClown,
 
     // Slot 18
+    #[serde(rename = "Thalia, the Thunder King")]
     ThaliaTheThunderKing,
     // FrostyTheSnowman,
     // Littlefoot,
     // CindyTheCheerOrc,
 
     // Slot 19
+    #[serde(rename = "Merci, the Mad Wizard")]
     MerciTheMadWizard,
+    #[serde(rename = "The Bat Billionaire")]
     TheBatBillionaire,
     // PetraThePilgrim,
+    #[serde(rename = "Polly the Parrot")]
     PollyTheParrot,
 
     // Slot 20
+    #[serde(rename = "Nate Dragon")]
     NateDragon,
     // KizlblypTheAlienTraitor,
     // RoboRudolph,
 
     // Slot 21
+    #[serde(rename = "The Exterminator")]
     TheExterminator,
     // GloriaTheGoodWitch,
 
     // Slot 22
+    #[serde(rename = "The Shadow Queen")]
     TheShadowQueen,
     // IlsaTheInsaneWizard,
 
     // Slot 23
+    #[serde(rename = "Greyskull the Pirate")]
     GreyskullThePirate,
 }
 
@@ -2217,140 +2267,8 @@ impl CrusaderName {
     }
 
     pub fn from_str(s: &str) -> Option<Self> {
-        use self::CrusaderName::*;
-        match s {
-            // Slot 1
-            "The Bush Whacker" => Some(TheBushWhacker),
-            "RoboRabbit" => Some(RoboRabbit),
-            // Some(GrahamTheDriver),
-            // Some(WarwickTheWarlock),
-
-            // Slot 2
-            "Jim the Lumberjack" => Some(JimTheLumberjack),
-            // Some(PilotPam),
-            "Veronica, the Android Archer" => Some(VeronicaTheAndroidArcher),
-            "Arachnobuddy" => Some(Arachnobuddy),
-
-            // Slot 3
-            "Emo Werewolf" => Some(EmoWerewolf),
-            "Sally the Succubus" => Some(SallyTheSuccubus),
-            // Some(KarenTheCatTeenager),
-
-            // Slot 4
-            "Sasha the Fierce Warrior" => Some(SashaTheFierceWarrior),
-            "Groklok the Orc" => Some(GroklokTheOrc),
-            // Some(MindyTheMime),
-            "Danni the Daring Damsel" => Some(DanniTheDaringDamsel),
-
-            // Slot 5
-            "The Washed Up Hermit" => Some(TheWashedUpHermit),
-            "Kyle the Party Bro" => Some(KyleThePartyBro),
-            "Serpent King Draco" => Some(SerpentKingDraco),
-            // Some(HenryTheScaredyGhoul),
-            "Grandmora" => Some(Grandmora),
-
-            // Slot 6
-            "Detective Kaine" => Some(DetectiveKaine),
-            // Some(MisterTheMonkey),
-            "Larry the Leprechaun" => Some(LarryTheLeprechaun),
-            // Some(BernardTheBartender),
-
-            // Slot 7
-            "The Princess" => Some(ThePrincess),
-            // Some(RoboTurkey),
-            // Some(RangerRayna),
-            "Baenarall, Angel of Hope" => Some(BaenarallAngelOfHope),
-
-            // Slot 8
-            "Natalie Dragon" => Some(NatalieDragon),
-            // Some(JackOLantern),
-            "President Billy Smithsonian" => Some(PresidentBillySmithsonian),
-            // Some(KarlTheKicker),
-
-            // Slot 9
-            "Jason, Master of Shadows" => Some(JasonMasterOfShadows),
-            // Some(PeteTheCarney),
-            "Broot" => Some(Broot),
-            // Some(PaulThePilgrim),
-
-            // Slot 10
-            "Artaxes, the Lion" => Some(ArtaxesTheLion),
-            "Drizzle the Dark Elf" => Some(DrizzleTheDarkElf),
-            // Some(BubbaTheSwimmingOrc),
-            "Sisaron the Dragon Sorceress" => Some(SisaronTheDragonSorceress),
-
-            // Slot 11
-            "Khouri, the Witch Doctor" => Some(KhouriTheWitchDoctor),
-            // Some(MommaKaine),
-            // Some(BrogonPrinceOfDragons),
-            // Some(TheHalfBloodElf),
-            "Foresight" => Some(Foresight),
-
-            // Slot 12
-            "Dark Gryphon" => Some(DarkGryphon),
-            "Rocky the Rockstar" => Some(RockyTheRockstar),
-            "Montana James" => Some(MontanaJames),
-            // Some(TheDarkHelper),
-
-            // Slot 13
-            "Sarah, the Collector" => Some(SarahTheCollector),
-            "The Metal Soldierette" => Some(TheMetalSoldierette),
-            "Snickette the Sneaky" => Some(SnicketteTheSneaky),
-
-            // Slot 14
-            "Gold Panda" => Some(GoldPanda),
-            // Some(RoboSanta),
-            // Some(LeerionTheRoyalDwarf),
-            // Some(KatieTheCupid),
-
-            // Slot 15
-            "Prince Sal, the Merman" => Some(PrinceSalTheMerman),
-            // Some(WendyTheWitch),
-            "Robbie Raccoon" => Some(RobbieRaccoon),
-            // Some(PrincessValTheMermaid),
-
-            // Slot 16
-            "Fire Phoenix" => Some(FirePhoenix),
-            "Alan the ArchAngel" => Some(AlanTheArchAngel),
-            // Some(FrightOTron4000),
-            "Spaceking" => Some(Spaceking),
-
-            // Slot 17
-            "King Reginald IV" => Some(KingReginaldIV),
-            // Some(QueenSiri),
-            // Some(MrBogginsTheSubstitute),
-            "Squiggles the Clown" => Some(SquigglesTheClown),
-
-            // Slot 18
-            "Thalia, the Thunder King" => Some(ThaliaTheThunderKing),
-            // Some(FrostyTheSnowman),
-            // Some(Littlefoot),
-            // Some(CindyTheCheerOrc),
-
-            // Slot 19
-            "Merci, the Mad Wizard" => Some(MerciTheMadWizard),
-            "The Bat Billionaire" => Some(TheBatBillionaire),
-            // Some(PetraThePilgrim),
-            "Polly the Parrot" => Some(PollyTheParrot),
-
-            // Slot 20
-            "Nate Dragon" => Some(NateDragon),
-            // Some(KizlblypTheAlienTraitor),
-            // Some(RoboRudolph),
-
-            // Slot 21
-            "The Exterminator" => Some(TheExterminator),
-            // Some(GloriaTheGoodWitch),
-
-            // Slot 22
-            "The Shadow Queen" => Some(TheShadowQueen),
-            // Some(IlsaTheInsaneWizard),
-
-            // Slot 23
-            "Greyskull the Pirate" => Some(GreyskullThePirate),
-
-            _ => None,
-        }
+        toml::from_str(&format!("{:?}", s))
+            .ok()
     }
 }
 
