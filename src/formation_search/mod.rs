@@ -300,11 +300,12 @@ fn expanding_updates_highest_dps_seen() {
     let crusaders = test_crusaders();
     let mut state = search_state(&crusaders);
     let mut search = Node::new();
-    assert_eq!(Dps(0.0), search.highest_dps_seen);
+    assert_eq!(search.highest_score_seen, Default::default());
     search.expand(&mut state);
+    search.track_score_changes(&state, &Default::default());
     // Sanity check, make sure the formation was filled
     assert_eq!(0, state.formation.empty_positions().count());
-    assert_eq!(state.formation.total_dps(), search.highest_dps_seen);
+    assert_ne!(search.highest_score_seen, Default::default());
 }
 
 #[test]
@@ -373,9 +374,12 @@ mod benchmarks {
         let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
         let state = State { formation, crusaders: &crusaders, placements: Vec::new(), };
+        let policy = SearchPolicy { active_play: false };
 
         b.iter(|| {
-            search.expand(&mut state.clone())
+            let mut new_state = state.clone();
+            search.expand(&mut new_state);
+            search.track_score_changes(&new_state, &policy)
         })
     }
 
@@ -397,12 +401,17 @@ mod benchmarks {
         let crusaders = create_user_data().unlocked_crusaders(None);
         let mut search = Node::new();
         let state = State { formation, crusaders: &crusaders, placements: Vec::new(), };
+        let policy = SearchPolicy { active_play: false };
         for _ in 0..1_000 {
-            search.expand(&mut state.clone());
+            let mut new_state = state.clone();
+            search.expand(&mut new_state);
+            search.track_score_changes(&new_state, &policy);
         }
 
         b.iter(|| {
-            search.check_single_formation(&mut state.clone())
+            let mut new_state = state.clone();
+            search.check_single_formation(&mut new_state);
+            search.track_score_changes(&new_state, &policy);
         })
     }
 }

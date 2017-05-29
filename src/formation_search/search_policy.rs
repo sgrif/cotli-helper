@@ -5,7 +5,7 @@ use aura::Aura;
 use dps::Dps;
 use formation::Formation;
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Default, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Default, Clone, Copy)]
 pub struct FormationScore(Dps);
 
 impl AddAssign for FormationScore {
